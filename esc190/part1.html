@@ -267,319 +267,6 @@ Functions generally work mostly the same way as Python. It is important to note 
         </tbody>
       </table>
       Therefore, if we were to change the value of <code>x</code> inside the function, it would only affect the value at address 1280, and the value of <code>b</code> (from the main memory table) will not be affected.
-
-<h1 id="L3">L3: Binary representation of ints, floats, and strings</h1>
-At a fundamental level, computer memory can be seen as a physical table where in each cell, the voltage is either high (1) or low (0). It does not know anything about types. A single <code>0</code> or <code>1</code> is a bit, and
-<ul>
-    <li>8 bits = byte</li>
-    <li>kilobyte = 1024 bytes</li>
-    <li>megabyte = 1000 kilobytes</li>
-</ul>
-The memory table stores a lot of information, including metadata. You will learn more about this in courses such as ECE253 and higher level 300+ courses. In this course, we will only deal with memory tables in the context of storing variables.
-<h2 id="L4-binary">Binary</h2>
-We can interpret the binary number \(1101\) as
-\[1101_\text{binary} = 1 \cdot 2^3 + 1 \cdot 2^2 + 0 \cdot 2^1 + 1 \cdot 2^0 = 13.\]
-Remark: that this is also exactly how decimals work! Also,
-\[521 = 5\cdot 10^2 + 2 \cdot 10^1 + 1 \cdot 10^0.\]
-It is less obvious how to go from decimal to binary. Suppose we want to convert \(25\) to binary.
-<ul>
-    <li>Right-to-left:</li>
-    <ol>
-        <li>25 is odd, so last digit in binary is \(1\). We now have to represent (25-1)/2 = 12.</li>
-        <li>12 is even, so 2nd last digit in binary is \(0\). We now have to represent (12-0)/2 = 6.</li>
-        <li>6 is even, so 3rd last digit in binary is \(0\). We now have to represent (6-0)/2 = 3.</li>
-        <li>3 is odd, so 4th last digit in binary is \(1\). We now have to represent (3-1)/2 = 1.</li>
-        <li>We can represent 1 by \(1\).</li>
-    </ol>
-    which gives
-    \[11001\]
-    A Python implementation is given below:
-<pre><code class="language-python">def get_decimal_digits(d):
-  digits = []
-  while d != 0:
-    digits = [(d % 10)] + digits
-    d //= 10
-  return digits
-
-def get_binary_digits(d):
-  digits = []
-  while d != 0:
-    digits = [(d % 2)] + digits
-    d //= 2
-  return digits
-
-print(get_decimal_digits(521))
-print(get_binary_digits(25))</code></pre>
-    <li>Left-to-right:</li>
-    <ul>
-
-    <li>
-        The idea is that we want to write 25 as
-        \[25 = b_k2^k +b_{k-1}2^{k-1} + \cdots + b_12^1 + b_0\]
-        Are we able to figure out what \(k\) is? We can determine the <i>largest power of 2 that fits into 25,</i> which is \(2^4=16\). We still need to represent \(25-16=9\)
-    </li>
-    <li>
-        The largest power of 2 that can fit in 9 is \(2^3=8\). We then need to represent \(9-8=1\)
-    </li>
-    <li>
-        The largest power of 2 that can fit in 1 is \(2^0=1\). We are now done.
-    </li>
-    We have decomposed \(25\) into powers of 2. That is,
-    \[25 = 2^4 + 2^3 + 2^0 = 11001_\text{binary}.\]
-    </ul>
-</ul>
-For 8-bit binary numbers, the 0th digit is the sign and the other 7 bits are the quantity. For example,
-\[
-b_0b_1b_2b_3b_4b_5b_6b_7 = \begin{cases}
-+(b_12^6 + b_22^5 + b_32^4+b_42^3 + b_52^2 + b_62^1 + b_7) & \text{if }b_0 = 0 \\
--(b_12^6 + b_22^5 + b_32^4+b_42^3 + b_52^2 + b_62^1 + b_7) & \text{if }b_0 = 1
-\end{cases}
-\]
-This is not the only way to represent numbers. Different schemes exist for different types, though there are some standard conventions (i.e. IEEE 754 for floats).
-
-In Unicode, the first bit tells us whether we use ASCII characters (which we will use) or Unicode (which is more complicated).
-<h2 id="L3-characters">Characters and Strings</h2>
-The above discussion helps us understand how characters and strings are stored and worked with in C.  Consider the following program,
-<pre><code class="language-C">#include &lt;stdio.h&gt;
-int main()
-{
-    char c = 'x';
-    printf("%c %d", c, (int)c);
-
-    return 0;
-}</code></pre>
-Notice that the program outputs <code>x 120</code>. This is because we can interpret <code>c</code> as a character, so it outputs <code>'x'</code>. Alternatively, we can interpret it as an integer, in which case it outputs its ASCII value <code>120</code>.
-
-We can store strings by writing
-<pre><code class="language-C">#include &lt;stdio.h&gt;
-int main()
-{
-    char* s = "Hello, World!";
-    return 0;
-}</code></pre>
-where <code>s</code> is the address of the first character in the string (in this case, the address of 'H'). The last character in the string is <code>\0</code> (can otherwise write it as <code>0</code> or <code>NULL</code>). Therefore, the program is able to read off a string by going to the address of the first character, and moving down the table (which is where the other characters are stored) until the null character is found. Explicitly, this is stored in the memory table as (only showing part of the table)
-<table class="table">
-    <tbody>
-      <tr>
-        <th scope="row">16</th>
-        <td><code>'H'</code></td>
-      </tr>
-      <tr>
-        <th scope="row">17</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">18</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">19</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">20</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">21</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">22</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">23</th>
-        <td>.</td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th scope="row"></th>
-        <td></td>
-      </tr>
-    </tbody>
-    <tbody>
-      <tr>
-        <th scope="row">24</th>
-        <td><code>'e'</code></td>
-      </tr>
-      <tr>
-        <th scope="row">25</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">26</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">27</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">28</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">29</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">30</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">31</th>
-        <td>.</td>
-      </tr>
-    </tbody>
-    <tbody>
-      <tr>
-        <th scope="row"></th>
-        <td></td>
-      </tr>
-    </tbody>
-    <tbody>
-      <tr>
-        <th scope="row">32</th>
-        <td><code>'l'</code></td>
-      </tr>
-      <tr>
-        <th scope="row">33</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">34</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">35</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">36</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">37</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">38</th>
-        <td>.</td>
-      </tr>
-      <tr>
-        <th scope="row">39</th>
-        <td>.</td>
-      </tr>
-    </tbody>
-  </table>
-  Here, the dot is used to denote that it takes 8 bits (1 byte) to store each character.
-
-<h1 id="L4">L4: Strings and Changing Variables in Functions</h1>
-<div class="card">
-  <h2 class="card-header" id="L3-review">Warm Up Question</h5>
-  <div class="card-body">
-    Draw the corresponding memory table given the following program. Assume an integer takes up 4 bytes.
-
-<pre><code class="language-C">#include &lt;stdio.h&gt;
-int main()
-{
-    int a = 5;
-    int b = 10;
-    int* p_a = 0;
-    p_a = &a;
-    b = *p_a;
-}
-</code></pre>
-<p>
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#L3Example" role="button" aria-expanded="false" aria-controls="L3Example">
-    Show Solution
-  </a>
-</p>
-<div class="collapse" id="L3Example">
-  <div class="card card-body">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Address</th>
-          <th scope="col">Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1600</th>
-          <td><code>5</code> (<code>a</code> of type <code>int</code>)</td>
-        </tr>
-        <tr>
-          <th scope="row">1632</th>
-          <td><code>5</code> (<code>b</code> of type <code>int</code>)</td>
-        </tr>
-        <tr>
-          <th scope="row">1664</th>
-          <td><code>1600</code> (<code>p_a</code> of type <code>int*</code></td>
-        </tr>
-        <tr>
-          <th scope="row">1696</th>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-</div>
-</div>
-Note that in the above example, not every address was written down. In C, every address is a byte. We can use the <code>sizeof</code> operator, which gives the size of an object. For example, <code>sizeof(int)</code> gives the size of an int and <code>sizeof(a)</code> gives the size of the variable <code>a</code>. The output is represented in bits. We can print this to console using <code>printf("%ud", sizeof(int))</code>.<br><br>
-
-Depending on your system, you may get a warning in the above print statements. This is because <code>sizeof</code> returns a <code>size_t</code> type, that could either be an unsigned integer or an unsigned long integer (depending on your system). You may choose to use <code>%lu</code> or <code>%zu</code> instead.
-<h2 id="L4-strings">Strings</h2>
-Recall that each character will always be 1 byte. The reason this is important is if we recall strings can be defined using a <i>pointer,</i><br><br>
-<pre><code class="language-C">char *s = "xyz";</code></pre>
-we get a memory table that looks like,<br><br>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Memory</th>
-      <th scope="col">Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1824</th>
-      <td><code>'x'</code></td>
-    </tr>
-    <tr>
-      <th scope="row">1832</th>
-      <td><code>'y'</code></td>
-    </tr>
-    <tr>
-      <th scope="row">1840</th>
-      <td><code>'z'</code></td>
-    </tr>
-    <tr>
-      <th scope="row">1848</th>
-      <td><code>\0</code></td>
-    </tr>
-    <tr>
-      <th scope="row">1856</th>
-      <td><code>1824</code> (<code>s</code> of type "address of char")</td>
-    </tr>
-  </tbody>
-</table>
-A few key observations:
-<ul>
-  <li>Each address can hold 1 byte and each character is 1 byte. Perfect!</li>
-  <li>The null character <code>\0</code> signifies the end of the string, so that we know when to stop. This is important, because we don't store the length anywhere!</li>
-  <li>We are using double quotes here. Double quotes automatically include the null character at the end.</li>
-  <li>The variable <code>s</code> gets stored elsewhere and is equal to the address of the first character.</li>
-  <li>The variable is placed somewhere in memory that is generally <i>not</i> the locals frame. However, most variables are typically stored in the main locals frame. This will be important in the next subsection where we will be also working with the locals frame of a particular function.</li>
-</ul>
-We can treat <code>s</code> as just any other variable! For example,<br><br>
-<pre><code class="language-C">printf("%c", *s);</code></pre>
-will print out <code>'x'</code>, and<br><br>
-<pre><code class="language-C">printf("%ld", (long int)s);</code></pre>
-will print <code>'1824'</code>.
-
 <h2 id="L4-functions">Changing Variables in Functions</h2>
 Suppose we have the following naive attempt at changing a variable through a function. We have,<br><br>
 <pre><code class="language-C">#include &lt;stdio.h&gt;
@@ -739,6 +426,318 @@ Because C gives us more freedom to work directly with the memory, we can do much
     </p>
   </div>
 </div>
+
+<h1 id="L3">L3: Binary representation of ints, floats</h1>
+At a fundamental level, computer memory can be seen as a physical table where in each cell, the voltage is either high (1) or low (0). It does not know anything about types. A single <code>0</code> or <code>1</code> is a bit, and
+<ul>
+    <li>8 bits = byte</li>
+    <li>kilobyte = 1024 bytes</li>
+    <li>megabyte = 1000 kilobytes</li>
+</ul>
+The memory table stores a lot of information, including metadata. You will learn more about this in courses such as ECE253 and higher level 300+ courses. In this course, we will only deal with memory tables in the context of storing variables.
+<h2 id="L4-binary">Binary</h2>
+We can interpret the binary number \(1101\) as
+\[1101_\text{binary} = 1 \cdot 2^3 + 1 \cdot 2^2 + 0 \cdot 2^1 + 1 \cdot 2^0 = 13.\]
+Remark: that this is also exactly how decimals work! Also,
+\[521 = 5\cdot 10^2 + 2 \cdot 10^1 + 1 \cdot 10^0.\]
+It is less obvious how to go from decimal to binary. Suppose we want to convert \(25\) to binary.
+<ul>
+    <li>Right-to-left:</li>
+    <ol>
+        <li>25 is odd, so last digit in binary is \(1\). We now have to represent (25-1)/2 = 12.</li>
+        <li>12 is even, so 2nd last digit in binary is \(0\). We now have to represent (12-0)/2 = 6.</li>
+        <li>6 is even, so 3rd last digit in binary is \(0\). We now have to represent (6-0)/2 = 3.</li>
+        <li>3 is odd, so 4th last digit in binary is \(1\). We now have to represent (3-1)/2 = 1.</li>
+        <li>We can represent 1 by \(1\).</li>
+    </ol>
+    which gives
+    \[11001\]
+    A Python implementation is given below:
+<pre><code class="language-python">def get_decimal_digits(d):
+  digits = []
+  while d != 0:
+    digits = [(d % 10)] + digits
+    d //= 10
+  return digits
+
+def get_binary_digits(d):
+  digits = []
+  while d != 0:
+    digits = [(d % 2)] + digits
+    d //= 2
+  return digits
+
+print(get_decimal_digits(521))
+print(get_binary_digits(25))</code></pre>
+    <li>Left-to-right:</li>
+    <ul>
+
+    <li>
+        The idea is that we want to write 25 as
+        \[25 = b_k2^k +b_{k-1}2^{k-1} + \cdots + b_12^1 + b_0\]
+        Are we able to figure out what \(k\) is? We can determine the <i>largest power of 2 that fits into 25,</i> which is \(2^4=16\). We still need to represent \(25-16=9\)
+    </li>
+    <li>
+        The largest power of 2 that can fit in 9 is \(2^3=8\). We then need to represent \(9-8=1\)
+    </li>
+    <li>
+        The largest power of 2 that can fit in 1 is \(2^0=1\). We are now done.
+    </li>
+    We have decomposed \(25\) into powers of 2. That is,
+    \[25 = 2^4 + 2^3 + 2^0 = 11001_\text{binary}.\]
+    </ul>
+</ul>
+For 8-bit binary numbers, the 0th digit is the sign and the other 7 bits are the quantity. For example,
+\[
+b_0b_1b_2b_3b_4b_5b_6b_7 = \begin{cases}
++(b_12^6 + b_22^5 + b_32^4+b_42^3 + b_52^2 + b_62^1 + b_7) & \text{if }b_0 = 0 \\
+-(b_12^6 + b_22^5 + b_32^4+b_42^3 + b_52^2 + b_62^1 + b_7) & \text{if }b_0 = 1
+\end{cases}
+\]
+This is not the only way to represent numbers. Different schemes exist for different types, though there are some standard conventions (i.e. IEEE 754 for floats).
+
+In Unicode, the first bit tells us whether we use ASCII characters (which we will use) or Unicode (which is more complicated).
+<h1 id="L3-characters">Characters and Strings</h2>
+The above discussion helps us understand how characters and strings are stored and worked with in C.  Consider the following program,
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main()
+{
+    char c = 'x';
+    printf("%c %d", c, (int)c);
+
+    return 0;
+}</code></pre>
+Notice that the program outputs <code>x 120</code>. This is because we can interpret <code>c</code> as a character, so it outputs <code>'x'</code>. Alternatively, we can interpret it as an integer, in which case it outputs its ASCII value <code>120</code>.
+
+We can store strings by writing
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main()
+{
+    char* s = "Hello, World!";
+    return 0;
+}</code></pre>
+where <code>s</code> is the address of the first character in the string (in this case, the address of 'H'). The last character in the string is <code>\0</code> (can otherwise write it as <code>0</code> or <code>NULL</code>). Therefore, the program is able to read off a string by going to the address of the first character, and moving down the table (which is where the other characters are stored) until the null character is found. Explicitly, this is stored in the memory table as (only showing part of the table)
+<table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">16</th>
+        <td><code>'H'</code></td>
+      </tr>
+      <tr>
+        <th scope="row">17</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">18</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">19</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">20</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">21</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">22</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">23</th>
+        <td>.</td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th scope="row"></th>
+        <td></td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <th scope="row">24</th>
+        <td><code>'e'</code></td>
+      </tr>
+      <tr>
+        <th scope="row">25</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">26</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">27</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">28</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">29</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">30</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">31</th>
+        <td>.</td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <th scope="row"></th>
+        <td></td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <th scope="row">32</th>
+        <td><code>'l'</code></td>
+      </tr>
+      <tr>
+        <th scope="row">33</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">34</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">35</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">36</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">37</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">38</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">39</th>
+        <td>.</td>
+      </tr>
+    </tbody>
+  </table>
+  Here, the dot is used to denote that it takes 8 bits (1 byte) to store each character.
+<div class="card">
+  <h2 class="card-header" id="L3-review">Warm Up Question</h5>
+  <div class="card-body">
+    Draw the corresponding memory table given the following program. Assume an integer takes up 4 bytes.
+
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main()
+{
+    int a = 5;
+    int b = 10;
+    int* p_a = 0;
+    p_a = &a;
+    b = *p_a;
+}
+</code></pre>
+<p>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#L3Example" role="button" aria-expanded="false" aria-controls="L3Example">
+    Show Solution
+  </a>
+</p>
+<div class="collapse" id="L3Example">
+  <div class="card card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Address</th>
+          <th scope="col">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1600</th>
+          <td><code>5</code> (<code>a</code> of type <code>int</code>)</td>
+        </tr>
+        <tr>
+          <th scope="row">1632</th>
+          <td><code>5</code> (<code>b</code> of type <code>int</code>)</td>
+        </tr>
+        <tr>
+          <th scope="row">1664</th>
+          <td><code>1600</code> (<code>p_a</code> of type <code>int*</code></td>
+        </tr>
+        <tr>
+          <th scope="row">1696</th>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+</div>
+Note that in the above example, not every address was written down. In C, every address is a byte. We can use the <code>sizeof</code> operator, which gives the size of an object. For example, <code>sizeof(int)</code> gives the size of an int and <code>sizeof(a)</code> gives the size of the variable <code>a</code>. The output is represented in bits. We can print this to console using <code>printf("%ud", sizeof(int))</code>.<br><br>
+
+Depending on your system, you may get a warning in the above print statements. This is because <code>sizeof</code> returns a <code>size_t</code> type, that could either be an unsigned integer or an unsigned long integer (depending on your system). You may choose to use <code>%lu</code> or <code>%zu</code> instead.
+<h2 id="L4-strings">Strings</h2>
+Recall that each character will always be 1 byte. The reason this is important is if we recall strings can be defined using a <i>pointer,</i><br><br>
+<pre><code class="language-C">char *s = "xyz";</code></pre>
+we get a memory table that looks like,<br><br>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Memory</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1824</th>
+      <td><code>'x'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1832</th>
+      <td><code>'y'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1840</th>
+      <td><code>'z'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1848</th>
+      <td><code>\0</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1856</th>
+      <td><code>1824</code> (<code>s</code> of type "address of char")</td>
+    </tr>
+  </tbody>
+</table>
+A few key observations:
+<ul>
+  <li>Each address can hold 1 byte and each character is 1 byte. Perfect!</li>
+  <li>The null character <code>\0</code> signifies the end of the string, so that we know when to stop. This is important, because we don't store the length anywhere!</li>
+  <li>We are using double quotes here. Double quotes automatically include the null character at the end.</li>
+  <li>The variable <code>s</code> gets stored elsewhere and is equal to the address of the first character.</li>
+  <li>The variable is placed somewhere in memory that is generally <i>not</i> the locals frame. However, most variables are typically stored in the main locals frame. This will be important in the next subsection where we will be also working with the locals frame of a particular function.</li>
+</ul>
+We can treat <code>s</code> as just any other variable! For example,<br><br>
+<pre><code class="language-C">printf("%c", *s);</code></pre>
+will print out <code>'x'</code>, and<br><br>
+<pre><code class="language-C">printf("%ld", (long int)s);</code></pre>
+will print <code>'1824'</code>.
+
+
 <h2 id="L5-swap">Swapping two integers</h2>
 <b>Problem:</b> Write a function to swap two integers.<br><br>
 
