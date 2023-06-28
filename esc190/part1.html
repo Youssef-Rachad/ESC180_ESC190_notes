@@ -188,14 +188,14 @@ The above code may give a warning (depends on system) that the formats that <cod
 
 <h2>Dereferencing Operator</h2>
 The dereferencing operator is given by <code>*</code> and acts on a memory address to get the value stored in memory at that address. For example, the code <code class="language-C">int value_of_a = *p_a;</code> tells us the program to get the value of <code>p_a</code> which is an address, then go to that address, and retrieve the value stored there. Suppose we run the code
-<pre><code class="language-C">#include &lt;stdio.h&gt
-    int main()
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main()
 {
-        int a = 42;
-        int* p_a = &a;
-        int b = *p_a;
-        return 0;
-    }</code></pre> we get the following memory table:<br><br>
+    int a = 42;
+    int* p_a = &a;
+    int b = *p_a;
+    return 0;
+}</code></pre> we get the following memory table:<br><br>
   <table class="table">
     <thead>
       <tr>
@@ -340,7 +340,7 @@ This is not the only way to represent numbers. Different schemes exist for diffe
 In Unicode, the first bit tells us whether we use ASCII characters (which we will use) or Unicode (which is more complicated).
 <h2 id="L3-characters">Characters and Strings</h2>
 The above discussion helps us understand how characters and strings are stored and worked with in C.  Consider the following program,
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int main()
 {
     char c = 'x';
@@ -351,7 +351,7 @@ int main()
 Notice that the program outputs <code>x 120</code>. This is because we can interpret <code>c</code> as a character, so it outputs <code>'x'</code>. Alternatively, we can interpret it as an integer, in which case it outputs its ASCII value <code>120</code>.
 
 We can store strings by writing
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int main()
 {
     char* s = "Hello, World!";
@@ -481,7 +481,7 @@ where <code>s</code> is the address of the first character in the string (in thi
   <div class="card-body">
     Draw the corresponding memory table given the following program. Assume an integer takes up 4 bytes.
 
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int main()
 {
     int a = 5;
@@ -534,7 +534,7 @@ Note that in the above example, not every address was written down. In C, every 
 Depending on your system, you may get a warning in the above print statements. This is because <code>sizeof</code> returns a <code>size_t</code> type, that could either be an unsigned integer or an unsigned long integer (depending on your system). You may choose to use <code>%lu</code> or <code>%zu</code> instead.
 <h2 id="L4-strings">Strings</h2>
 Recall that each character will always be 1 byte. The reason this is important is if we recall strings can be defined using a <i>pointer,</i><br><br>
-<pre><code class="language-C">char *s = "xyz"</code></pre>
+<pre><code class="language-C">char *s = "xyz";</code></pre>
 we get a memory table that looks like,<br><br>
 <table class="table">
   <thead>
@@ -582,7 +582,7 @@ will print <code>'1824'</code>.
 
 <h2 id="L4-functions">Changing Variables in Functions</h2>
 Suppose we have the following naive attempt at changing a variable through a function. We have,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 void f(int a) // NOTE: INCORRECT
 {
   a = 12;
@@ -645,7 +645,7 @@ Therefore, when variables are defined inside a function, they are stored in a di
 So how do we fix this?
 <br><br>
 The standard solution is to instead pass the value of <code>a</code> (or else the function will just create a copy of it), we pass in the address <code>&a</code>. The function does not need to change what this address is, but it can read off this value and go to the proper location in memory and modify it. The correct implementation is<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 void f(int* p_a)
 {
   *p_a = 12;
@@ -743,7 +743,7 @@ Because C gives us more freedom to work directly with the memory, we can do much
 <b>Problem:</b> Write a function to swap two integers.<br><br>
 
 Similar to the problem of changing the value of a variable, we need to pass in the address of two variables instead of the values. This tells the function where in the memory table to look in order to swap the two integers. We have,
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 void swap(int *p_a, int *p_b)
 {
   int temp = *p_a; // Create a temp variable in the function's local frame
@@ -774,7 +774,7 @@ There is one subtlety here, which we will see in the next section.
 An array is a block of memory containing a sequence of elements, of the same type. Arrays always have a pre-specified size. We can initialize an array using curly braces.<br><br>
 <pre><code class="language-C">int arr[5] = {1,2,3,4,5};</code></pre>
 This is unlike Python, where we do not need to specify a size, and arrays can dynamically change in size. If you are familiar with <code>numpy,</code> C arrays are much more similar to <code>numpy</code> arrays. We are allowed to retrieve and modify array elements,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int main()
 {
   int arr[5] = {1,2,3,4,5};
@@ -819,15 +819,16 @@ The first three lines in the main function will create the following memory tabl
 The <code>sizeof</code> operator gives how much space the variable takes up, in bytes. This means that <code>sizeof(arr[0])</code> will give 4 bytes, since <code>arr[0]</code> is an integer and <code>sizeof(arr)</code> will give 20 bytes, since 20 = 4 x 5, where 5 is the number of elements.<br><br>
 
 When passing an array to a function, it gets converted to a pointer. For example, if we have the function<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
-void set0(int *p_a)
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+void set_to_zero(int *p_a)
 {
   *p_a = 0; // p[0] = 0;
   printf("%ud\n", sizeof(p_a)); // prints 8
 }
+
 int main()
 {
-printf("%ud", 3);
+  printf("%ud", 3);
   int arr[5] = {1,2,3,4,5};
   printf("%d\n",arr[0]); // prints 1
   set0(arr);
@@ -843,7 +844,7 @@ There is one slight caveat here to any eagle-eyed student! When we worked with s
 Therefore, <code>*(arr+i)</code> and <code>arr[i]</code> will always be equivalent.
 <h2 id="L5-strings">Revisiting Strings</h2>
 We can initialize strings the same way we initialize arrays because of how similar they are. The following are equivalent:
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int main()
 {
   char arr1[4] = "uvw";
@@ -865,7 +866,7 @@ Alternatively, we can define arrays (and strings) without specifying a size via:
 The program will automatically determine how many entries this array has.<br><br>
 <h2 id="L5-arrays-in-functions">Arrays in Functions</h2>
 Initializing arrays inside functions is similar to initializing an integer inside a function, except we now allocate a block of memory. Here is incorrect code of how we can make an array.
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int *make_array_wrong()
 {
   int arr[5] = {1, 2, 3, 4, 5};
@@ -881,10 +882,10 @@ To properly do this, we need to allocate a block of memory on the heap (as oppos
 To do this, we can use the following notation:<br><br>
 <pre><code class="language-C">int *a = (int *)malloc(sizeof(int) * 12);</code></pre>
 where <code>a</code> is now a pointer to a block of memory of size <code>12 * sizeof(int)</code> bytes. This is enough space for 12 integers. Note that we need to cast the pointer to an integer pointer using <code>(int *)</code>, since <code>malloc</code> returns a void pointer (i.e. it just knows to create this much space in the memory table, but doesn't know what this space is used for). To create an array inside a function, we can use the following code,<br><br>
-<pre><code>#include &lt;stdio.h&gt
-#include &lt;stdlib.h&gt
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
-int *make_array_right()
+int *make_array_correctly()
 {
     int *a = (int *)malloc(5*sizeof(int));
     a[0] = 1;
@@ -910,7 +911,7 @@ It is also important to free the memory when we no longer need the variable. Thi
 <h1 id="L6">L6: More on Strings and Double Pointers</h1>
 <h2 id="L6-Changing-Strings">Editing Strings</h2>
 Recall that we can define strings in two ways. Both ways are similar, but there are key differences that are very important. Consider,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int main()
 {
   // Defining string using address of character
@@ -928,7 +929,7 @@ int main()
 The main difference is that when we are defining the string using the first method, the string is placed somewhere in memory that is generally not the locals frame and thus we are not allowed to change it, only read it. But defining it as an array does place it in the main locals frame, and thus we can change it like a regular array.<br><br>
 
 Because one is an array and the other is an address, their sizes are different as well. We can also define strings a third way, using <code>malloc</code>, which was briefly touched upon last lecture. We can have,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int main()
 {
   char *str3 = (char *)malloc(3*sizeof(char)); // same as malloc(3)
@@ -979,12 +980,13 @@ which will produce the following memory table,
   Remember that it is always best practice to free variables once they are no longer needed.
 <h2 id="L6-String-Functions">String in Functions</h2>
 Similar to arrays, we cannot create strings inside a function and return the address of the local variable. Consider the following code,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 char *make_string_wrong(int sz)
 {
   char str[sz];
   return str;
 }
+
 int main()
 {
   char *str = make_string_wrong(3);
@@ -992,7 +994,7 @@ int main()
   printf("%ud\n", str); // fine, prints the address where str used to be
 }</code></pre>
 Instead, we need to use <code>malloc</code> again. The following code works,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 char *make_string_right(int sz)
 {
   char *str = (char *)malloc(sz*sizeof(char));
@@ -1006,7 +1008,7 @@ int main()
 }</code></pre>
 <h2 id="L6-Double-Pointers">Double Pointers</h2>
 Consider the following code,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
 int main()
 {
   int *a = 0;
@@ -1055,8 +1057,8 @@ and we can work through the above computations:
 <h1 id="L7-Strings">L7: More Memory and String Operations</h1>
 <h2 id="L7-initializing-pointers">Initializing Pointers</h2>
 Consider the following code, which initializes a pointer in three different ways:<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
-#include &lt;stdlib.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main()
 {
@@ -1093,8 +1095,8 @@ Some comments about the above code:
   <li>If we tried to run <code>p_a++;</code> after the <code>malloc</code> instead, it will crash, since we only allocated enough memory for a single integer.</li>
 </ol>
 We can initialize double pointers the same way,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt
-#include &lt;stdlib.h&gt
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main()
 {
@@ -1107,7 +1109,10 @@ int main()
 }</code></pre>
 <h2 id="L7-strings">String Operations</h2>
 Consider the following function to print an array:<br><br>
-<pre><code class="language-C">void print_array(int *arr, int sz)
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void print_array(int *arr, int sz)
 {
   int i;
   for (i = 0; i &lt; sz; i++)
@@ -1115,7 +1120,8 @@ Consider the following function to print an array:<br><br>
     printf("%d ", arr[i]);
   }
   printf("\n");
-}</code></pre>
+}
+</code></pre>
 We can write something similar to print a string manually,
 <pre><code class="language-C">void manual_print_str(char *str)
 {
@@ -1161,7 +1167,15 @@ or if you want to show off,<br><br>
   }
   return length;
 }</code></pre>
-Here, <code>*str++</code> means first access <code>*str</code> then increment <str>str</str>. Here is a list of common shortcuts:
+<h1>L7.5 Increment and Decrement operators</h1>
+If we want to increase a numberical quantity by 1 we can do <code>foo = foo + 1</code> or even <code>foo += 1</code> and similarily for subtracting 1.
+However, this is done so often, especially in loops, that an operator is defined as a short hand.
+Note that the placement of the operator also introduces a subtlety: in what order do we access the variable and increment/decrement it?
+<ul>
+    <li><code>*foo++</code> means first access <code>*foo</code> then increment <code>foo</code>.</li>
+    <li></li>
+</ul>
+Here,  Here is a list of common shortcuts:
 <ol>
   <li><code>str++</code> puts <code>str + 1</code> into <code>str</code>, the value of <code>*str</code> is <code>str[0]</code></li>
   <li><code>*++a</code> means first increment <code>a</code> then access <code>*a</code></li>
@@ -1328,7 +1342,7 @@ When we call the function <code>print_uoft_student</code>, we pass in the entire
 <h2 id="L9-new-types">New Types</h2>
 In C, we can use <code>typedef</code> to define new custom types. This is useful if we have a boolean we definitely know is true or false but we're implementing it with an integer. Then we can write something like<br><br>
 <pre><code class="language-C">typedef int BOOL;</code></pre>
-which allows us to write <code>BOOL t=0;</code> And for our earlier example with UofT students, we can write<br><br>
+which allows us to write <code>BOOL t = 0;</code> And for our earlier example with UofT students, we can write<br><br>
 <pre><code class="language-C">typedef struct uoft_student uoft_student;</code></pre>
 So instead of writing <code>struct uoft_student</code> in the future, we only need to write <code>uoft_student</code>. An alternative way of writing this is built into the structure definition, i.e.<br><br>
 <pre><code class="language-C">typedef struct uoft_student{
@@ -1583,19 +1597,6 @@ int main()
 </div>
 </div>
 </div>
-<h2 id="L10-project-help">Header Files and Command Line</h2>
-First, how do we run C code through command line?
-<ol>
-  <li>Open up a terminal and make sure you are in the correct directory. To do so, you can type <code>ls</code> or <code>dir</code> to see subfolders and you can move between them by typing <code>cd folderName</code>. To go back, you can type <code>cd ..</code>. To see the full path of where you currently are, you can type <code>pwd</code>.</li>
-  <li>Now type  <code>gcc -Wall -std=c99 -o myprogram filename.c</code>. Here, <code>-Wall</code> tells the compiler to show all warnings, <code>-std=c99</code> tells the compiler to use the C99 standard, and <code>-o myprogram</code> tells the compiler to output the program as <code>myprogram</code>. You can name the program whatever you want, but it's good to name it something that is descriptive of what it does. On Windows, you will need to name it <code>myprogram.exe</code> instead.</li>
-  </li>
-  <li>On Linux or Mac, you can run the program by typing <code>./myprogram</code>. On Windows, you can run the program by typing <code>./myprogram.exe</code>.</li>
-</ol>
-Next, how do we use header files? Header files are a way to organize code. We can put all of our function and struct declarations in a header file, and then include it in our main program. This way, we can keep our code organized and we don't have to worry about forgetting to include a function or struct declaration in our main program. To do this, we can create a file called <code>my_struct.h</code> and put all of our declarations in there. Then, we can include it in our main program by typing <code>#include "my_strct.h"</code>.<br><br>
-
-<h1 id = "L11">L11+ Onwards</h1>
-See <a href="part2.html">Part 2</a>.
-<br><br><br><br><br>
 </div>
     </div>
   </body>
