@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCY17GV3DB');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date());
+    (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "//www.google-analytics.com/analytics.js",
+    "ga"
+  );
+
+  ga("create", "UA-19048260-11", "auto");
+  ga("send", "pageview");
+
+  hljs.highlightAll();
+
+  function goToTutor(){
+      encoded_code = encodeURIComponent(event.target.parentElement.querySelector("code").innerText);
+      url = `https://pythontutor.com/visualize.html#code=${encoded_code}&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=5&heapPrimitives=nevernest&origin=opt-frontend.js&py=c_gcc9.3.0&rawInputLstJSON=%5B%5D&textReferences=false`;
+      console.log('Are the headers included?: ', event.target.parentElement.querySelector("code").dataset.codeHeader, ' ok ', event.target.parentElement.querySelector("code").dataset);
+      window.open(url, '_blank').focus();
+  }
+
+</script>
+  </head>
+  <body data-bs-spy="scroll" data-target="#toc">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+      </div>
+      <div class="col-sm-9">
+
+
+<h1 id="-esc190-lecture-notes">ESC190 Lecture Notes: Part 1.5 LOL update this to 2 later<br> Metaprogramming</h1>
+    <p>See all lecture notes <a href="../">here</a>.</p>
+
+<h2>Command Line Compilation</h2>
+First, how do we run C code through command line?
+<ol>
+  <li>Open up a terminal and make sure you are in the correct directory. To do so, you can type <code>ls</code> or <code>dir</code> to see subfolders and you can move between them by typing <code>cd folderName</code>. To go back, you can type <code>cd ..</code>. To see the full path of where you currently are, you can type <code>pwd</code>.</li>
+  <li>Now type  <code>gcc -Wall -std=c99 -o myprogram filename.c</code>. Here, <code>-Wall</code> tells the compiler to show all warnings, <code>-std=c99</code> tells the compiler to use the C99 standard, and <code>-o myprogram</code> tells the compiler to output the program as <code>myprogram</code>. You can name the program whatever you want, but it's good to name it something that is descriptive of what it does. On Windows, you will need to name it <code>myprogram.exe</code> instead.</li>
+  </li>
+  <li>On Linux or Mac, you can run the program by typing <code>./myprogram</code>. On Windows, you can run the program by typing <code>./myprogram.exe</code>.</li>
+</ol>
+<h2>Header Files</h2>
+Next, how do we use header files? Header files are a way to organize code. We can put all of our function and struct declarations in a header file, and then include it in our main program. This way, we can keep our code organized and we don't have to worry about forgetting to include a function or struct declaration in our main program. To do this, we can create a file called <code>my_struct.h</code> and put all of our declarations in there. Then, we can include it in our main program by typing <code>#include "my_strct.h"</code>.<br><br>
+<h2>Introduction to Makefiles</h2>
+
+<h1 id = "L11">L11+ Onwards</h1>
+See <a href="part2.html">Part 2</a>.
+<br><br><br><br><br>
+
+
+<h1 id="L13">L13: Patch</h1>
+Refer to the pre-lecture code <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W05/patch.c">patch.c</a> and <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W05/patch.py">patch.py</a>
+<h2 id="L13-GDB">Using GDB</h2>
+First, compile <code>patch.c</code> and you should get an output file. See Lecture 10 for more information on compiling C code. After it is compiled, we can run
+<pre><code class="language-bash">gdb patch</code></pre>
+Then typing
+<pre><code class="language-bash">layout asm</code></pre>
+we are able to get the machine instructions that comprise the code. You don't need to worry about this right now, you'll learn about it in 2nd year ECE253 :) The only thing we need to understand is that the compiler is able to translate the C code into machine code, which gives very simple instructions.
+<h2 id="L13-changing-g">Changing a Function</h2>
+The goal of this exercise is to change the function <code>g</code> such that it behaves like the function <code>f</code>. They are defined as follows:
+<pre><code class="language-C">int f(int a, int b, int c)
+{
+    return a + b;
+}
+
+int g(int a, int b, int c)
+{
+    return a + c;
+}
+</code></pre>
+When looking at the machine instructions, I obtain the following snippet:
+<pre><code class="language-assembly">
+│   0x1189 &lt;f&gt;              endbr64
+│   0x118d &lt;f+4&gt;            push   %rbp
+│   0x118e &lt;f+5&gt;            mov    %rsp,%rbp
+│   0x1191 &lt;f+8&gt;            mov    %edi,-0x4(%rbp)
+│   0x1194 &lt;f+11&gt;           mov    %esi,-0x8(%rbp)
+│   0x1197 &lt;f+14&gt;           mov    %edx,-0xc(%rbp)
+│   0x119a &lt;f+17&gt;           mov    -0x4(%rbp),%edx
+│   0x119d &lt;f+20&gt;           mov    -0x8(%rbp),%eax
+│   0x11a0 &lt;f+23&gt;           add    %edx,%eax
+│   0x11a2 &lt;f+25&gt;           pop    %rbp
+│   0x11a3 &lt;f+26&gt;           retq
+│   0x11a4 &lt;g&gt;              endbr64
+│   0x11a8 &lt;g+4&gt;            push   %rbp
+│   0x11a9 &lt;g+5&gt;            mov    %rsp,%rbp
+│   0x11ac &lt;g+8&gt;            mov    %edi,-0x4(%rbp)
+│   0x11af &lt;g+11&gt;           mov    %esi,-0x8(%rbp)
+│   0x11b2 &lt;g+14&gt;           mov    %edx,-0xc(%rbp)
+│   0x11b5 &lt;g+17&gt;           mov    -0x4(%rbp),%edx
+│   0x11b8 &lt;g+20&gt;           mov    -0xc(%rbp),%eax
+│   0x11bb &lt;g+23&gt;           add    %edx,%eax
+│   0x11bd &lt;g+25&gt;           pop    %rbp
+│   0x11be &lt;g+26&gt;           retq
+</code></pre>
+Some brief comments about this structure:
+<ul>
+  <li>Each line is an instruction. Each byte of instruction is stored in a different location in memory. The first set of characters represent the memory in hexadecimal.</li>
+  <li>The <code>mov</code> command moves data from one location to another. The first argument is the destination, the second argument is the source.</li>
+  <li>In GDB, we can display the value at an address with the command <code>x 0x119d</code>, which in this particular example gives <code>0x119d &lt;f+20&gt;:  0x01f8458b</code>. The hexadecimal number 0x01f8458b encodes the instructions for that line. We can display it as a decimal if we do <code>x/d 0x119d</code> which outputs <code>0x119d &lt;f+20&gt;:  33047947</code></li>
+</ul>
+If we compare the machine code for both functions, they differ by only one line! Compare &lt;f+20&gt; with &lt;g+20&gt;. If we wish to modify <code>g</code> such that it acts like <code>f</code>, we just need to change what this one line does in memory. This is done using the following code. Consider,
+<pre><code class="language-C">void patch(int (*h)(int, int, int))
+{
+    *(int *)((void*)h + 20 )  = 33047947; //0x01f8458b;
+}
+</code></pre>
+Here is what this function does:
+<ol>
+  <li>It takes in the pointer to a function. Recall that if we want to modify <code>int a = 5;</code> inside a function, we need to pass in the address. The same goes here if we want to modify a function.</li>
+  <li>We cast the pointer to a void pointer (i.e. not associated with any data type) using <code>(void*)h</code>.</li>
+  <li>Note that <code>(void*)h</code> is the address of the start of the function. To get to the part of the function or instructions we actually want to change, we need to increment the address by 20 bytes (which we said earlier was the only place that it differed from <code>f</code>).</li>
+  <li><code>(void*)h + 20</code> is a void pointer that points to the line of instruction we want to change. But we've seen that instructions are encoded by a number, so we need to cast this to an int pointer via <code>(int *)((void*)h + 20)</code>.</li>
+  <li>We've seen that the instruction we want to change this to can be represented as an integer as <code>33047947</code>, so we write this into memory at this address.
+    <ul>
+      <li>Clarification: Note that an integer is 4 bytes but the instruction at <code>0x11b8 &lt;g+20&gt;</code> is 3 bytes, since the next instruction is at <code>0x11b8 &lt;g+20&gt;</code>. The reason this still works is because the instruction at <code>0x11bb &lt;g+23&gt;</code> and <code>0x11a0 &lt;f+23&gt;</code> is the same, so the 4th byte will be overwritten with a byte that is equal to it.
+      </li>
+
+    </ul>
+  </li>
+</ol>
+Note that this particular example is not very useful, as it's not a good practice and very difficult to debug, hopefully for obvious reasons. Sometimes it's done for optimizations, but we don't need to worry about that.
+<h2 id="L13-python-weirdness">Python Memory Model Weirdness</h2>
+Consider the following code,
+<pre><code>import ctypes
+
+def change_float(x):
+    # Go to the memory address of x and change the value there
+    pointer = ctypes.c_void_p(id(x))
+    float_pointer = ctypes.cast(pointer, ctypes.POINTER(ctypes.c_double))
+    float_pointer[2] = 12.0
+
+
+
+if __name__ == '__main__':
+    x = 11.0
+    change_float(x)
+    print(x) # 12.0
+    print(x == 11.0) # True
+    print(11.0 == 12.0) # True
+    print(10+1.0 < 10+2.0) # False
+</code></pre>
+Surprisingly, this prints<pre><code class="language-bash">12.0
+True
+True
+</code></pre>
+As a quick reminder, in Python, variables are essentially just names that are bound to objects. When you pass a variable to a function in Python, what is actually passed is a reference to the object, rather than a copy of the object itself. The code works via,
+<ol>
+  <li>Inside the function, the <code>id</code> function is used to get the memory address of the object, and uses the <code>ctypes</code> module to cast that memory address to a pointer to a <code>ctypes.c_double</code> type. There is some nomenclature confusions here,
+  <ul>
+    <li>In C, a <code>double</code> is a double-precision floating point number (usually 64 bits) while a <code>float</code> is a single-precision floating point number (usually 32 bits)</li>
+    <li>In Python, a float is the same as a double in C.</li>
+  </ul>
+  </li>
+  <li>
+    The line <code>float_pointer[2] = 12.0</code> is setting the value stored at the memory location pointed to by float_pointer to be <code>12.0</code>.
+  </li>
+  <li>
+    This line of code modifies the memory of the float object that was passed to the change_float function, so that the address at which the values <code>x</code> and <code>12.0</code> are stored, is the same, so <code>x == 12.0</code> and their values are equal. However, the object <code>x</code> and <code>11.0</code> are identical (i.e. they have the same id so Python doesn't both checking their actual values), so we also have <code>x == 11.0</code> and <code>11.0 == 12.0</code> (since 11.0 is the same object as <code>x</code>).<br><br>
+
+    Note that the memory representation of an object is the way that the value of the object is stored in computer memory, while the id is a unique identifer that is assigned to each object. Two objects could have different ids but the same memory representation. The reason this is allowed is because the <code>ctypes</code> module is allowing the user to bypass Python's memory management and directly access memory, which is not typically recommended or necessary.
+  </li>
+  <li>The reason the last three lines work is that the 11.0 literal is mapped to refer to a single id address since it appears in the code several times. So <code>print(10+1.0 < 10+2.0)</code> will still print False.</li>
+</ol>
+It's important to recognize that this is not recommended for general use, as it relies on implementation-specific details and can lead to unexpected behavior and make the code difficult to understand and maintain. It's best to stick to the standard Python operations and data structures, which provide a more predictable and stable behavior.<br><br>
+
+What do I need to know and don't know?
+<ul>
+  <li>Know: Python and C memory model</li>
+  <li>Don't Know: Machine Code and how to use <code>ctypes</code> in Python</li>
+</ul>
+<h1 id="L14">L14: Python Memory Model and Valgrind</h1>
+<h2 id="L14-memory-model">Python Memory Model</h2>
+Let us review the previous section on the Python memory model and refer to the previous code. When we assign values to variables, we create a variable table and a memory table. So <code>x = 11.0</code> will give us
+<pre>-----------
+Variable Table
+x | @1032
+-----------
+Memory Table
+%1032 | 11.0
+-----------
+</pre> and after <code>change_float(x)</code> is ran, we get the following tables:
+<pre>-----------
+Variable Table
+x | @1032
+-----------
+Memory Table
+%1032 | 12.0
+-----------
+</pre>
+Here, the address of <code>x</code> has not changed, but the value at the address that <code>x</code> refers to has changed to <code>12.</code> When variables are passed to functions in Python, we always pass through the address of the variable, so this is analogous to C, where we pass in a pointer and change the value at that address. Usually, this doesn't matter that much because most objects are <b>immutable,</b> which means that they cannot be changed once they are created and re-assigning the variable to refer to a new address in memory. But with <code>ctypes</code>, we can make Python variables behave more like how they would in C, but there really isn't a lot of applications besides for pedagogical purposes.
+<br><br>
+Another important feature of Python is that when the code runs, it first scans the entire code for <b>literals.</b> Anytime it sees a literal and the literal is repeated, it maps it to the same memory location. This is done for optimization purposes, as literals are immutable. This is why using <code>ctypes</code> can lead to some counterintuitive behaviour.
+<br><br>
+This is why when we run <code>print(11.0)</code> it prints out <code>12.0</code>, as it is getting the ID of the literal <Code>11.0</Code> going to the corresponding address, but we overwrote the value at that address as <code>12.0</code>, which is what it will print out. So even something like <code>10.0 + 2.0 == 11.0</code> will still return <code>TRUE</code> since the address that the literal <code>11.0</code> refers to stores the value <code>12.0.</code>
+<br><br>
+However, <pre><code class="language-python">x = 5
+y = 7
+x1 = 6
+print(x + y == x1 + y)
+</code></pre>
+will give us <code>False</code> because these are no longer connected to the literal <code>11.0</code> which is what started this whole mess.
+<h2 id="L14-valgrind">Valgrind</h2>
+We can use valgrind to debug problems with memory issues. There are four ways to run valgrind:
+<ul>
+  <li>Linux: Can be installed</li>
+  <li>Windows: Install Windows Subsystem for Linux (WSL): <a href="https://learn.microsoft.com/en-us/windows/wsl/install">See here.</a></li>
+  <li>Any computer: Connect to the ECF Linux machines</li>
+  <li>Gradescope: There is a "test" assignment on gradescope which will run Valgrind for you.</li>
+</ul>
+Consider the following two programs,
+<pre><code class="language-C">#include &lt;stdio.h&gt
+#include &lt;stdlib.h&gt
+
+int main(){
+    char a[6] = "EngSci";
+    printf("%c", a[1000000]);
+}
+</code></pre>
+<pre><code class="language-C">#include &lt;stdio.h&gt
+#include &lt;stdlib.h&gt
+
+int main(){
+    char *p = malloc(1000000);
+    return 0;
+}</code></pre>
+There are two issues with it:
+<ul>
+  <li>Undefined behaviour: The program tries to access a memory location that is out of bounds. The array <code>a</code> has a size of 6, and accessing an index that is out of bounds leads to undefined behavior, and in this case, it results in a segmentation fault.</li>
+  <li>Memory leak: The program allocates memory using the <code>malloc</code> function but does not free it, leading to a memory leak.</li>
+</ul>
+We can run valgrind by first compiling the first program, then running:
+<pre><code class="language-bash">valgrind ./file_name</code></pre>
+On my system, I get the following message:
+<pre>==3274== Memcheck, a memory error detector
+==3274== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==3274== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==3274== Command: ./test_valgrind
+==3274==
+==3274== Invalid read of size 1
+==3274==    at 0x109191: main (in /home/xueqilin/esc190_notes/test_valgrind)
+==3274==  Address 0x1fff0f3862 is not stack'd, malloc'd or (recently) free'd
+==3274==
+==3274==
+==3274== Process terminating with default action of signal 11 (SIGSEGV)
+==3274==  Access not within mapped region at address 0x1FFF0F3862
+==3274==    at 0x109191: main (in /home/xueqilin/esc190_notes/test_valgrind)
+==3274==  If you believe this happened as a result of a stack
+==3274==  overflow in your program's main thread (unlikely but
+==3274==  possible), you can try to increase the size of the
+==3274==  main thread stack using the --main-stacksize= flag.
+==3274==  The main thread stack size used in this run was 8388608.
+==3274==
+==3274== HEAP SUMMARY:
+==3274==     in use at exit: 0 bytes in 0 blocks
+==3274==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==3274==
+==3274== All heap blocks were freed -- no leaks are possible
+==3274==
+==3274== For lists of detected and suppressed errors, rerun with: -s
+==3274== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+Segmentation fault
+</pre>
+This error message tells us that the error occurred in the main function, and it was an invalid read of size 1. The program tried to read from the memory location at address 0x1fff0f3862, which was not a valid location. If we run the VS Code Debugger, it will also automatically perform post-mortem debugging and tell us the line where the segmentation fault occurs. Running valgrind on the second program gives
+<pre>==3471== Memcheck, a memory error detector
+==3471== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==3471== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==3471== Command: ./test_valgrind
+==3471==
+==3471==
+==3471== HEAP SUMMARY:
+==3471==     in use at exit: 1,000,000 bytes in 1 blocks
+==3471==   total heap usage: 1 allocs, 0 frees, 1,000,000 bytes allocated
+==3471==
+==3471== LEAK SUMMARY:
+==3471==    definitely lost: 1,000,000 bytes in 1 blocks
+==3471==    indirectly lost: 0 bytes in 0 blocks
+==3471==      possibly lost: 0 bytes in 0 blocks
+==3471==    still reachable: 0 bytes in 0 blocks
+==3471==         suppressed: 0 bytes in 0 blocks
+==3471== Rerun with --leak-check=full to see details of leaked memory
+==3471==
+==3471== For lists of detected and suppressed errors, rerun with: -s
+==3471== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</pre>
+which tells us how many bytes are lost. In real applications, this example is not particularly helpful to us as it only tells us thee memory that is lost at the end of the program, and most systems automatically clean up the memory once the program is finished running. However, for continuously running programs, it is important to make sure there are no memory leaks.
+
+<h1 id="L16">L16: Best Practices</h1>
+Follow these three principles:
+<ul>
+  <li>Break down each task into smaller sub-tasks</li>
+  <li>Test frequently WHILE you are writing the program</li>
+  <li>When debugging, debug line by line.</li>
+</ul>
+The examples in this lecture will attempt to demonstrate these practices. Just note that because of how the lecture is structured (i.e. it walks through the developement process), it is difficult to faithfully reflect the lecture.
+<h2 id="L16-example-15">Walkthrough of Lab Question</h2>
+This is question 2 of Lab 4. Suppose we have a text file that lists several (not necessarily the below) constants, i.e. \(g=9.8\), \(e=2.72\), \(G=0.0000000000667\), and \(pi=3.14\) and we wish to compute the sum. How can we do this?
+<br><br>
+
+We should always be thinking of how we can test our code throughout the process, so we should first create the text file that will contain a sample test case, saved as <code>data.txt</code><br><br> We will have it consist of a simpler file first, to make it test easier.
+<code>
+  <pre>
+1. g = 9.8
+2. e = 2.728
+3.</pre>
+</code>
+where I used numbers to represent line numbers. Here, I am deciding ahead of time I will always leave an empty line at the end. This choice is arbitrary, as long as we remain consistent. Now we should break it up into sub-tasks.
+<ol>
+  <li><b>Task 1:</b> First, we need to be able to extract the appropriate number from each line.<br><br>
+
+    We can write a function with signature <code>const char* get_double_str(const char* line)</code> where the <code>const</code> is optional, but is a good practice because it tells us that we should not be changing the contents of the string.<br><br> It is important to note that <code>const char*</code> is different from <code>char* const</code>. The first gives us a pointer to a const char (in this case), while the second gives us a constant pointer to a char (where the value being pointed to can change but the pointer can't).
+    <br><br> There are several ways to approach this:
+    <ol>
+      <li>Using <code>strtok()</code>. This works, but is a bit complicated in figuring out how it works.</li>
+      <li>Finding the equal sign and then skipping a space.</li>
+      <li>Finding the first digit.</li>
+    </ol>
+    We will choose this last approach because it is more robust (and avoids issues where there is no space after the equal sign). We do this by creating other subtasks:<Br><br>
+
+      <b>Subtask:</b> Checking if a character is a digit. We can do this via,
+      <pre><code class="c">int is_digit(char c)
+{
+    return c >= '0' && c <= '9';
+}
+</code></pre>
+which works because the ASCII values of the digits are in order. Before we move on, we can test this:<br><br>
+<pre><code class="c">int main()
+{
+    for(int c = '0'; c <= '9'; c++)
+    {
+        printf("%c is digit: %d. Another way to
+        compute the value: %d\n", c, (int)c, c-'0');
+    }
+    printf("Is 'a' a digit? %d\n", is_digit('a'));
+    printf("Is '0' a digit? %d\n", is_digit('0'));
+    printf("Is '9' a digit? %d\n", is_digit('9'));
+    printf("Is ' ' a digit? %d\n", is_digit(' '));
+    printf("Is '4' a digit? %d\n", is_digit('4'));
+}
+</code></pre>
+which gives us the output:<br><br>
+<pre>0 is digit: 48. Another way to compute the value: 0
+1 is digit: 49. Another way to compute the value: 1
+2 is digit: 50. Another way to compute the value: 2
+3 is digit: 51. Another way to compute the value: 3
+4 is digit: 52. Another way to compute the value: 4
+5 is digit: 53. Another way to compute the value: 5
+6 is digit: 54. Another way to compute the value: 6
+7 is digit: 55. Another way to compute the value: 7
+8 is digit: 56. Another way to compute the value: 8
+9 is digit: 57. Another way to compute the value: 9
+Is 'a' a digit? 0
+Is '0' a digit? 1
+Is '9' a digit? 1
+Is ' ' a digit? 0
+Is '4' a digit? 1</pre>
+
+Now, we can finish the function:<br><br>
+<pre><code class="c">const char* get_double_str(const char* line)
+{
+    while(!is_digit(*line) && *line != '\0')
+    {
+        line++;
+    }
+    return line;
+}
+</code></pre>
+which is motivated by moving the pointer until we find a digit, or until it reaches the null character. We can test this as well in our main function,<br><br>
+<pre><code class="c">printf("%s\n", get_double_str("pi = 3.14"));
+printf("%s\n", get_double_str("G = 0.0000000000667"));
+printf("%s\n", get_double_str("e = 2.728"));</code></pre>
+  </li>
+which gives us the desired output. At this point, we should also be thinking if we thought of all the test cases. It turns out one thing we didn't think of is dealing with negatives! We can fix this by modifying the <code>is_digit()</code> function to also check if the character is a negative sign, via the following:
+<pre><code class="c">int is_digit_or_minus(char c)
+{
+    return (c >= '0' && c <= '9') || (c == '-');
+}
+</code></pre>
+We would also need to test this new code to check if it actually detects the negative sign AND if it still works with the regular digits AND that it is reflected correctly in <code>get_double_str.</code> But since we already have code that tests these functions, we only need to make minor modifications! The full code and test cases will be included at the end of this section.</li>
+<li>
+<b>Task 2:</b> Next, we need to be able to convert the string to an actual float. There is a default function for this, <code>atof()</code>, but we will write our own function for practice. The idea behind our function is that it will first get the sign, then get the integer part of the float, then get the decimal portion. To get the integer part, we note that as an example,
+\[542 = 10 \cdot (10 \cdot 5 + 4) + 2\]
+</li>
+so we can work insides out: we multiply \(5\) by ten, then add \(4\). Then multiply the combined result by \(10\), then add on the next digit. This allows us to work from left to right. We can write a function to do this,<br><br>
+<pre><code class="c">double my_atof(const char *str)
+{
+    // First figure out the sign
+    int sign = 1;
+    if(*str == '-'){
+        sign = -1;
+        str++;
+    }
+
+    // str is now a string that starts with a digit
+    double integer_part = 0;
+    while(is_digit_or_minus(*str)){
+        integer_part = 10*integer_part + (*str - '0');
+        str++;
+    }
+
+    return sign * integer_part;
+}
+</code></pre>
+and of course, test this part out <i>before</i> we move on to the float part. This allows us to very early on identify if there is a problem with the integer part. If we don't test right now, and test later, then we don't know if the problem is with the integer part or the float part.<br><br>
+
+<b>Always test code you are able to test, before writing more code.</b><br><br>
+
+Now how can we deal with the fractional part? We can try breaking down the decimal \(0.123\) in a similar way, writing it as:
+\[0.123 = 1 \cdot 10^{-1} + 2 \cdot 10^{-2} + 3 \cdot 10^{-3}.\]
+If we can keep track of the current power of 10 (which decreases by a factor of 10 each time), then we can read from left to right and add on the appropriate terms to the fractional part.
+
+This gives us,
+<pre><code class="c">double my_atof(const char *str)
+{
+    // First figure out the sign
+    int sign = 1;
+    if(*str == '-'){
+        sign = -1;
+        str++;
+    }
+
+    // str is now a string that starts with a digit
+    double integer_part = 0;
+    while(is_digit_or_minus(*str)){
+        integer_part = 10*integer_part + (*str - '0');
+        str++;
+    }
+
+    // Now we potentially have a fractional part
+    // Assume there is always a decimal point
+    str++; // Skip the decimal point
+
+    double fractional_part = 0;
+    double cur_pow10 = 0.1;
+    while(*str != '\0'){
+        fractional_part += (*str - '0') * cur_pow10;
+        cur_pow10 *= 0.1;
+        str++;
+    }
+
+    return sign * (integer_part + fractional_part);
+}</code></pre>
+which we should also test.
+</ol>
+We can now combine everything together.
+<pre><code class='c'>void print_sum_of_constants(const char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    if(fp == NULL){
+        printf("Error opening file %s\n", filename);
+        return;
+    }
+
+    double sum = 0;
+    char line[100]; // Assume no line is longer than 100 characters
+    while(fgets(line, 100, fp) != NULL){
+        const char *double_str = get_double_str(line);
+        sum += my_atof(double_str);
+    }
+
+    printf("Sum of constants in %s is %f\n", filename, sum);
+}</code></pre>
+However, if we try to this this code, we get \(12.148\) instead of \(12.528\). We can debug this by tracing the code line by line, and we will realize that we are not exiting the while loop correctly when computing the fractional part. We are only exiting it when we reach the null character, but we should also exit it when we reach the end of the line. We can fix this by changing it to
+<pre><code class='c'>while(*str != '\0' && *str != '\n'){
+  fractional_part += (*str - '0') * cur_pow10;
+  cur_pow10 *= 0.1;
+  str++;
+}</code></pre>
+and now it will work. See <a href="data.txt">data.txt</a> and <a href="read_doubles.c">read_doubles.c</a> for the full code and test cases.
+<h1 id="L17">L17: Memory Model Review for Structs</h1>
+Consider the following code, which creates a student struct and attempts to change the name:
+<pre><code class="C">#include &lt;stdio.h&gt
+#include &lt;string.h&gt
+
+typedef struct student1{
+    char name[3];
+    int age;
+} student1;
+
+void change_name_wrong(student1 s)
+{
+    s.name[0] = 'a';
+}
+
+void change_name_right_a(student1 *p_s)
+{
+    p_s->name[0] = 'b';
+}
+
+void change_name_right_b(student1 *p_s)
+{
+    strcpy(p_s->name, "c");
+}
+
+int main(){
+    student1 s = {"x", 20};
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_wrong(s);
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_right_a(&s);
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_right_b(&s);
+    printf("%s %d", s.name, s.age);
+}</code></pre>
+This will create the following memory table after calling <code>change_name_wrong()</code>.
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>'a','\0',[],[]</code> // function: s (temporary, created in <code>change_name_wrong</code> and lost after function call)</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td><code>20</code></s></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'x','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+where the <code>[]</code> represents padding (see lecture 10). After running <code>change_name_right_a()</code> we get the following memory table:
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>64</code> // function: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'b','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+After running <code>change_name_right_b()</code> we get the following memory table:
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>64</code> // function: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'c','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">76</th>
+      <td><code>'c','\0'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">80</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+Note that in this function, the function first creates <code>'c','\0'</code> somewhere in memory and then uses the <code>strcpy</code> function to copy the string to the address of <code>s.name</code>. It is also important to remember that
+<h2 id="L17-equivalent">C equivalent of Python Code</h2>
+Suppose we have the following Python code:
+<pre><code class="python">def change_name(s):
+  s[0] = "b"
+
+if __name__ == '__name__':
+  s = ["x", 20]
+  change_name(s)
+</code></pre>
+How could we do the same thing in C? It is important to remember that in Python we are always dealing with addresses, we need to reflect this in our C code,
+<pre><code class="C">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+typedef struct student2{
+    char *name;
+    int *p_age;
+} student2;
+
+void change_name(student2 *p_s)
+{
+    p_s->name = "b";
+}
+int main(){
+    student2 *p_s = (student2*)malloc(sizeof(student2));
+
+    // Create a temporary student2
+    int *p_age = (int*)malloc(sizeof(int));
+    *p_age = 20;
+    student2 temp = {"x", p_age};
+
+    // Copy the temporary student2 into p_s
+    memcpy(p_s, &temp, sizeof(student2));
+
+    printf("%s %d\n", p_s->name, *(p_s->age));
+
+    change_name(p_s);
+    printf("%s %d\n", p_s->name, *(p_s->age));
+
+}</code></pre>
+which corresponds to the following memory table after properly setting up the structure.
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td>108 // temp.name</td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td>120 // temp.p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">76</th>
+      <td>56 // main: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">80</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">84</th>
+      <td>120 // main: p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">88</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">92</th>
+      <td>108 // temp.name</td>
+    </tr>
+    <tr>
+      <th scope="row">96</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">100</th>
+      <td>120 // temp.p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">104</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">108</th>
+      <td><code>'x','\0'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">112</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">116</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">120</th>
+      <td>20</td>
+    </tr>
+  </tbody>
+</table>
+Now we can change the name of the student in the <code>change_name</code> function. We pass in <code>p_s</code> which is <code>56</code>, the address where the student is stored. We then access the name of the student via <code>p_s->name</code> and set it equal to <code>"b"</code>. Note that if we wrote <code>'b'</code> instead, there would be a segmentation fault when we try to later print it, since <code>'b'</code> corresponds to a character and <code>"b"</code> corresponds to an address (i.e. it points to the first character of a string).
+
+</div>
+    </div>
+  </body>
+</html>
