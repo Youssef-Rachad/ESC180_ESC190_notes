@@ -1,0 +1,19 @@
+{
+    "part1":{
+        "lecture1":{
+            "text":"
+            #include <stdio.h>
+int main()
+{
+    int a = 42; // Need to initialize the type of variable
+    a = 43; // Changing the value of an already initialized variable
+    // a = "hi"; will give an error or warning!
+
+    printf("%d\n", a); // Prints 43
+
+    return 0;
+}
+            "
+        }
+    }
+}
