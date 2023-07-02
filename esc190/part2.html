@@ -95,9 +95,182 @@
 <h1 id="-esc190-lecture-notes">ESC190 Lecture Notes: <br> Meta Programming</h1>
     <p>See all lecture notes <a href="../">here</a>.</p>
 
-<h1>Command Line Compilation</h1>
-<h2>Basic Command</h2>
-<h2>Exectuables</h2>
+    <h1 id="foreword">Foreword</h1>
+There are 2 dominant operating system types which present major differences in the command run and the programs used.
+First there is UNIX, which comprises of Apple and Linux machines.
+Then there is MSDOS, which comprises of Windows machines. (Note that Windows computers support UNIX commands through Powershell or by installing WSL Linux)
+<h1 id="file-system">File System</h1>
+<h2 id="unix-machines-and-wsl">UNIX machines and WSL</h2>
+Open your terminal and follow along. There's a good chance you'll open onto the home directory (<code>yourname/~</code>). You can double check this by running <code>pwd</code>.
+From here let's make an ESC190 folder: <code>mkdir esc190</code>
+Now let's navigate to it: <code>cd esc190</code> and list the files inside using <code>ls</code> (It should return empty since there are no files in our folder yet)
+<br>We can create a file in a few ways
+<ul>
+<li><code>touch FILENAME</code> creates an empty file </li>
+<li>Use your text editor, such as textedit, gedit, vscode or vim</li>
+</ul>
+For this example, let's write an easy hello world:
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main()
+{
+  printf("Hello ESC190!\n");
+  return 0;
+}
+</code></pre>
+Once you've created a file and saved it, return to your terminal and run <code>ls</code> again. Ta-Da we can see our file in the directory.
+Take some time to familiarise yourself with these commands and search online for a deeper understanding.
+<h2 id="msdos-machines">MSDOS machines</h2>
+Open your terminal and follow along. There's a good chance you'll open onto the home directory (<code>Users/yourname</code>). You can double check this by running <code>pwd</code>.
+Note that if you use Powershell, the above section can be useful as it supports UNIX commands
+From here let's make an ESC190 folder: <code>mkdir esc190</code>
+Now let's navigate to it: <code>cd esc190</code> and list the files inside using 'dir' (It should return empty since there are no files in our folder yet)
+We can create a file in a few ways
+<ul>
+<li><code> type FILENAME</code>creates an empty file </li>
+<li>Use your text editor, such as textedit, gedit, vscode or vim</li>
+</ul>
+For this example, let's write an easy hello world (I will call the file <code>main.c</code> but you can choose another name):
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main()
+{
+  printf("Hello ESC190!\n");
+  return 0;
+}
+</code></pre>
+Once you've created a file and saved it, return to your terminal and run <code>dir</code> again. Ta-Da we can see our file in the directory.
+Take some time to familiarise yourself with these commands and search online for a deeper understanding.
+<h1 id="compilation">Compilation</h1>
+<ul>
+<li>Now that we have a program in C, let's see (no pun intended) how to compile it.</li>
+</ul>
+<h2 id="unix-machines-and-wsl">UNIX machines and WSL</h2>
+<ul>
+<li>Open your terminal in the same directory as your C program (recall you can run 'ls' to check if the file is in your folder).</li>
+<li>The C compiler that is installed for Apple machines is called clang, and the one for Linux is called gcc. I will refer to both as \<compiler\></li>
+<li>Execute '\<compiler\> -o main main.c' (change 'main' to match your filename)<ul>
+<li>the o flag ('-o' in '-o main') tells the compiler that we want to name our executable 'main'.</li>
+</ul>
+</li>
+<li>Run 'ls' to see the compiled program. On my computer it is 'main'.</li>
+<li>To execute the compiled program run './main'.</li>
+</ul>
+<h2 id="windows-machines">Windows machines</h2>
+<ul>
+<li>Open your terminal in the same directory as your C program (recall you can run 'dir' to check if the file is in your folder).</li>
+<li>OH BOY, I hate mingw so much</li>
+<li>Execute 'gcc -o main main.c' (change 'main' to match your filename)<ul>
+<li>the o flag ('-o' in '-o main') tells the compiler that we want to name our executable 'main.out'.</li>
+</ul>
+</li>
+<li>Run 'dir' to see the compiled program. On my computer it is 'main.out'.</li>
+<li>To execute the compiled program run './main.out'.</li>
+</ul>
+<h1 id="header-files">Header Files</h1>
+<ul>
+<li>In programming, it is often useful to separate out code into files and import them.</li>
+<li>For this example, let's create a library for converting fahrenheit to Celsius.</li>
+<li>First, let's define the header file <code>conversion_temp.h</code>:
+<pre><code class="language-C">#ifndef CONVERSION
+#define CONVERSION
+
+float convertFtoC(float fahrenheit);
+#endif // CONVERSION
+</code></pre>
+<li>Then, let's implement 'convertFtoC' in <code>conversion_temp.c</code>: </li>
+</ul>
+<pre><code class="language-C">float convertFtoC(float fahrenheit)
+{
+        return (fahrenheit - 32) * 5 / 9;
+}</code></pre>
+
+And finally, update our main file:
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include "conversion_temp.h"; // path to header file
+int main()
+{
+  float temp = convertFtoC(68);
+  printf("It's %f degrees outside\n", temp);
+  printf("Hello ESC190!\n");
+  return 0;
+}
+</code></pre>
+Now, how do we compile our code? running 'gcc -o main main.c' fails because we didn't tell the compiler to include the header file. What's more, we need to tell the compiler that we defined 'convertFtoC' in conversion_temp.h and that we implemented it in conversion_temp.c.
+Instead, execute: 'gcc -o main main.c conversion_temp.c'
+Some motivation behind this is that C only allows for imports in header files.
+<h1 id="compilation-flags">Compilation Flags</h1>
+We saw in the previous example the o flag used '-o'.
+These flags inform the compiler about our program and the way we want to build our executable.
+This gets interesting when we want to write better and safer code.
+<ul>
+<li><code>-Wall</code> prints all warnings</li>
+<li><code>-Wpedantic</code> gives more information about warnings </li>
+<li><code>-Werror</code> treats warnings as errors. Note under this flag we should declare <code class="language-C">int main(void){...}</code>, make sure to add this.</li>
+</ul>
+<h1 id="introduction-to-makefiles-optional-">Introduction to Makefiles (optional)</h1>
+<ul>
+<li>All this compilation can get tedious. We can write a makefile to make this process automatic.</li>
+<li>This section assumes you have make or cmake installed already (for now)</li>
+<li>We can write a basic Makefile for our example above in a 'Makefile' file
+<pre><code class="language-make">CC       = gcc # or clang, depends on the compiler you use
+CFLAGS   = -Wall -Werror -Wpedantic # compilations flags
+TARGET   = main
+OBJFILES = conversion_temp.c main.c
+
+all: $(TARGET)
+
+$(TARGET): $(OBJFILES)
+    $(CC) $(CFLAGS) -o $(TARGET) $(OBJFILES)
+</code></pre>
+<ul>
+<li>NOTE that tabs must be used (not spaces). Why? Who would do this? It hurts inside.</li>
+<li>This becomes especially useful for a quick way to run tests during projects.</li>
+<li>Consider the following structure
+<pre>
+my_project_in_esc190/
+|- main.c
+|- conversion_temp.h
+|- conversion_temp.c
+|- tests/
+   |- tests_header.h
+   |- test_1.c
+   |- test_2.c
+</pre>
+<li>We would normally have to compile, for each test, the following way: <code>gcc -o testing_1 ./test_1.c main.c</code></li>
+<li>using a makefile, we write
+</ul>
+<pre><code class="language-make">CC       = gcc # or clang, depends on the compiler you use
+CFLAGS   = -Wall -Werror -Wpedantic # compilations flags
+TARGET   = main
+OBJFILES = conversion_temp.c main.c
+all: $(TARGET)
+
+$(TARGET): $(OBJFILES)
+    $(CC) $(CFLAGS) -o $(TARGET) $(OBJFILES)
+
+test1: $(OBJFILES) test_1.c
+    $(CC) $(CFLAGS) -o test1 $(OBJFILES) test_1.o &amp;&amp; test1
+
+test2: $(OBJFILES) test_2.c
+    $(CC) $(CFLAGS) -o test2 $(OBJFILES) test_2.o &amp;&amp; test2
+
+testall: test1 test2</code></pre>
+<ul>
+<li>Now, executing 'make testall' in terminal will execute all test cases in one command!</li>
+</ul>
+<h1 id="patch">Patch</h1>
+<h2 id="gdb">GDB</h2>
+<ul>
+<li>The debugger is your best friend, here is a short introduction to command line debugging</li>
+</ul>
+<h2 id="valgrind">Valgrind</h2>
+<ul>
+<li>Valgrind is your best friend who never forgets about you ... or the memory you allocated.</li>
+<li>Execute
+<pre><code class="hljs-bash">valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes main
+</code></pre> to see a report and catch memory leaks.
+</li>
+</ul>
+<!--
 <h2>Compilation Flags</h2>
 First, how do we run C code through command line?
 <ol>
@@ -109,7 +282,7 @@ First, how do we run C code through command line?
 <h1>Header Files</h1>
 Next, how do we use header files? Header files are a way to organize code. We can put all of our function and struct declarations in a header file, and then include it in our main program. This way, we can keep our code organized and we don't have to worry about forgetting to include a function or struct declaration in our main program. To do this, we can create a file called <code>my_struct.h</code> and put all of our declarations in there. Then, we can include it in our main program by typing <code>#include "my_strct.h"</code>.<br><br>
 <h1>Introduction to Makefiles</h1>
-
+-->
 <h1 id="L13">L13: Patch</h1>
 Refer to the pre-lecture code <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W05/patch.c">patch.c</a> and <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W05/patch.py">patch.py</a>
 <h2 id="L13-GDB">Using GDB</h2>
