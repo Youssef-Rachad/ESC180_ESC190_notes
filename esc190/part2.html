@@ -73,9 +73,17 @@
   ga("send", "pageview");
 
   hljs.highlightAll();
+
+  function goToTutor(){
+      encoded_code = encodeURIComponent(event.target.parentElement.querySelector("code").innerText);
+      url = `https://pythontutor.com/visualize.html#code=${encoded_code}&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=5&heapPrimitives=nevernest&origin=opt-frontend.js&py=c_gcc9.3.0&rawInputLstJSON=%5B%5D&textReferences=false`;
+      console.log('Are the headers included?: ', event.target.parentElement.querySelector("code").dataset.codeHeader, ' ok ', event.target.parentElement.querySelector("code").dataset);
+      window.open(url, '_blank').focus();
+  }
+
 </script>
-</head>
-<body data-bs-spy="scroll" data-target="#toc">
+  </head>
+  <body data-bs-spy="scroll" data-target="#toc">
   <div class="container">
     <div class="row">
       <div class="col-sm-3">
@@ -84,714 +92,768 @@
       <div class="col-sm-9">
 
 
-<h1 id="-esc190-lecture-notes">ESC190 Lecture Notes: Part 2<br> Data Structures and Basic Algorithms</h1>
+<h1 id="-esc190-lecture-notes">ESC190 Lecture Notes: <br> Meta Programming</h1>
     <p>See all lecture notes <a href="../">here</a>.</p>
-    </p>
 
-<h1 id = "L11">L11: Sorting</h1>
-<h2 id="L11-qsort">qsort</h2>
-C has a built-in function called qsort that can be used to sort an array of elements. The function takes in 4 arguments:
+<h1>Command Line Compilation</h1>
+<h2>Basic Command</h2>
+<h2>Exectuables</h2>
+<h2>Compilation Flags</h2>
+First, how do we run C code through command line?
 <ol>
-    <li>The array to be sorted</li>
-    <li>The number of elements in the array</li>
-    <li>The size of each element in the array</li>
-    <li>A function that compares two elements in the array. It should return</li>
-    <ul>
-        <li>A negative number if the first element is smaller than the second element</li>
-        <li>0 if the two elements are equal</li>
-        <li>A positive number if the first element is larger than the second element</li>
-    </ul>
+  <li>Open up a terminal and make sure you are in the correct directory. To do so, you can type <code>ls</code> or <code>dir</code> to see subfolders and you can move between them by typing <code>cd folderName</code>. To go back, you can type <code>cd ..</code>. To see the full path of where you currently are, you can type <code>pwd</code>.</li>
+  <li>Now type  <code>gcc -Wall -std=c99 -o myprogram filename.c</code>. Here, <code>-Wall</code> tells the compiler to show all warnings, <code>-std=c99</code> tells the compiler to use the C99 standard, and <code>-o myprogram</code> tells the compiler to output the program as <code>myprogram</code>. You can name the program whatever you want, but it's good to name it something that is descriptive of what it does. On Windows, you will need to name it <code>myprogram.exe</code> instead.</li>
+  </li>
+  <li>On Linux or Mac, you can run the program by typing <code>./myprogram</code>. On Windows, you can run the program by typing <code>./myprogram.exe</code>.</li>
 </ol>
-<pre><code class="language-C">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
+<h1>Header Files</h1>
+Next, how do we use header files? Header files are a way to organize code. We can put all of our function and struct declarations in a header file, and then include it in our main program. This way, we can keep our code organized and we don't have to worry about forgetting to include a function or struct declaration in our main program. To do this, we can create a file called <code>my_struct.h</code> and put all of our declarations in there. Then, we can include it in our main program by typing <code>#include "my_strct.h"</code>.<br><br>
+<h1>Introduction to Makefiles</h1>
 
-int compare_ints(const void *p_a, const void *p_b)
+<h1 id="L13">L13: Patch</h1>
+Refer to the pre-lecture code <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W05/patch.c">patch.c</a> and <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W05/patch.py">patch.py</a>
+<h2 id="L13-GDB">Using GDB</h2>
+First, compile <code>patch.c</code> and you should get an output file. See Lecture 10 for more information on compiling C code. After it is compiled, we can run
+<pre><code class="language-bash">gdb patch</code></pre>
+Then typing
+<pre><code class="language-bash">layout asm</code></pre>
+we are able to get the machine instructions that comprise the code. You don't need to worry about this right now, you'll learn about it in 2nd year ECE253 :) The only thing we need to understand is that the compiler is able to translate the C code into machine code, which gives very simple instructions.
+<h2 id="L13-changing-g">Changing a Function</h2>
+The goal of this exercise is to change the function <code>g</code> such that it behaves like the function <code>f</code>. They are defined as follows:
+<pre><code class="language-C">int f(int a, int b, int c)
 {
-  int *p_a_i = (int *)p_a;
-  int *p_b_i = (int *)p_b;
-  return *p_a_i - *p_b_i;
+    return a + b;
 }
 
-int main()
+int g(int a, int b, int c)
 {
-  int arr[] = {6, 5, 10, 2};
-  qsort(arr, 4, sizeof(int), compare_ints);
-}
-</code></pre>
-The reason the compare function takes in void pointers is because qsort is a generic function that can be used to sort any type of data. The function then casts the void pointers to the correct type and compares the two elements. This allows us to be more creative. Suppose we have our own structure to represent students, and we wish to sort them by their age. If two students have the same age then we wish to sort them by their name. We can do this by writing a compare function that compares the ages first and then compares the names if the ages are equal. We have,
-<pre><code class="language-C">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-
-typedef struct student1{
-  char name[20];
-  int age;
-} student1;
-
-int compare_student1s(const void *p_a, const void *p_b)
-{
-  // Want to sort student1's by name
-  // If students have the same age, sort by name
-
-  student1 *p_a_s = (student1 *)p_a;
-  student1 *p_b_s = (student1 *)p_b;
-  int age_diff = p_a_s->age - p_b_s->age;
-  if(age_diff != 0)
-  {
-    return age_diff;
-  }else{
-    return strcmp(p_a_s->name, p_b_s->name);
-  }
-}
-
-int main()
-{
-  student1 s1_arr[] = {{"John", 20}, {"Jill", 21}, {"Jack", 21}};
-
-  qsort(s1_arr, 3, sizeof(student1), compare_student1s);
-
-  for (int i = 0; i < 3; i++)
-    printf("%s %d\n", s1_arr[i].name, s1_arr[i].age);
+    return a + c;
 }
 </code></pre>
-Note that:
+When looking at the machine instructions, I obtain the following snippet:
+<pre><code class="language-assembly">
+│   0x1189 &lt;f&gt;              endbr64
+│   0x118d &lt;f+4&gt;            push   %rbp
+│   0x118e &lt;f+5&gt;            mov    %rsp,%rbp
+│   0x1191 &lt;f+8&gt;            mov    %edi,-0x4(%rbp)
+│   0x1194 &lt;f+11&gt;           mov    %esi,-0x8(%rbp)
+│   0x1197 &lt;f+14&gt;           mov    %edx,-0xc(%rbp)
+│   0x119a &lt;f+17&gt;           mov    -0x4(%rbp),%edx
+│   0x119d &lt;f+20&gt;           mov    -0x8(%rbp),%eax
+│   0x11a0 &lt;f+23&gt;           add    %edx,%eax
+│   0x11a2 &lt;f+25&gt;           pop    %rbp
+│   0x11a3 &lt;f+26&gt;           retq
+│   0x11a4 &lt;g&gt;              endbr64
+│   0x11a8 &lt;g+4&gt;            push   %rbp
+│   0x11a9 &lt;g+5&gt;            mov    %rsp,%rbp
+│   0x11ac &lt;g+8&gt;            mov    %edi,-0x4(%rbp)
+│   0x11af &lt;g+11&gt;           mov    %esi,-0x8(%rbp)
+│   0x11b2 &lt;g+14&gt;           mov    %edx,-0xc(%rbp)
+│   0x11b5 &lt;g+17&gt;           mov    -0x4(%rbp),%edx
+│   0x11b8 &lt;g+20&gt;           mov    -0xc(%rbp),%eax
+│   0x11bb &lt;g+23&gt;           add    %edx,%eax
+│   0x11bd &lt;g+25&gt;           pop    %rbp
+│   0x11be &lt;g+26&gt;           retq
+</code></pre>
+Some brief comments about this structure:
 <ul>
-    <li>We can use curly braces to initialize a struct</li>
-    <li>The <code>strcmp</code> function compares two strings and returns a negative number if the first string is smaller than the second string, 0 if the two strings are equal, and a positive number if the first string is larger than the second string</li>
+  <li>Each line is an instruction. Each byte of instruction is stored in a different location in memory. The first set of characters represent the memory in hexadecimal.</li>
+  <li>The <code>mov</code> command moves data from one location to another. The first argument is the destination, the second argument is the source.</li>
+  <li>In GDB, we can display the value at an address with the command <code>x 0x119d</code>, which in this particular example gives <code>0x119d &lt;f+20&gt;:  0x01f8458b</code>. The hexadecimal number 0x01f8458b encodes the instructions for that line. We can display it as a decimal if we do <code>x/d 0x119d</code> which outputs <code>0x119d &lt;f+20&gt;:  33047947</code></li>
 </ul>
-
-<h2 id="L11-reading-files">Reading Files</h2>
-Quick tip: When copying a file, download it instead of copying and pasting. When copying, you may accidentally ruin the formatting of the file.<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-
-int main()
+If we compare the machine code for both functions, they differ by only one line! Compare &lt;f+20&gt; with &lt;g+20&gt;. If we wish to modify <code>g</code> such that it acts like <code>f</code>, we just need to change what this one line does in memory. This is done using the following code. Consider,
+<pre><code class="language-C">void patch(int (*h)(int, int, int))
 {
-  FILE *fp = fopen("cities.txt", "r");
-  char line[200];
-  fgets(line, 200, fp);
-  line[strlen(line) - 1] = '\0';
-  int num_items = atoi(line);
-
-  return 0;
+    *(int *)((void*)h + 20 )  = 33047947; //0x01f8458b;
 }
 </code></pre>
-The code works via the following:
+Here is what this function does:
 <ol>
-    <li>Within <code>main</code>, a file pointer <code>fp</code> is created and is assigned the result of opening the file <code>cities.txt</code> in read mode. If the file doesn't exist, <code>fopen</code> returns <code>NULL</code>.</li>
-    <li>A character array <code>line</code> with a maximum size of 200 characters is declared.</li>
-    <li>The function <code>fgets</code> is called, which reads a line of text from the file pointed to by <code>fp</code> and stores it in the <code>line</code> array. The maximum number of characters to be read is specified as 200, the second argument to <code>fgets</code>.</li>
-    <li>The last character of <code>line</code>, which is the newline character, is replaced with a null terminator (<code>'\0'</code>) to end the string.</li>
-    <li>The function <code>atoi</code> is called with <code>line</code> as its argument, which converts the string representation of a number to its integer value. This is <code>93827</code> for the project, the total number of cities.</li>
-  </ol>
-Alternatively, we can use <code>fgets</code> to read the entire file line by line. This is useful if we want to read the file line by line and do something with each line.
+  <li>It takes in the pointer to a function. Recall that if we want to modify <code>int a = 5;</code> inside a function, we need to pass in the address. The same goes here if we want to modify a function.</li>
+  <li>We cast the pointer to a void pointer (i.e. not associated with any data type) using <code>(void*)h</code>.</li>
+  <li>Note that <code>(void*)h</code> is the address of the start of the function. To get to the part of the function or instructions we actually want to change, we need to increment the address by 20 bytes (which we said earlier was the only place that it differed from <code>f</code>).</li>
+  <li><code>(void*)h + 20</code> is a void pointer that points to the line of instruction we want to change. But we've seen that instructions are encoded by a number, so we need to cast this to an int pointer via <code>(int *)((void*)h + 20)</code>.</li>
+  <li>We've seen that the instruction we want to change this to can be represented as an integer as <code>33047947</code>, so we write this into memory at this address.
+    <ul>
+      <li>Clarification: Note that an integer is 4 bytes but the instruction at <code>0x11b8 &lt;g+20&gt;</code> is 3 bytes, since the next instruction is at <code>0x11b8 &lt;g+20&gt;</code>. The reason this still works is because the instruction at <code>0x11bb &lt;g+23&gt;</code> and <code>0x11a0 &lt;f+23&gt;</code> is the same, so the 4th byte will be overwritten with a byte that is equal to it.
+      </li>
 
-<h1 id="L12-bubble-sort-again">L12: Bubble Sort</h1>
-Bubble sort was gone over very quickly last lecture, so this lecture will go over it in more detail.
-<h2 id="L12-bubble-sort">Bubble Sort</h2>
-Bubble sort is a simple sorting technique that repeatedly steps through the list to be sorted, compares each pair of adjacent items and swaps them if they are in the wrong order. The pass through the list is repeated until no swaps are needed, which indicates that the list is sorted. The algorithm gets its name from the way smaller elements "bubble" to the top of the list. The pseudocode is given by (from Wikipedia),<br><br>
-<pre>
-function bubbleSort(L)
-    n = length(L)
-    repeat
-        swapped = false
-        for i=1 to n-1 inclusive do
-            /* if this pair is out of order */
-            if A[i-1] > A[i] then
-                /* swap them and remember something changed */
-                swap(A[i-1], A[i])
-                swapped = true
-            end if
-        end for
-    until not swapped
-end function
-</pre>
-<div class="card">
-  <h3 class="card-header">Exercise</h5>
-  <div class="card-body">
-    Consider the below sequence. Manually apply bubble sort:
-    <pre>
-5, 2, 10, 56, 15
-    </pre>
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#L3Example" role="button" aria-expanded="false" aria-controls="L3Example">
-    Show Solution
-  </a>
-</p>
-<div class="collapse" id="L3Example">
-  <div class="card card-body">
-    Each line represents a different step:
-<pre>
-5, 2, 10, 56, 8
-2, 5, 10, 56, 8 // 2 and 5 swapped
-2, 5, 10, 56, 8 // 5 and 10 in order
-2, 5, 10, 56, 8 // 10 and 56 in order
-2, 5, 10, 8, 56 // 56 and 8 swapped
-// Go back to beginning
-2, 5, 10, 8, 56 // 2 and 8 in order
-2, 5, 10, 8, 56 // 5 and 10 in order
-2, 5, 8, 10, 56 // 8 and 10 swapped
-2, 5, 8, 10, 56 // 10 and 56 in order
-// Go back to beginning
-2, 5, 8, 10, 56 // 2 and 5 in order
-2, 5, 8, 10, 56 // 5 and 8 in order
-2, 5, 8, 10, 56 // 8 and 10 in order
-2, 5, 8, 10, 56 // 10 and 56 in order
-</pre>
-</div></div></div></div>
-In C, it can be implemented as,<br><br>
-<pre><code class="language-C">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-
-void bubble_sort(void *arr, int num_items, int item_size,
-                 int (*compare)(const void *, const void *))
-{
-  int i, j;
-  void *temp = malloc(item_size);
-
-  for (i = 0; i < num_items - 1; i++){
-    for (j = 0; j < num_items - i - 1; j++){
-      // compare arr[j] and arr[j + 1], swap if necessary
-      // arr[j] only makes sense if array is of type int*, float*, etc.
-      void *p_j = arr + j * item_size;
-      void *p_j1 = arr + (j + 1) * item_size;
-
-      // Now can compute compare(p_j, p_j1)
-      if (compare(p_j, p_j1) > 0){
-        // kind of want to swap *p_j and *p_j1
-        memcpy(temp, p_j, item_size); // temp = *p_j
-        memcpy(p_j, p_j1, item_size);
-        memcpy(p_j1, temp, item_size);
-      }
-    }
-  }
-  free(temp);
-}
-
-int compare_int(const void *p_a, const void *p_b)
-{
-  const int *x = (const int *)p_a;
-  const int *y = (const int *)p_b;
-  return *x - *y;
-}
-
-int main()
-{
-  int arr[] = {64, 34, 25, 12, 22, 11, 90};
-  int num_items = sizeof(arr) / sizeof(arr[0]);
-  bubble_sort(arr, num_items, sizeof(int), compare_int);
-
-  for (int i = 0; i < num_items; i++)
-    printf("%d ", arr[i]);
-
-  return 0;
-}
-</code></pre>
-Here are some comments about the signature of the <code>bubble_sort</code> function:
-<ul>
-    <li><code>void *arr</code>: This is a pointer to the array to be sorted. The data type of the array is not specified, so the function can be used with arrays of any data type.
-    </li>
-    <li><code>int (*compare)(const void *, const void *)</code> is a pointer to a comparison function. The comparison function takes two pointers to void as arguments and returns an integer less than, equal to, or greater than zero, depending on the result of the comparison. This allows the function to be used with arrays of any data type and to sort the array in any order.</li>
-</ul>
-Note that when we swap two elements in the array, we need to use the <code>memcpy</code> function to copy the data from one element to another. This is because we don't know the data type of the elements in the array.<br><br>The <code>memcpy</code> function takes three arguments: the destination, the source, and the number of bytes to copy. The destination and source are both pointers to void, so we can use the <code>swap</code> function with arrays of any data type.
-<div class="card">
-  <h3 class="card-header">Exercise</h5>
-  <div class="card-body">
-    Consider the above code. It is actually inefficient and not the most ideal implementation of bubble sort. Why? (Hint: Compare this to the pseudocode)
-<br><br>
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#L3Example" role="button" aria-expanded="false" aria-controls="L3Example">
-    Show Solution
-  </a>
-</p>
-<div class="collapse" id="L3Example">
-  <div class="card card-body">
-    There is no stop condition. If the array is somehow fully sorted halfway into the program, it will still run to the very end (even if you pass in an already sorted array!)
-  </div>
-</div>
-</div>
-</div>
-<h2 id="detailed-bubble-sort">Optimizing Bubble Sort</h2>
-We can modify the program such that if a full pass through the array is made without any swaps, then the array is already sorted and we can stop the program. This can be done by modifying the <code>bubble_sort</code> function as follows:
-<pre><code class="language-C">void bubble_sort(void *arr, int num_items, int item_size,
-                 int (*compare)(const void *, const void *))
-{
-  int i, j;
-  void *temp = malloc(item_size);
-
-  for (i = 0; i < num_items - 1; i++)
-  {
-    int swapped = 0;
-    for (j = 0; j < num_items - i - 1; j++)
-    {
-      // compare arr[j] and arr[j + 1], swap if necessary
-      // arr[j] only makes sense if array is of type int*, float*, etc.
-      void *p_j = arr + j * item_size;
-      void *p_j1 = arr + (j + 1) * item_size;
-
-      // Now can compute compare(p_j, p_j1)
-      if (compare(p_j, p_j1) > 0)
-      {
-        // kind of want to swap *p_j and *p_j1
-        memcpy(temp, p_j, item_size); // temp = *p_j
-        memcpy(p_j, p_j1, item_size);
-        memcpy(p_j1, temp, item_size);
-        swapped = 1;
-      }
-    }
-    if (!swapped){
-      break; // return could cause a memory leak
-             // could go free(temp) and return
-    }
-  }
-  free(temp);
-}
-</code></pre>
-
-<h1 id="L18">L18: Consts and Linked Lists</h1>
-<h2 id="L18-Const">The const keyword</h2>
-<ul>
-  <li><code>const</code> indicates that a value is not to be changing. Changing a <code>const</code> value could result in a compilation warning or warning. The intended purpose is to help catch errors in the code earlier. Consider:
-<pre><code class="C">const char c = 42;
-c = 43; // compilation error
-
-const char *p_c = (char*)malloc(sizeof(char));
-*p_c = 0; // compilation error
-p_c = "hello"; // fine
-</code></pre>
+    </ul>
   </li>
-  <li>In the second part of the above example, we demonstrate that we are not allowed to modify the contents of
-    the memory at the address p_c. However, we can assign the pointer <code>p_c</code> to point to a string literal <code>"hello"</code>. This is allowed because the pointer itself is not modified, only the memory location it points to. </li>
-  <li>String literals like <code>"hello"</code> are of type <code>const char*</code></li>
-  <li>Sometimes, we wish to not be able to change the address, but be able to go to the address and change the contents. We can achieve that via the following:
-<pre><code class="C">int * const p_n = (int*)malloc(sizeof(int))
-p_n = 0; // error
-*p_n = 1; // fine
+</ol>
+Note that this particular example is not very useful, as it's not a good practice and very difficult to debug, hopefully for obvious reasons. Sometimes it's done for optimizations, but we don't need to worry about that.
+<h2 id="L13-python-weirdness">Python Memory Model Weirdness</h2>
+Consider the following code,
+<pre><code>import ctypes
+
+def change_float(x):
+    # Go to the memory address of x and change the value there
+    pointer = ctypes.c_void_p(id(x))
+    float_pointer = ctypes.cast(pointer, ctypes.POINTER(ctypes.c_double))
+    float_pointer[2] = 12.0
+
+
+
+if __name__ == '__main__':
+    x = 11.0
+    change_float(x)
+    print(x) # 12.0
+    print(x == 11.0) # True
+    print(11.0 == 12.0) # True
+    print(10+1.0 < 10+2.0) # False
 </code></pre>
-  </li>
-  <li>Similarly, we can disallow changing both the address and the contents (but this is usually not done)
-<pre><code class="C">const int * const p_n = (int*)malloc(sizeof(int))
-p_n = 0; // error
-*p_n = 1; // error
+Surprisingly, this prints<pre><code class="language-bash">12.0
+True
+True
 </code></pre>
-  </li>
-</ul>
-We can apply the <code>const</code> keyword to write our student2 structure as follows:
-<pre><code class="C">typedef struct student2{
-    const char *name;
-    const int *p_age;
-} student2;</code></pre>
-When an instance of this struct is created, the <code>const</code> keyword tells us we are reserving a place in memory for the address of the age and the address of the name. Like before, we cannot change the name like
-<pre><code class='c'>void change_name_wrong(student2 *p_s)
-{
-    p_s->name[0] = 'b';
-}</code></pre>
-since <code>p_s->name[0],p_s->name[1],</code> etc. are read-only (cannot change the value of the memory at the pointer). The above code attempts to go to the address and change the value at that address (which can't be done, since it's a const), while doing something like
-<pre><code class='c'>void change_name_right(student2 *p_s)
-{
-    p_s->name = "b";
-}</code></pre>
-is fine since we are not changing the value at the address, but rather the address itself.
-<h2 id="L18-Linked-Lists">Linked Lists</h2>
-Motivation: We cannot dynamically add an element to an existing array or block of memory easily, as there could be no space there! The only option we have is to re-allocate everything to a new location with enough space. This is inefficient, especially for larger arrays. Instead, we can use a special data structure called a <b>linked list</b>.
-<ul>
-  <li>A linked list consists of a data structure called a <code>node</code>, which consists of the following information:</li>
+As a quick reminder, in Python, variables are essentially just names that are bound to objects. When you pass a variable to a function in Python, what is actually passed is a reference to the object, rather than a copy of the object itself. The code works via,
+<ol>
+  <li>Inside the function, the <code>id</code> function is used to get the memory address of the object, and uses the <code>ctypes</code> module to cast that memory address to a pointer to a <code>ctypes.c_double</code> type. There is some nomenclature confusions here,
   <ul>
-    <li><code>data:</code> the actual data you need to store</li>
-    <li><code>next:</code> the address of the next node</li>
+    <li>In C, a <code>double</code> is a double-precision floating point number (usually 64 bits) while a <code>float</code> is a single-precision floating point number (usually 32 bits)</li>
+    <li>In Python, a float is the same as a double in C.</li>
   </ul>
-  <li>We can then make an array by creating a chain of these nodes, where we can find the next node by following the <code>next</code> pointer. While this uses up more space than a regular array, it has the benefit of preventing re-allocating everything. For example, if we want to add an element to the end of the list, we can simply create a new node and set the <code>next</code> pointer of the last node to point to the new node (+ a minor detail we'll touch on in a bit). </li>
-  <li>See the <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W07/LL.pdf">lecture slides</a> for a visual of linked lists and their operations.</li>
-</ul>
-<h2 id="L18-LL-operations">Linked List Operations</h2>
-We want to implement the following operations: Inserting, Removing, and Searching.
-<ul>
-  <li>Inserting: Suppose we already have a pointer to a node, and we wish to insert a node after that. What we can do is create this new node, and set its <code>next</code> pointer to point to the node that the original node pointed to. Then, we can set the original node's <code>next</code> pointer to point to the new node we just created.</li>
-  <ul><li><b>Analogy:</b> A popular children's activity is to form a <i>human train,</i> where each person puts their hand on the shoulder of the person in front of them, forming a chain (linked list). If a new participant Bob (the new node) wants to join the train in front of Alice (who is holding Carol's shoulder), Bob can do so by holding onto Carol's shoulder, and then Alice can hold onto Bob's shoulder. </li></ul>
-  <li>Removing: Suppose we already have a pointer to a node, and we wish to delete that node. We can do so by setting the <code>next</code> pointer of the node before the node we want to delete to point to the node after the node we want to delete. Finally, we free up the memory.</li>
-  <ul><li><b>Analogy:</b> If Bob wants to leave the train, he can simply let go of Carol's shoulder, and Alice can hold onto Carol's shoulder. </li></ul>
-  <li>Getting: Suppose we wish to find a node (i.e. its pointer) at a certain index (i.e. the <code>i</code>th node) In the previous 2 operations, we assumed we already had this pointer. We can do so by iterating through the linked list by following the <code>next</code> pointer until we find the node we want. </li>
-  <ul><li><b>Analogy:</b> If a teacher wants to find the 7th student, they can start from the very beginning of the train and follow it to the end until the 7th student is found.</li></ul>
   </li>
+  <li>
+    The line <code>float_pointer[2] = 12.0</code> is setting the value stored at the memory location pointed to by float_pointer to be <code>12.0</code>.
+  </li>
+  <li>
+    This line of code modifies the memory of the float object that was passed to the change_float function, so that the address at which the values <code>x</code> and <code>12.0</code> are stored, is the same, so <code>x == 12.0</code> and their values are equal. However, the object <code>x</code> and <code>11.0</code> are identical (i.e. they have the same id so Python doesn't both checking their actual values), so we also have <code>x == 11.0</code> and <code>11.0 == 12.0</code> (since 11.0 is the same object as <code>x</code>).<br><br>
+
+    Note that the memory representation of an object is the way that the value of the object is stored in computer memory, while the id is a unique identifer that is assigned to each object. Two objects could have different ids but the same memory representation. The reason this is allowed is because the <code>ctypes</code> module is allowing the user to bypass Python's memory management and directly access memory, which is not typically recommended or necessary.
+  </li>
+  <li>The reason the last three lines work is that the 11.0 literal is mapped to refer to a single id address since it appears in the code several times. So <code>print(10+1.0 < 10+2.0)</code> will still print False.</li>
+</ol>
+It's important to recognize that this is not recommended for general use, as it relies on implementation-specific details and can lead to unexpected behavior and make the code difficult to understand and maintain. It's best to stick to the standard Python operations and data structures, which provide a more predictable and stable behavior.<br><br>
+
+What do I need to know and don't know?
+<ul>
+  <li>Know: Python and C memory model</li>
+  <li>Don't Know: Machine Code and how to use <code>ctypes</code> in Python</li>
 </ul>
-In summary, we can delete and insert nodes in constant time, which is faster than array operations which are O(n). However, getting the <code>i</code>th node is linear time, while we can do that in constant time for arrays.
-<h2 id="L18-LL-implementation">Linked List Implementation</h2>
-We can implement the linked list as follows:
-<pre><code class="c">#include &lt;stdio.h&gt
-#include &lt;string.h&gt
+<h1 id="L14">L14: Python Memory Model and Valgrind</h1>
+<h2 id="L14-memory-model">Python Memory Model</h2>
+Let us review the previous section on the Python memory model and refer to the previous code. When we assign values to variables, we create a variable table and a memory table. So <code>x = 11.0</code> will give us
+<pre>-----------
+Variable Table
+x | @1032
+-----------
+Memory Table
+%1032 | 11.0
+-----------
+</pre> and after <code>change_float(x)</code> is ran, we get the following tables:
+<pre>-----------
+Variable Table
+x | @1032
+-----------
+Memory Table
+%1032 | 12.0
+-----------
+</pre>
+Here, the address of <code>x</code> has not changed, but the value at the address that <code>x</code> refers to has changed to <code>12.</code> When variables are passed to functions in Python, we always pass through the address of the variable, so this is analogous to C, where we pass in a pointer and change the value at that address. Usually, this doesn't matter that much because most objects are <b>immutable,</b> which means that they cannot be changed once they are created and re-assigning the variable to refer to a new address in memory. But with <code>ctypes</code>, we can make Python variables behave more like how they would in C, but there really isn't a lot of applications besides for pedagogical purposes.
+<br><br>
+Another important feature of Python is that when the code runs, it first scans the entire code for <b>literals.</b> Anytime it sees a literal and the literal is repeated, it maps it to the same memory location. This is done for optimization purposes, as literals are immutable. This is why using <code>ctypes</code> can lead to some counterintuitive behaviour.
+<br><br>
+This is why when we run <code>print(11.0)</code> it prints out <code>12.0</code>, as it is getting the ID of the literal <Code>11.0</Code> going to the corresponding address, but we overwrote the value at that address as <code>12.0</code>, which is what it will print out. So even something like <code>10.0 + 2.0 == 11.0</code> will still return <code>TRUE</code> since the address that the literal <code>11.0</code> refers to stores the value <code>12.0.</code>
+<br><br>
+However, <pre><code class="language-python">x = 5
+y = 7
+x1 = 6
+print(x + y == x1 + y)
+</code></pre>
+will give us <code>False</code> because these are no longer connected to the literal <code>11.0</code> which is what started this whole mess.
+<h2 id="L14-valgrind">Valgrind</h2>
+We can use valgrind to debug problems with memory issues. There are four ways to run valgrind:
+<ul>
+  <li>Linux: Can be installed</li>
+  <li>Windows: Install Windows Subsystem for Linux (WSL): <a href="https://learn.microsoft.com/en-us/windows/wsl/install">See here.</a></li>
+  <li>Any computer: Connect to the ECF Linux machines</li>
+  <li>Gradescope: There is a "test" assignment on gradescope which will run Valgrind for you.</li>
+</ul>
+Consider the following two programs,
+<pre><code class="language-C">#include &lt;stdio.h&gt
 #include &lt;stdlib.h&gt
 
-typedef struct node{
-    int data;
-    struct node *next;
-} node;
+int main(){
+    char a[6] = "EngSci";
+    printf("%c", a[1000000]);
+}
+</code></pre>
+<pre><code class="language-C">#include &lt;stdio.h&gt
+#include &lt;stdlib.h&gt
 
-typedef struct LL{
-    node *head;
-    int size;
-} LL;
+int main(){
+    char *p = malloc(1000000);
+    return 0;
+}</code></pre>
+There are two issues with it:
+<ul>
+  <li>Undefined behaviour: The program tries to access a memory location that is out of bounds. The array <code>a</code> has a size of 6, and accessing an index that is out of bounds leads to undefined behavior, and in this case, it results in a segmentation fault.</li>
+  <li>Memory leak: The program allocates memory using the <code>malloc</code> function but does not free it, leading to a memory leak.</li>
+</ul>
+We can run valgrind by first compiling the first program, then running:
+<pre><code class="language-bash">valgrind ./file_name</code></pre>
+On my system, I get the following message:
+<pre>==3274== Memcheck, a memory error detector
+==3274== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==3274== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==3274== Command: ./test_valgrind
+==3274==
+==3274== Invalid read of size 1
+==3274==    at 0x109191: main (in /home/xueqilin/esc190_notes/test_valgrind)
+==3274==  Address 0x1fff0f3862 is not stack'd, malloc'd or (recently) free'd
+==3274==
+==3274==
+==3274== Process terminating with default action of signal 11 (SIGSEGV)
+==3274==  Access not within mapped region at address 0x1FFF0F3862
+==3274==    at 0x109191: main (in /home/xueqilin/esc190_notes/test_valgrind)
+==3274==  If you believe this happened as a result of a stack
+==3274==  overflow in your program's main thread (unlikely but
+==3274==  possible), you can try to increase the size of the
+==3274==  main thread stack using the --main-stacksize= flag.
+==3274==  The main thread stack size used in this run was 8388608.
+==3274==
+==3274== HEAP SUMMARY:
+==3274==     in use at exit: 0 bytes in 0 blocks
+==3274==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==3274==
+==3274== All heap blocks were freed -- no leaks are possible
+==3274==
+==3274== For lists of detected and suppressed errors, rerun with: -s
+==3274== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+Segmentation fault
+</pre>
+This error message tells us that the error occurred in the main function, and it was an invalid read of size 1. The program tried to read from the memory location at address 0x1fff0f3862, which was not a valid location. If we run the VS Code Debugger, it will also automatically perform post-mortem debugging and tell us the line where the segmentation fault occurs. Running valgrind on the second program gives
+<pre>==3471== Memcheck, a memory error detector
+==3471== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==3471== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==3471== Command: ./test_valgrind
+==3471==
+==3471==
+==3471== HEAP SUMMARY:
+==3471==     in use at exit: 1,000,000 bytes in 1 blocks
+==3471==   total heap usage: 1 allocs, 0 frees, 1,000,000 bytes allocated
+==3471==
+==3471== LEAK SUMMARY:
+==3471==    definitely lost: 1,000,000 bytes in 1 blocks
+==3471==    indirectly lost: 0 bytes in 0 blocks
+==3471==      possibly lost: 0 bytes in 0 blocks
+==3471==    still reachable: 0 bytes in 0 blocks
+==3471==         suppressed: 0 bytes in 0 blocks
+==3471== Rerun with --leak-check=full to see details of leaked memory
+==3471==
+==3471== For lists of detected and suppressed errors, rerun with: -s
+==3471== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</pre>
+which tells us how many bytes are lost. In real applications, this example is not particularly helpful to us as it only tells us thee memory that is lost at the end of the program, and most systems automatically clean up the memory once the program is finished running. However, for continuously running programs, it is important to make sure there are no memory leaks.
 
-void create_node(node **p_n, int data)
+<h1 id="L16">L16: Best Practices</h1>
+Follow these three principles:
+<ul>
+  <li>Break down each task into smaller sub-tasks</li>
+  <li>Test frequently WHILE you are writing the program</li>
+  <li>When debugging, debug line by line.</li>
+</ul>
+The examples in this lecture will attempt to demonstrate these practices. Just note that because of how the lecture is structured (i.e. it walks through the developement process), it is difficult to faithfully reflect the lecture.
+<h2 id="L16-example-15">Walkthrough of Lab Question</h2>
+This is question 2 of Lab 4. Suppose we have a text file that lists several (not necessarily the below) constants, i.e. \(g=9.8\), \(e=2.72\), \(G=0.0000000000667\), and \(pi=3.14\) and we wish to compute the sum. How can we do this?
+<br><br>
+
+We should always be thinking of how we can test our code throughout the process, so we should first create the text file that will contain a sample test case, saved as <code>data.txt</code><br><br> We will have it consist of a simpler file first, to make it test easier.
+<code>
+  <pre>
+1. g = 9.8
+2. e = 2.728
+3.</pre>
+</code>
+where I used numbers to represent line numbers. Here, I am deciding ahead of time I will always leave an empty line at the end. This choice is arbitrary, as long as we remain consistent. Now we should break it up into sub-tasks.
+<ol>
+  <li><b>Task 1:</b> First, we need to be able to extract the appropriate number from each line.<br><br>
+
+    We can write a function with signature <code>const char* get_double_str(const char* line)</code> where the <code>const</code> is optional, but is a good practice because it tells us that we should not be changing the contents of the string.<br><br> It is important to note that <code>const char*</code> is different from <code>char* const</code>. The first gives us a pointer to a const char (in this case), while the second gives us a constant pointer to a char (where the value being pointed to can change but the pointer can't).
+    <br><br> There are several ways to approach this:
+    <ol>
+      <li>Using <code>strtok()</code>. This works, but is a bit complicated in figuring out how it works.</li>
+      <li>Finding the equal sign and then skipping a space.</li>
+      <li>Finding the first digit.</li>
+    </ol>
+    We will choose this last approach because it is more robust (and avoids issues where there is no space after the equal sign). We do this by creating other subtasks:<Br><br>
+
+      <b>Subtask:</b> Checking if a character is a digit. We can do this via,
+      <pre><code class="c">int is_digit(char c)
 {
-    *p_n = (node*)malloc(sizeof(node));
-    (*p_n)->data = data;
-    (*p_n)->next = NULL;
+    return c >= '0' && c <= '9';
+}
+</code></pre>
+which works because the ASCII values of the digits are in order. Before we move on, we can test this:<br><br>
+<pre><code class="c">int main()
+{
+    for(int c = '0'; c <= '9'; c++)
+    {
+        printf("%c is digit: %d. Another way to
+        compute the value: %d\n", c, (int)c, c-'0');
+    }
+    printf("Is 'a' a digit? %d\n", is_digit('a'));
+    printf("Is '0' a digit? %d\n", is_digit('0'));
+    printf("Is '9' a digit? %d\n", is_digit('9'));
+    printf("Is ' ' a digit? %d\n", is_digit(' '));
+    printf("Is '4' a digit? %d\n", is_digit('4'));
+}
+</code></pre>
+which gives us the output:<br><br>
+<pre>0 is digit: 48. Another way to compute the value: 0
+1 is digit: 49. Another way to compute the value: 1
+2 is digit: 50. Another way to compute the value: 2
+3 is digit: 51. Another way to compute the value: 3
+4 is digit: 52. Another way to compute the value: 4
+5 is digit: 53. Another way to compute the value: 5
+6 is digit: 54. Another way to compute the value: 6
+7 is digit: 55. Another way to compute the value: 7
+8 is digit: 56. Another way to compute the value: 8
+9 is digit: 57. Another way to compute the value: 9
+Is 'a' a digit? 0
+Is '0' a digit? 1
+Is '9' a digit? 1
+Is ' ' a digit? 0
+Is '4' a digit? 1</pre>
+
+Now, we can finish the function:<br><br>
+<pre><code class="c">const char* get_double_str(const char* line)
+{
+    while(!is_digit(*line) && *line != '\0')
+    {
+        line++;
+    }
+    return line;
+}
+</code></pre>
+which is motivated by moving the pointer until we find a digit, or until it reaches the null character. We can test this as well in our main function,<br><br>
+<pre><code class="c">printf("%s\n", get_double_str("pi = 3.14"));
+printf("%s\n", get_double_str("G = 0.0000000000667"));
+printf("%s\n", get_double_str("e = 2.728"));</code></pre>
+  </li>
+which gives us the desired output. At this point, we should also be thinking if we thought of all the test cases. It turns out one thing we didn't think of is dealing with negatives! We can fix this by modifying the <code>is_digit()</code> function to also check if the character is a negative sign, via the following:
+<pre><code class="c">int is_digit_or_minus(char c)
+{
+    return (c >= '0' && c <= '9') || (c == '-');
+}
+</code></pre>
+We would also need to test this new code to check if it actually detects the negative sign AND if it still works with the regular digits AND that it is reflected correctly in <code>get_double_str.</code> But since we already have code that tests these functions, we only need to make minor modifications! The full code and test cases will be included at the end of this section.</li>
+<li>
+<b>Task 2:</b> Next, we need to be able to convert the string to an actual float. There is a default function for this, <code>atof()</code>, but we will write our own function for practice. The idea behind our function is that it will first get the sign, then get the integer part of the float, then get the decimal portion. To get the integer part, we note that as an example,
+\[542 = 10 \cdot (10 \cdot 5 + 4) + 2\]
+</li>
+so we can work insides out: we multiply \(5\) by ten, then add \(4\). Then multiply the combined result by \(10\), then add on the next digit. This allows us to work from left to right. We can write a function to do this,<br><br>
+<pre><code class="c">double my_atof(const char *str)
+{
+    // First figure out the sign
+    int sign = 1;
+    if(*str == '-'){
+        sign = -1;
+        str++;
+    }
+
+    // str is now a string that starts with a digit
+    double integer_part = 0;
+    while(is_digit_or_minus(*str)){
+        integer_part = 10*integer_part + (*str - '0');
+        str++;
+    }
+
+    return sign * integer_part;
+}
+</code></pre>
+and of course, test this part out <i>before</i> we move on to the float part. This allows us to very early on identify if there is a problem with the integer part. If we don't test right now, and test later, then we don't know if the problem is with the integer part or the float part.<br><br>
+
+<b>Always test code you are able to test, before writing more code.</b><br><br>
+
+Now how can we deal with the fractional part? We can try breaking down the decimal \(0.123\) in a similar way, writing it as:
+\[0.123 = 1 \cdot 10^{-1} + 2 \cdot 10^{-2} + 3 \cdot 10^{-3}.\]
+If we can keep track of the current power of 10 (which decreases by a factor of 10 each time), then we can read from left to right and add on the appropriate terms to the fractional part.
+
+This gives us,
+<pre><code class="c">double my_atof(const char *str)
+{
+    // First figure out the sign
+    int sign = 1;
+    if(*str == '-'){
+        sign = -1;
+        str++;
+    }
+
+    // str is now a string that starts with a digit
+    double integer_part = 0;
+    while(is_digit_or_minus(*str)){
+        integer_part = 10*integer_part + (*str - '0');
+        str++;
+    }
+
+    // Now we potentially have a fractional part
+    // Assume there is always a decimal point
+    str++; // Skip the decimal point
+
+    double fractional_part = 0;
+    double cur_pow10 = 0.1;
+    while(*str != '\0'){
+        fractional_part += (*str - '0') * cur_pow10;
+        cur_pow10 *= 0.1;
+        str++;
+    }
+
+    return sign * (integer_part + fractional_part);
+}</code></pre>
+which we should also test.
+</ol>
+We can now combine everything together.
+<pre><code class='c'>void print_sum_of_constants(const char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    if(fp == NULL){
+        printf("Error opening file %s\n", filename);
+        return;
+    }
+
+    double sum = 0;
+    char line[100]; // Assume no line is longer than 100 characters
+    while(fgets(line, 100, fp) != NULL){
+        const char *double_str = get_double_str(line);
+        sum += my_atof(double_str);
+    }
+
+    printf("Sum of constants in %s is %f\n", filename, sum);
+}</code></pre>
+However, if we try to this this code, we get \(12.148\) instead of \(12.528\). We can debug this by tracing the code line by line, and we will realize that we are not exiting the while loop correctly when computing the fractional part. We are only exiting it when we reach the null character, but we should also exit it when we reach the end of the line. We can fix this by changing it to
+<pre><code class='c'>while(*str != '\0' && *str != '\n'){
+  fractional_part += (*str - '0') * cur_pow10;
+  cur_pow10 *= 0.1;
+  str++;
+}</code></pre>
+and now it will work. See <a href="data.txt">data.txt</a> and <a href="read_doubles.c">read_doubles.c</a> for the full code and test cases.
+<h1 id="L17">L17: Memory Model Review for Structs</h1>
+Consider the following code, which creates a student struct and attempts to change the name:
+<pre><code class="C">#include &lt;stdio.h&gt
+#include &lt;string.h&gt
+
+typedef struct student1{
+    char name[3];
+    int age;
+} student1;
+
+void change_name_wrong(student1 s)
+{
+    s.name[0] = 'a';
 }
 
-
-void create_LL_from_data(LL **p_LL, int *data_arr, int size)
+void change_name_right_a(student1 *p_s)
 {
-    (*p_LL) = (LL*)malloc(sizeof(LL));
-    (*p_LL)->size = 0; // initialize size to 0
+    p_s->name[0] = 'b';
+}
 
-    // keep track of the last node of the linked list
-    node *tail = 0;
-
-    for(int i = 0; i < size; i++){
-
-        // n is a pointer to a node with data = data[i], next = NULL
-        node *n;
-        create_node(&n, data_arr[i]);
-
-        // If the last node is the 1st node
-        if(tail == 0){
-            (*p_LL)->head = n;
-        }
-
-        // If the last node is not the 1st node
-        else{
-            // append the new node to the end of the linked list
-            tail->next = n;
-        }
-
-        // update the tail
-        tail = n;
-
-        // update the size
-        (*p_LL)->size++;
-    }
+void change_name_right_b(student1 *p_s)
+{
+    strcpy(p_s->name, "c");
 }
 
 int main(){
-    int data_arr[] = {1, 2, 3, 4, 5};
-    LL *p_LL;
-    create_LL_from_data(&p_LL, data_arr, 5);
+    student1 s = {"x", 20};
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_wrong(s);
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_right_a(&s);
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_right_b(&s);
+    printf("%s %d", s.name, s.age);
 }</code></pre>
-Here are some observations:
-<ul>
-<li>The idea behind the <code>create_LL_from_data</code> function is to keep track of the last node of the linked list (known as the tail) and constantly update it such that every time we create a new node, the tail's <code>next</code> pointer points to the new node. </li>
-<li>Initializing a new node like <code>node *n</code> will cause the <code>next</code> pointer to be <code>0</code> i.e. <code>NULL</code>. This is how we can tell we reached the end of a linked list.</li>
-</li>
-<li>we need to use pointers to pointers because we want to be able to modify the value of the <code>LL</code> pointer (i.e. the memory address it points to), rather than just the value of the data it points to.</li>
-</ul>
-<h1 id="L19">L19: Abstract Data Type</h1>
-An <b>abstract data type</b> (ADT) is any collection of values, together with operations on those values. For example:
-<ul>
-  <li><code>ints</code> with operations <code>+,-*,/,%</code></li>
-  <li><code>lists</code> with operations insert, remove, get</li>
-</ul>
-An ADT specifies what values are represented and what operations can be performed, but not how to store them or how to carry them out. They allow for modularity and reuse, as it is independent of implementation. A <b>data structure</b> is an implementation of an ADT as it is a way to represent the values, and algorithms for each operation.<br><br>
+This will create the following memory table after calling <code>change_name_wrong()</code>.
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>'a','\0',[],[]</code> // function: s (temporary, created in <code>change_name_wrong</code> and lost after function call)</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td><code>20</code></s></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'x','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+where the <code>[]</code> represents padding (see lecture 10). After running <code>change_name_right_a()</code> we get the following memory table:
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>64</code> // function: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'b','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+After running <code>change_name_right_b()</code> we get the following memory table:
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>64</code> // function: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'c','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">76</th>
+      <td><code>'c','\0'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">80</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+Note that in this function, the function first creates <code>'c','\0'</code> somewhere in memory and then uses the <code>strcpy</code> function to copy the string to the address of <code>s.name</code>. It is also important to remember that
+<h2 id="L17-equivalent">C equivalent of Python Code</h2>
+Suppose we have the following Python code:
+<pre><code class="python">def change_name(s):
+  s[0] = "b"
 
-Example: Consider a <code>list</code> which is an ordered collection of data items that supports the following operations:
-<ul>
-  <li><code>Insert(list, i, x)</code>: add item <code>x</code> at index <code>i</code> of <code>list</code>. The item previously at index <code>i</code>, and all following items, are shifted up by one index to make room for <code>x</code>.</li>
-  <li><code>Remove(list, i)</code>: remove item at index <code>i</code> of <code>list</code>. The item previously at index <code>i+1</code>, and all following items, are shifted down by one index to fill the gap.</li>
-  <li><code>Get(list, i)</code>: return the item at index <code>i</code> of <code>list</code>.</li>
-</ul>
-We define this ADT very abstractly, such that we only describe the outcome of each operation, but not how to implement it. For example, lists can be implemented using arrays, but it can also be implemented using linked lists.
-<h2 id="L19-LL-insert">Insert for Linked List</h2>
-In the previous lecture, we defined the linked list struct as follows:
-<pre><code class="c">typedef struct node{
-  int data;
-  struct node *next;
-} node;
-
-typedef struct LL{
-  node *head;
-  int size;
-} LL;
+if __name__ == '__name__':
+  s = ["x", 20]
+  change_name(s)
 </code></pre>
-We also talked about how to implement insertions conceptually. We can implement it as follows:
-<pre><code class="c">
-void LL_insert(LL *my_list, int new_elem, int index)
+How could we do the same thing in C? It is important to remember that in Python we are always dealing with addresses, we need to reflect this in our C code,
+<pre><code class="C">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+typedef struct student2{
+    char *name;
+    int *p_age;
+} student2;
+
+void change_name(student2 *p_s)
 {
-  // Create the new node
-  node *n;
-  create_node(&n, new_elem);
-
-  // If the list is empty
-  if(my_list->head == NULL){
-    my_list->head = n;
-    my_list->size++;
-    return;
-  }
-
-  // To insert at the very beginning
-  if(index == 0){
-    n->next = my_list->head;
-    my_list->head = n;
-    my_list->size++;
-    return;
-  }
-
-  // Errors
-  if (index < 0 || index > my_list->size-1){
-    fprintf(stderr, "Invalid index %d", index);
-    exit(1); // exits the program, returns 1 to the OS
-  }
-
-  // Traverse to the desired index
-  node *cur = my_list->head;
-  for(int i = 0; i < index; i++){
-    cur = cur->next;
-  }
-
-  n->next = cur->next;
-  cur->next = n;
-  my_list->size++;
+    p_s->name = "b";
 }
-</code></pre>
-Note that we deal with a few edge cases:
-<ul>
-  <li>If the list is empty, which we can check if the head is <code>NULL</code>, then we proceed to make the new node the first (and only) element of the linked list.</li>
-  <li>We want to implement it such that inserting it at index <code>0</code> corresponds to inserting it at the very beginning. To do this, not only do we need to update the <code>next</code> pointer of the new node, but the <code>head</code> pointer of our linked list. The order here is important. If we instead ran <code>my_list->head = n;</code> first, we lose information on where the original head is located.</li>
-  <li>If the index is invalid, there are a few possibilities of what we can do.<ol>
-    <li>Just Crash: Sometimes this is a good idea, if we are trying to optimize the code. It's on the user to give valid parameters.</li>
-    <li>Don't crash and don't insert. Instead, set a global variable to indicate an error. The reason we need a global variable here is that there's no other thing we can return that will indicate this. For example, if we are trying to return the element at an invalid index, a naive idea would be to return something like <code>-1</code> or <code>"Error"</code>, but how do we know that this is actually an error and their list doesn't actually include this!</li>
-    <li>Print an error message. In particular the best way to print an error is using <code>fprintf(stderr, "message")</code> because it prints to the standard error stream, which is different from the standard output stream. Unlike <code>printf</code> (which sometimes doesn't show in terminal), this will always show, and allows regular print statements and error messages to be separated.</li>
-  </ol>
+int main(){
+    student2 *p_s = (student2*)malloc(sizeof(student2));
 
-  </li>
-</ul>
-In the other cases, we first need to traverse to the desired index. Because this is not an array, we need to follow the linked list via the <code>next</code> pointers. Once we reach the desired index, we can update the <code>next</code> pointers of the new node and the node before it. Similar to above, the order of updating the <code>next</code> pointers matter!
-<h2 id="L19-LL-remove">Remove and Get for Linked List</h2>
-The code to remove and get for linked lists can be found <a href="https://www.cs.toronto.edu/~guerzhoy/190/labs/linkedlist.c">here</a> and is very similar to the code for insert. For deletion, we just need to remember to update the <code>next</code> pointer of the node before the one we are deleting, and freeing up the memory. Like most cases, the order here is important.
+    // Create a temporary student2
+    int *p_age = (int*)malloc(sizeof(int));
+    *p_age = 20;
+    student2 temp = {"x", p_age};
 
-Getting is actually partially implemented in insertion and deletion, as we need to find the <code>i</code>th element. Error handling for all three functions are also similar.
-<h2 id="L19-Coding-Practices">Good Coding Practices</h2>
-Suppose you have a piece of code, that relies on an abstract data structure (i.e. a list). We can define this structure in a header file <a href="https://www.cs.toronto.edu/~guerzhoy/190/labs/list.h">list.h</a>. Recall that an ADT doesn't include how it is implemented, just the operations. <br><br>
+    // Copy the temporary student2 into p_s
+    memcpy(p_s, &temp, sizeof(student2));
 
-We can now implement this ADT in a separate file. For example, we can either implement it using <a href="https://www.cs.toronto.edu/~guerzhoy/190/labs/linkedlist.c">linkedlist.c</a> or <a href="https://www.cs.toronto.edu/~guerzhoy/190/labs/arraylist.c">arraylist.c</a>. For example, if our <code>list.h</code> file looks like
-<pre><code class="c">#if !defined(LIST_H)
-#define LIST_H
-void create_list_from_data(void **p_list, int *data_arr, int size);
-void list_append(void *list, int new_elem);
-void list_insert(void *list, int new_elem, int index);
-void list_delete(void *list, int index);
-void list_free_all(void *list);
-int list_get(void *list, int index);
-#endif</code></pre> Then our <code>linkedlist.c</code> file needs to contain these functions. If we already have code (i.e. the earlier ones we wrote), we don't need to modify them. Instead, we can just create a new function that calls them in order to have the right form. For example,
-<pre><code class="c">void list_insert(void *list, int new_elem, int index)
-{
-    LL_insert((LL*)list, new_elem, index);
-}
+    printf("%s %d\n", p_s->name, *(p_s->age));
 
-int list_get(void *list, int index)
-{
-    return LL_get(list, index);
+    change_name(p_s);
+    printf("%s %d\n", p_s->name, *(p_s->age));
+
 }</code></pre>
-Notice that the functions in <code>list.h</code> take in void pointers, because we want them to be as general as possible (i.e. could be implemented using either an array or linked list). These additional functions we write in <code>linkedlist.c</code> are just wrappers. One final note is that although we can cast the void pointer to the correct type <code>(LL*)</code>, it is not necessary.<br><br>
+which corresponds to the following memory table after properly setting up the structure.
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td>108 // temp.name</td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td>120 // temp.p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">76</th>
+      <td>56 // main: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">80</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">84</th>
+      <td>120 // main: p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">88</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">92</th>
+      <td>108 // temp.name</td>
+    </tr>
+    <tr>
+      <th scope="row">96</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">100</th>
+      <td>120 // temp.p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">104</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">108</th>
+      <td><code>'x','\0'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">112</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">116</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">120</th>
+      <td>20</td>
+    </tr>
+  </tbody>
+</table>
+Now we can change the name of the student in the <code>change_name</code> function. We pass in <code>p_s</code> which is <code>56</code>, the address where the student is stored. We then access the name of the student via <code>p_s->name</code> and set it equal to <code>"b"</code>. Note that if we wrote <code>'b'</code> instead, there would be a segmentation fault when we try to later print it, since <code>'b'</code> corresponds to a character and <code>"b"</code> corresponds to an address (i.e. it points to the first character of a string).
 
-We can do this for both <code>linkedlist.c</code> and <code>arraylist.c</code>, and when we want to compile our main program, we can choose to compile it with either <code>linkedlist.c</code> or <code>arraylist.c</code>. For example, we can run
-<pre><code class="language-bash">gcc linkedlist.c -c -o linkedlist.o</code></pre>
-to create the object file <code>linkedlist.o</code>. We can then compile <code>main.c</code> alongside <code>linkedlist.o</code> to create an executable. We can do this by running
-<pre><code class="language-bash">gcc main.c linkedlist.o -o main</code></pre>
-If we instead wanted to compile using the array list implementation, we can run
-<pre><code class="language-bash">gcc main.c arraylist.o -o main</code></pre>
-This has several advantages:
-<ul>
-  <li>Modularity and Reusability: When writing our main code, we don't have to worry about how certain functions are implemented. Also, if we already have code that can implement abstract data structures, we can just re-use them for future projects without changing too much!</li>
-  <li>Faster compilation: Using a precompiled object like <code>linkedlist.o</code> can save compilation time. Although this is not a big problem now, compilation time can be an issue for larger and more complex projects.</li>
-</ul>
-<h2 id="L19-Python">Python Classes</h2>
-Structures in C are similar to classes in Python (Classes in Python are actually much much more powerful, but that's not the point in this section). We can define a <code>Student</code> class in Python as follows,
-<pre><code class="language-python">class Student:
-  def __init__(self, name, gpa):
-      self.name = name
-      self.gpa = gpa
-
-  def __str__(self):
-      return self.name + ": " + str(self.gpa)
-if __name__ == "__main__":
-  s = Student('Fred', 3.7)
-  print(s.name, s.gpa)
-</code></pre>
-Here, <code>__str__</code> is a built-in function, and we can call it via either:
-<pre><code class="python">s.__str__()
-Student.__str__(s)
-</code></pre>
-Here, the first line is just shorthand notation for the second line. What makes this built-in function useful is that we can call <code>print(s)</code> and it will treat this as <code>print(s.__str__())</code> instead.<br><br>
-
-We can also write a function to compare two classes, so that we can use operators such as <code><</code>, <code>></code>, and <code>==</code>. For example,
-<pre><code class="language-python">class Student:
-  def __init__(self, name, gpa):
-      self.name = name
-      self.gpa = gpa
-
-  def __str__(self):
-      return self.name + ": " + str(self.gpa)
-
-  def __lt__(self, other):
-      # Return True if self has lower gpa than other
-      # If GPAs are tied, compare names
-
-      if self.gpa < other.gpa:
-        return True
-      elif self.gpa == other.gpa:
-        return self.name < other.name
-      else:
-        return False
-if __name__ == "__main__":
-  fred = Student('Fred', 3.7)
-  bob = Student('Bob', 2.0)
-  print(Student.__lt__(fred, bob))
-  print(fred < bob)
-</code></pre>
-Recall that this is very similar to the compare function we wrote for <code>qsort.</code> Because we can compare different students, we can also sort them using the default sorted function in Python. For example,
-<pre><code class="language-python">L = [Student("Fred", 3.7"), Student("Bob", 3.7), Student("Alice", 3.9)]
-L.sort()
-print(L) # [Bob: 3.7, Fred: 3.7, Alice: 3.9]
-</code></pre>
-will allow us to sort and print out the list of students in a very convenient way (using both the custom print and compare functions we wrote)!
-
-Note that this is a more flexible method of sorting classes in Python. The "traditional" way (for simple comparison functions), we will write a function to get a numerical value from the class and sort using that key. For example,
-<pre><code class="python">def get_name(s):
-  return s.name
-L.sort(key=get_name)
-</code></pre>
-will sort the list of students in <code>L</code> alphabetically. Alternatively, we can use anonymous functions (lambda functions) which we can write in one line to save space. For example,
-<pre><code class="python">L.sort(key=lambda s: s.name)</code></pre>
-achieves the same purpose.<br><br>
-
-However, it is difficult (but not impossible) to modify the "traditional" way and come up with a way to map a more complicated comparison function to a numerical value. Note: comparison functions can be as complex as we want, but they need to be <i>transitive</i> in order to get meaningful results.
-
-
-
-
-
-<h1 id="L20">L20: Precedence</h1>
-Recall the standard order of operations for arithmetic expressions. For example,
-\[1 + 2 * 8 = 17\]
-and C will treat this completely normally. However, there are some unintuitive cases when dealing with other operators in C, which we will discuss in this lecture.
-<h2 id="L20-plus-plus">++ Operator</h2>
-Recall the <code>++</code> operator, which increments a variable by 1. Specifically, it is a post increment operator, meaning that it increments the variable after it is evaluated. For example, consider the following code,
-<pre><code class='c'>int a = 6;
-int b = 7 + a++; // make b = 7+a, and then increment a by 1
-</code></pre>
-Note that adding parentheses here doesn't matter, since the <code>++</code> operator is already the highest precedence (see <a href="https://en.cppreference.com/w/c/language/operator_precedence">precedence list</a>). Therefore, the code
-<pre><code class='c'>int a = 6;
-int b = 7 + (a++); // make b = 7+a, and then increment a by 1
-</code></pre>
-will give the same behaviour, which is not intuitive at first! Now consider something similar,
-<pre><code class='c'>char *s = "hello";
-printf("%c", *(s++)); // incrementing the address
-                      // what happens with just *s++
-printf("%c", (*s)++); // incrementing the value at address s
-                      // 'h' becomes 'i'
-</code></pre>
-The first case is what happens if we don't have any parentheses at all (since <code>++</code> has highest precedence). Note that the second case here may lead to a segmentation fault.<br><br>
-
-This notation can be very useful, and can be used to write certain functions in a very fast way (see L7). For example, if we want to copy a string, we can do the following:
-<pre><code class='c'>char *s = "hello";
-char dest[10];
-char *dest_write = dest;
-// want to copy string s into dest
-while(*dest_write++ = *s++);
-</code></pre>
-The while loop is the only thing we need. There are a few things to note here:
-<ul>
-  <li>The value of an "assignment relation" is equal to the value assigned. Therefore, the while loop will continue to run as long as <code>*s</code> is not <code>NULL</code>. In general, any non-zero value is true and any zero value (including NULL) is false.</li>
-  <li>The notation <code>*dest_write++ = *s++</code> tells us to assign the value of <code>*s</code> to <code>*dest_write</code>, then the <code>++</code> operator tells us to increment both pointers AFTER the assignment happens.</li>
-</ul>
-While this works, it is usually not a good practice as you have to be very careful about the order of operations and think about things. It's included here for you to understand it exists and see it once, but please don't use this in your code when you could write more readable code in just a few extra lines.
-<h1 id="L21">L21: Linked Lists II</h1>
-In this lecture, we will discuss how to implement a linked list in Python. Most of the time, you won't need to use a linked list in Python (we'll see an example next Monday), but it is still important to understand how linked lists work, and the work done in this lecture will be useful for implementing other data structures in Python for the rest of this course. The advantage of Python over C is pedagogical here, we want to focus on the data structure and not the specific implementation details.<br><br>
-
-If you are not familiar with classes, please see the last part of L19. Consider the Node class,
-<pre><code class="python">class Node:
-  def __init__(self, value):
-      self.value = value
-      self.next = None
-
-  def __str__(self):
-      return f"{self.value}"</code></pre>
-By default, we have set <code>self.next = None</code> to indicate that the next node is not yet defined. We can then create a linked list by creating a series of nodes and linking them together. For example,
-<pre><code class="python">if __name__ == '__main__':
-  n1 = Node(12)
-  n2 = Node(15)
-  n3 = Node(500)
-
-  n1.next = n2
-  n2.next = n3</code></pre>
-Recall that in the Python memory model, values are not copied. Everything is passed by reference. Therefore, something like <code>n1.next = n2</code> means we make <code>n1.next</code> refer to the address of <code>n2</code> (so they are treated as the "same" thing). In C, the analogy would be
-<pre><code class="c">node *n1 = create_node(12)
-node *n2 = create_node(15)
-n1->next = n2;
-</pre></code>
-where the function <code>create_node()</code> performs the memory allocation for you, which is what Python is doing behind the scenes. We can also make a linked list class and include some functions. For example,
-<pre><code class="python">class LinkedList:
-  def __init__(self):
-      self.head = None
-
-  def get_i(self, i):
-      # return the value at index i
-      cur = self.head
-      for j in range(i):
-          cur = cur.next
-      return cur.value
-
-  def append(self, value):
-      '''Add a new node with the value value to the end of the list'''
-      # Create a new node
-      new_node = Node(value)
-      print(new_node)
-
-      if self.head == None:
-          self.head = new_node
-      else:
-          # Find the last node
-          cur = self.head
-          while cur.next != None:
-              cur = cur.next
-          cur.next = new_node
-
-  def insert(self, value, i):
-      '''Insert a node with the value value at index i'''
-      new_node = Node(value)
-
-      if i == 0:
-          new_node.next = self.head
-          self.head = new_node
-      else:
-          cur = self.head
-          for j in range(i-1):
-              cur = cur.next
-          new_node.next = cur.next
-          cur.next = new_node
-
-  def __str__(self):
-      cur = self.head
-      s = ""
-      if(cur == None):
-          return "Empty list :("
-
-      while cur != None:
-          s += str(cur) + " -> "
-          cur = cur.next
-      return s[:-4] # remove last arrow</code></pre>
-Note that we didn't do anything new here. We took the existing code we had in L18 and transformed it into Python equivalents. The only new thing is the <code>__str__</code> function, which allows us to easily print out the linked list. For this function we have two cases: if the list is empty, we print something, and if the list is non-empty we print out the values of each node, connected with the -> symbol. We can then test our code,
-<pre><code class="python">if __name__ == '__main__':
-  LL = LinkedList()
-  LL.append(3)
-  LL.append(50)
-  LL.append(100)
-
-  print(LL)</code></pre>
-<h1 id = "L22">L22+ Onwards</h1>
-See <a href="part3.html">Part 3</a>.
-
-<br><br><br><br><br>
-
+</div>
+    </div>
   </body>
 </html>
