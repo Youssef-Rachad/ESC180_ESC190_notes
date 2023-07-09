@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCY17GV3DB');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date());
+    (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "//www.google-analytics.com/analytics.js",
+    "ga"
+  );
+
+  ga("create", "UA-19048260-11", "auto");
+  ga("send", "pageview");
+
+  hljs.highlightAll();
+</script>
+</head>
+<body data-bs-spy="scroll" data-target="#toc">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+      </div>
+      <div class="col-sm-9">
+
+<h1 id = "L9">L9: Structures</h1>
+<h2 id="L9-example">Basic Example</h2>
+We can create our own data structures in C. As an illustrative example, let us create a structure that can represent UofT students. We want to represent:
+<ol>
+  <li>
+    <code>char st_number_str[11]</code> This is the student number (10 digits + NULL). Note that this is technically a number but we represent it this way because we don't need to do math operations on it.
+    <code>int faculty_num</code> For our purposes, this will be something like <code>0</code> for FASE, <code>1</code> for Arts & Science, <code>2</code> for Kinesiology, etc.
+  </li>
+</ol>
+We can create a structure, initialize it, and create a function that prints it out with the following code,<br><br>
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+struct uoft_student{
+  char st_number_str[11];
+  int faculty_num;
+};
+
+void print_uoft_student(struct uoft_student s)
+{
+  printf("student number: %s\n", s.st_number_str);
+  printf("faculty number: %d\n", s.faculty_num);
+}
+
+int main()
+{
+  struct uoft_student s;
+  s.faculty_num = 0;
+  // s.st_number_str = "1234567890";
+  // ^ error
+  strcpy(s.st_number_str, "1234567890");
+
+  print_uoft_student(s);
+}</code></pre>
+Note that in order to initialize a string, we can't use the notation <code>s.st_number_str = "1234567890"</code> but instead use the <code>strcpy</code> function from <code>string.h</code>.<br><br>
+
+How does this look like in memory? We get the following memory table,
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">448</th>
+      <td><code>"abc"</code> (<code>st_number_str</code>, part of <code>s1</code>)</td>
+    </tr>
+    <tr>
+      <th scope="row">480</th>
+      <td><code>0</code> (<code>faculty_num</code>, part of <code>s1</code>)</td>
+    </tr>
+  </tbody>
+</table>
+When we call the function <code>print_uoft_student</code>, we pass in the entire structure <code>s</code> as a parameter. This means the function then creates a copy of <code>s</code> and stores it in the local frame of the function.
+<h2 id="L9-new-types">New Types</h2>
+In C, we can use <code>typedef</code> to define new custom types. This is useful if we have a boolean we definitely know is true or false but we're implementing it with an integer. Then we can write something like<br><br>
+<pre><code class="language-C">typedef int BOOL;</code></pre>
+which allows us to write <code>BOOL t=0;</code> And for our earlier example with UofT students, we can write<br><br>
+<pre><code class="language-C">typedef struct uoft_student uoft_student;</code></pre>
+So instead of writing <code>struct uoft_student</code> in the future, we only need to write <code>uoft_student</code>. An alternative way of writing this is built into the structure definition, i.e.<br><br>
+<pre><code class="language-C">typedef struct uoft_student{
+  char st_number_str[11];
+  int faculty_num;
+} uoft_student;</code></pre>
+This is what we'll use from now on for this lecture, but there are some cases in the future where we have to be more careful. This doesn't change how the code works, but it just helps with reading the code. For example, the code we had earlier becomes slightly more readable, i.e.<br><br>
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+typedef struct uoft_student{
+  char st_number_str[11];
+  int faculty_num;
+} uoft_student;
+
+void print_uoft_student(uoft_student s)
+{
+  printf("student number: %s\n", s.st_number_str);
+  printf("faculty number: %d\n", s.faculty_num);
+}
+
+int main()
+{
+  uoft_student s;
+  s.faculty_num = 0;
+  // s.st_number_str `= "1234567890";
+  // ^ error
+  strcpy(s.st_number_str, "1234567890");
+
+  print_uoft_student(s);
+}
+</code></pre>
+<h2 id = "L9-struct-functions">Functions on Structs</h2>
+Suppose we wish to modify a struct inside a function. As you may have guessed, we can't just pass in the struct, as that creates a copy! Instead, we need to pass in a pointer to the struct. For example, we can write a function that changes the faculty number of a student to 1,<br><br>
+<pre><code class="language-C">void drop_to_artsci(uoft_student *p_s)
+{
+  (*p_s).faculty_num = 1;
+}
+</code></pre>
+and in the main file, we can call <code>drop_to_artsci(&s)</code>. There is another notational shortcut! Instead of writing something like <code>(*a).b</code> we can write down the equivalent statement <code>a->b</code>. The above function can then be rewritten in a more suggestive manner,<br><br>
+<pre><code class="language-C">void drop_to_artsci(uoft_student *p_s)
+{
+  p_s->faculty_num = 1;
+}
+</code></pre>
+The way people usually think about it is if we pass in a pointer to the structure, we typically want to use the arrow and we pass in just the structure, we don't want to use it (or else it doesn't make sense!).
+<h2 id="L9-struct-advanced">Pointers in Structures</h2>
+Consider the following structure,<br><br>
+<pre><code class="language-C">typedef struct waterloo_student{
+  char *st_number_str;
+} waterlooser;
+</code></pre>
+and we wish to change the student id. There are two ways we can try to do this, with one incorrect and the other correct. They are:<br><br>
+<pre><code class="language-C">void change_w_id_bad(waterlooser w)
+{
+  w.st_number_str = (char *)malloc(5 * sizeof(char));
+  strcpy(w.st_number_str, "666");
+}
+
+void change_w_id_good(waterlooser w)
+{
+  strcpy(w.st_number_str, "666");
+}
+</code></pre>
+The reason why the first method is incorrect is because <code>w.st_number_str</code> is a pointer to where the string is stored. When it passes through the function, it creates a copy of the pointer, but we still have the information of where in memory this string is stored. If we try to (incorrectly) allocate space, then <code>w.st_number_str</code> will now point to somewhere else in memory that is big enough to store <code>"666</code>, but the original address of <code>w.st_number_str</code> will stay the same.<br><br>
+
+If we directly use <code>strcpy</code>, then it will copy the string <code>"666"</code> to the destination <code>w.st_number_str</code> whose value is the address in which the original string is stored.
+<h2 id="L9-Creating-Structs">Creating Structs</h2>
+Suppose we wish to create a waterlooser with a function. To do so, we need a pointer to a pointer,<br><br>
+<pre><code class="language-C">typedef struct waterloo_student{
+  char *st_number_str;
+} waterlooser;
+
+void create_waterlooser(waterlooser **p_p_w)
+{
+  *p_p_w = (waterlooser *)malloc(sizeof(waterlooser));
+  (*p_p_w)->st_number_str = (char *)malloc(5 * sizeof(char));
+  // (*(*p_p_w)).st_number_str = (char *)malloc(11 * sizeof(char));
+  // ^ same as above
+}
+
+int main()
+{
+  waterlooser *w;
+  create_waterlooser(&w);
+};
+</code></pre>
+Inside the <code>create_waterlooser</code> function, we need to allocate enough space to store 1 waterlooser, and then allocate enough space to store their student number. In the first line, we wish to obtain the address of the memory block that is big enough to store 1 waterlooser, and set that as the address of the waterlooser. After that, we can go to that address, and at that address write the address of a student number string, which we can do via malloc. Remember that <code>st_number_str</code> is a pointer itself!<br><br>
+
+Note that in the above, we are modifying the address of <code>st_number_str</code>! In the earlier examples (where we didn't use a double pointer), we could only change the value at this address using <code>strcpy</code> but we can't change where this points to. Using a double pointer allows us greater degrees of freedom.<br><br>
+
+In the main function, we originally have a pointer to the waterlooser, but it is not a valid address. We can pass in the address of this pointer to our <code>create_waterlooser</code> function, which then makes it a valid address to a waterlooser.<br><br>
+
+As always, we need to free the memory we allocated once it is no longer needed. This can be done in a function that is typically called <code>destroy</code>. There are a few subtleties though! The below function works,<br><br>
+<pre><code class="language-C">void destroy_waterlooser(waterlooser *p_w)
+{
+  free(p_w -> st_number_str);
+  free(p_w);
+}
+</code></pre>
+Note that the order of these lines matter! If we try to free <code>p_w</code> first, we can do that, but we are no longer able to access <code>p_w -> st_number_str</code>.
+</div>
+    </div>
+    </div>
+    <footer>
+        By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+        &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as attribution to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not suggest that the original author endorses any adaptation. This permission to share, re-distribute and adapt is non-transferrable.
+    </footer>
+  </body>
+</html>
+

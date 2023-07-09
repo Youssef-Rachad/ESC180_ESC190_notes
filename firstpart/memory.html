@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCY17GV3DB');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date());
+    (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "//www.google-analytics.com/analytics.js",
+    "ga"
+  );
+
+  ga("create", "UA-19048260-11", "auto");
+  ga("send", "pageview");
+
+  hljs.highlightAll();
+</script>
+</head>
+<body data-bs-spy="scroll" data-target="#toc">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+      </div>
+      <div class="col-sm-9">
+
+
+
+<h1 id="L10">L10: Memory Model for Structures and Header Files</h1>
+
+<h2 id="L10-Review">Structure Padding</h2>
+Suppose we have the following code,<br><br>
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+typedef struct student1{
+  char name[5];
+  int f;
+} student1;
+
+
+int main()
+{
+  student1 s1;
+  printf("%lu, %lu, %lu\n", (unsigned long)(&s1),
+                         (unsigned long)(&(s1.name)),
+                         (unsigned long)(&(s1.f)));
+  printf("%lu\n", (unsigned long)sizeof(s1));
+  return 0;
+}
+</code></pre>
+On my computer, this outputs: <br><br><pre><code>140728275508316, 140728275508316, 140728275508324
+12</code></pre>
+These are big numbers, but note the following observations:
+<ol>
+  <li>
+    The first two numbers are the same. That is, the address of <code>s1</code> corresponds to the address of <code>s1.name.</code>
+  </li>
+  <li>
+    The address of <code>s1.f</code> is 8 bytes after the address of <code>s1.name</code>, which should only take 3 bytes. Why is this the case? This is because the compiler is trying to align the data in memory. In this case, it is trying to align the data to 4 bytes. This process is known as structure padding.
+  </li>
+  <li>
+    The total size of the structure is \(5+3+4=12\) bytes, where 5 comes from the string, the 4 comes from the integer, and there are 3 empty bytes.
+  </li>
+</ol>
+<h2 id="L10-Examples">More Examples</h2>
+Let's work through what the memory table looks like for the following code,<br><br>
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+typedef struct student2
+{
+  char *name;
+  int f;
+} student2;
+
+void set_name2a(student2 s)
+{
+  strcpy(s.name,"abc"); // s.name needs to be valid address
+}
+
+int main()
+{
+    student2 s2;
+    // s2.name = (char *)malloc(5*sizeof(char));
+    set_name2a(s2);
+    printf("%s\n", s2.name);
+}
+</code></pre>
+If we run this code as is (with the line commented out), then the program will crash, even though we are changing the name of the student in a similar way as the previous lecture. The difference is that there will be a segmentation fault. When we write <code>student2 s2;</code> it creates a struct, but <code>s.name</code> is just some random address, so we can't write <code>"abc"</code> to it!<br><br>
+
+If we uncomment the line, then the program will run, since we have allocated enough space for the string and we can set <code>s2.name</code> to the address of this memory block.<br><br>
+<h2 id="L10-Exercises">Some Exercises</h2>
+Here are a few exercises, which tests your understanding of structures and pointers, based off of some previous examples. Don't cheat!
+<div class="card">
+  <h3 class="card-header">Exercise 1</h5>
+  <div class="card-body">
+    Consider the following code. What's going to happen?
+    <ol type="a">
+      <li>Nothing happens.</li>
+      <li>It crashes.</li>
+      <li>The name gets changed to <code>"abc"</code></li>
+    </ol>
+
+<pre><code class="language-C">#include &lt;stdio.h&gt
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+typedef struct student1
+{
+  char name[5];
+  int f;
+} student1;
+
+void set_name1a(student1 s)
+{
+  strcpy(s.name,"abc");
+}
+
+int main()
+{
+    student1 s1;
+    set_name1a(s1);
+}
+</code></pre>
+<p>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#L3Example" role="button" aria-expanded="false" aria-controls="L3Example">
+    Show Solution
+  </a>
+</p>
+<div class="collapse" id="L3Example">
+  <div class="card card-body">
+    <p>The answer is (a) nothing happens! If we have an <code>s1</code> and pass it into a function, everything gets copied. So all <code>set_name1a(s1)</code> does is change what the string is in the copy of <code>s1</code> that is passed into the function. The original <code>s1</code> is unchanged.</p>
+  </div>
+</div>
+
+</div>
+</div>
+<div class="card">
+  <h3 class="card-header">Exercise 2</h5>
+  <div class="card-body">
+    Consider the following code. What's going to happen?
+    <ol type="a">
+      <li>Nothing happens.</li>
+      <li>It crashes.</li>
+      <li>The name gets changed to <code>"abc"</code></li>
+    </ol>
+
+<pre><code class="language-C">#include &lt;stdio.h&gt
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+typedef struct student2
+{
+  char *name;
+  int f;
+} student1;
+
+void set_name2b(student2 s)
+{
+  s.name = (char *)malloc(5);
+  strcpy(s.name,"abc");
+}
+
+int main()
+{
+    student2 s2;
+    set_name2b(s2);
+}
+</code></pre>
+<p>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#L3Example" role="button" aria-expanded="false" aria-controls="L3Example">
+    Show Solution
+  </a>
+</p>
+<div class="collapse" id="L3Example">
+  <div class="card card-body">
+    <p>Trick question! None of the above is true. While nothing may seem to happen, there is a memory leak. See Lecture 9, section "Pointers in Structures" for a more thorough discussion of why this is the case.</p>
+  </div>
+</div>
+</div>
+</div>
+
+
+
+
+
+</div>
+    </div>
+    </div>
+    <footer>
+        By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+        &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as attribution to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not suggest that the original author endorses any adaptation. This permission to share, re-distribute and adapt is non-transferrable.
+    </footer>
+  </body>
+</html>
+
+

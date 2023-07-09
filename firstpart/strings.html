@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCY17GV3DB');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date());
+    (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "//www.google-analytics.com/analytics.js",
+    "ga"
+  );
+
+  ga("create", "UA-19048260-11", "auto");
+  ga("send", "pageview");
+
+  hljs.highlightAll();
+</script>
+</head>
+<body data-bs-spy="scroll" data-target="#toc">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+      </div>
+      <div class="col-sm-9">
+
+<h1 id="L3">L3: Strings</h1>
+<h2 id="L3-characters">Characters and Strings</h2>
+The above discussion helps us understand how characters and strings are stored and worked with in C.  Consider the following program,
+<pre><code class="language-C">#include &lt;stdio.h&gt
+int main()
+{
+    char c = 'x';
+    printf("%c %d", c, (int)c);
+
+    return 0;
+}</code></pre>
+Notice that the program outputs <code>x 120</code>. This is because we can interpret <code>c</code> as a character, so it outputs <code>'x'</code>. Alternatively, we can interpret it as an integer, in which case it outputs its ASCII value <code>120</code>.
+
+We can store strings by writing
+<pre><code class="language-C">#include &lt;stdio.h&gt
+int main()
+{
+    char* s = "Hello, World!";
+    return 0;
+}</code></pre>
+where <code>s</code> is the address of the first character in the string (in this case, the address of 'H'). The last character in the string is <code>\0</code> (can otherwise write it as <code>0</code> or <code>NULL</code>). Therefore, the program is able to read off a string by going to the address of the first character, and moving down the table (which is where the other characters are stored) until the null character is found. Explicitly, this is stored in the memory table as (only showing part of the table)
+<table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">16</th>
+        <td><code>'H'</code></td>
+      </tr>
+      <tr>
+        <th scope="row">17</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">18</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">19</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">20</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">21</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">22</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">23</th>
+        <td>.</td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th scope="row"></th>
+        <td></td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <th scope="row">24</th>
+        <td><code>'e'</code></td>
+      </tr>
+      <tr>
+        <th scope="row">25</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">26</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">27</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">28</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">29</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">30</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">31</th>
+        <td>.</td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <th scope="row"></th>
+        <td></td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <th scope="row">32</th>
+        <td><code>'l'</code></td>
+      </tr>
+      <tr>
+        <th scope="row">33</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">34</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">35</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">36</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">37</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">38</th>
+        <td>.</td>
+      </tr>
+      <tr>
+        <th scope="row">39</th>
+        <td>.</td>
+      </tr>
+    </tbody>
+  </table>
+  Here, the dot is used to denote that it takes 8 bits (1 byte) to store each character.
+<h2 id="L4-strings">Strings</h2>
+Recall that each character will always be 1 byte. The reason this is important is if we recall strings can be defined using a <i>pointer,</i><br><br>
+<pre><code class="language-C">char *s = "xyz"</code></pre>
+we get a memory table that looks like,<br><br>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Memory</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1824</th>
+      <td><code>'x'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1832</th>
+      <td><code>'y'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1840</th>
+      <td><code>'z'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1848</th>
+      <td><code>\0</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1856</th>
+      <td><code>1824</code> (<code>s</code> of type "address of char")</td>
+    </tr>
+  </tbody>
+</table>
+A few key observations:
+<ul>
+  <li>Each address can hold 1 byte and each character is 1 byte. Perfect!</li>
+  <li>The null character <code>\0</code> signifies the end of the string, so that we know when to stop. This is important, because we don't store the length anywhere!</li>
+  <li>We are using double quotes here. Double quotes automatically include the null character at the end.</li>
+  <li>The variable <code>s</code> gets stored elsewhere and is equal to the address of the first character.</li>
+  <li>The variable is placed somewhere in memory that is generally <i>not</i> the locals frame. However, most variables are typically stored in the main locals frame. This will be important in the next subsection where we will be also working with the locals frame of a particular function.</li>
+</ul>
+We can treat <code>s</code> as just any other variable! For example,<br><br>
+<pre><code class="language-C">printf("%c", *s);</code></pre>
+will print out <code>'x'</code>, and<br><br>
+<pre><code class="language-C">printf("%ld", (long int)s);</code></pre>
+will print <code>'1824'</code>.
+<h2 id="L5-strings">Revisiting Strings</h2>
+We can initialize strings the same way we initialize arrays because of how similar they are. The following are equivalent:
+<pre><code class="language-C">#include &lt;stdio.h&gt
+int main()
+{
+  char arr1[4] = "uvw";
+  char arr2[4] = {'x', 'y', 'z', '\0'};
+  char arr3[3] = {'a', 'b', 'c'}; // Incorrect, will produce weird results
+  printf("%s\n", arr1); // uvw
+  printf("%s\n", arr2); // xyz
+  printf("%s\n", arr3); // something weird!
+}
+</code></pre>
+Some key points:
+<ol>
+  <li>The size of the array should be set to 1 more than the number of characters. This is because strings always end with the null character <code>\0</code>.</li>
+  <li>The null character is automatically included when we define a string by concatenating characters, i.e. like in the definition of <code>arr1</code>.</li>
+  <li>If we forget to include the null character when defining it explicitly as an array, i.e. for <code>arr3</code>, then the program doesn't know when to stop. When printing (and other operations), it will only stop once it reaches a null character. On my machine, the output was <code>abcuvw</code>.</li>
+</ol>
+Alternatively, we can define arrays (and strings) without specifying a size via:<br><br>
+<pre><code class="language-C">char arr[] = {'x', 'y', 'z', '\0'};</code></pre>
+The program will automatically determine how many entries this array has.<br><br>
+
+
+</div>
+    </div>
+    </div>
+    <footer>
+        By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+        &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as attribution to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not suggest that the original author endorses any adaptation. This permission to share, re-distribute and adapt is non-transferrable.
+    </footer>
+  </body>
+</html>
+
+

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCY17GV3DB');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date());
+    (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "//www.google-analytics.com/analytics.js",
+    "ga"
+  );
+
+  ga("create", "UA-19048260-11", "auto");
+  ga("send", "pageview");
+
+  hljs.highlightAll();
+</script>
+</head>
+<body data-bs-spy="scroll" data-target="#toc">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+      </div>
+      <div class="col-sm-9">
+
+
+
+<h2 id="L5-arrays">Arrays</h2>
+An array is a block of memory containing a sequence of elements, of the same type. Arrays always have a pre-specified size. We can initialize an array using curly braces.<br><br>
+<pre><code class="language-C">int arr[5] = {1,2,3,4,5};</code></pre>
+This is unlike Python, where we do not need to specify a size, and arrays can dynamically change in size. If you are familiar with <code>numpy,</code> C arrays are much more similar to <code>numpy</code> arrays. We are allowed to retrieve and modify array elements,<br><br>
+<pre><code class="language-C">#include &lt;stdio.h&gt
+int main()
+{
+  int arr[5] = {1,2,3,4,5};
+  printf("%d\n", arr[2]); // prints 3
+  arr[2] = 6;
+
+  printf("%ud, %ud\n", sizeof(arr), sizeof(arr[0])) // prints 20, 4
+  printf("#of elements in arr is %d\n", sizeof(arr) / sizeof(arr[0]))
+}
+</code></pre>
+The first three lines in the main function will create the following memory table, where we are assuming integers take 32 bits:
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Locals frame [main]</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1600</th>
+      <td><code>1</code> (<code>arr</code> of type <code>int</code>, size <code>5</code>)</td>
+    </tr>
+    <tr>
+      <th scope="row">1632</th>
+      <td><code>2</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1664</th>
+      <td><code>3</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1696</th>
+      <td><code>4</code></td>
+    </tr>
+    <tr>
+      <th scope="row">1728</th>
+      <td><code>5</code></td>
+    </tr>
+  </tbody>
+</table>
+The <code>sizeof</code> operator gives how much space the variable takes up, in bytes. This means that <code>sizeof(arr[0])</code> will give 4 bytes, since <code>arr[0]</code> is an integer and <code>sizeof(arr)</code> will give 20 bytes, since 20 = 4 x 5, where 5 is the number of elements.<br><br>
+
+When passing an array to a function, it gets converted to a pointer. For example, if we have the function<br><br>
+<pre><code class="language-C">#include &lt;stdio.h&gt
+void set0(int *p_a)
+{
+  *p_a = 0; // p[0] = 0;
+  printf("%ud\n", sizeof(p_a)); // prints 8
+}
+int main()
+{
+printf("%ud", 3);
+  int arr[5] = {1,2,3,4,5};
+  printf("%d\n",arr[0]); // prints 1
+  set0(arr);
+  printf("%d\n",arr[0]); // prints 0
+}
+</code></pre>
+</div>
+    </div>
+    </div>
+    <footer>
+        By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+        &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as attribution to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not suggest that the original author endorses any adaptation. This permission to share, re-distribute and adapt is non-transferrable.
+    </footer>
+  </body>
+</html>
+

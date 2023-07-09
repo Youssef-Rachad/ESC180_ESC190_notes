@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCY17GV3DB');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date());
+    (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "//www.google-analytics.com/analytics.js",
+    "ga"
+  );
+
+  ga("create", "UA-19048260-11", "auto");
+  ga("send", "pageview");
+
+  hljs.highlightAll();
+</script>
+</head>
+<body data-bs-spy="scroll" data-target="#toc">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+      </div>
+      <div class="col-sm-9">
+
+
+<h1 id="-esc190-lecture-notes">ESC190 Lecture Notes: Part 1<br> Introduction to C</h1>
+    <p>See all lecture notes <a href="../">here</a>.</p>
+    </p>
+<h1 id="L2">L2: Introduction to C</h1>
+<h2 id="L2-syntax">Variables</h2>
+Like Python, there are different types of variables. Unlike Python, you need to declare what type it is when you initialize. After initializing, we can only change this variable to another value of the same type.
+<pre><code class="language-C">#include &lt;stdio.h&gt
+int main()
+{
+    int a = 42; // Need to initialize the type of variable
+    a = 43; // Changing the value of an already initialized variable
+    // a = "hi"; will give an error or warning!
+
+    printf("%d\n", a); // Prints 43
+
+    return 0;
+}
+</code></pre>
+Why does C do this? Because compiler needs to assign the appropriate space in the memory table. Therefore, we need to think of variables in a slightly different way. When the code initializes, it stores 42 in memory, i.e. at address 3040 (nothing inherently special about this number, only here so we have a concrete example). <b>The program associates <code>a</code> with this address.</b> The table becomes,<br><br>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Address</th>
+        <th scope="col">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">3040</th>
+        <td><code>42</code> (<code>a</code> of type <code>int</code>)</td>
+      </tr>
+      <tr>
+        <th scope="row">3072</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">3104</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">3136</th>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  After the line <code>a = 43;</code> is run, the program will look at the address in which the value of <code>a</code> is stored, and change that value to 43. The table then changes to,<br><br>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Address</th>
+        <th scope="col">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">3040</th>
+        <td><code>43</code> (<code>a</code> of type <code>int</code>)</td>
+      </tr>
+      <tr>
+        <th scope="row">3072</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">3104</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">3136</th>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+ Note that this is not how Python works. Changing the value of a variable will change the address of that variable. C is therefore <i>more</i> intuitive in the sense that variables are associated with a location in physical memory.
+
+ Finally, the line <code>printf("%d\n",a)</code> tells us to print the value of <code>a</code>. The format specifier <code>%d</code> tells the program to interpret <code>a</code> as an integer, and <code>\n</code> tells the code to make a line break. Here is a list of <a href="https://www.tutorialspoint.com/format-specifiers-in-c">format specifiers.</a>
+<h1 id="L3">L3: Binary representation of ints, floats</h1>
+At a fundamental level, computer memory can be seen as a physical table where in each cell, the voltage is either high (1) or low (0). It does not know anything about types. A single <code>0</code> or <code>1</code> is a bit, and
+<ul>
+    <li>8 bits = byte</li>
+    <li>kilobyte = 1024 bytes</li>
+    <li>megabyte = 1000 kilobytes</li>
+</ul>
+The memory table stores a lot of information, including metadata. You will learn more about this in courses such as ECE253 and higher level 300+ courses. In this course, we will only deal with memory tables in the context of storing variables.
+<h2 id="L4-binary">Binary</h2>
+We can interpret the binary number \(1101\) as
+\[1101_\text{binary} = 1 \cdot 2^3 + 1 \cdot 2^2 + 0 \cdot 2^1 + 1 \cdot 2^0 = 13.\]
+Remark: that this is also exactly how decimals work! Also,
+\[521 = 5\cdot 10^2 + 2 \cdot 10^1 + 1 \cdot 10^0.\]
+It is less obvious how to go from decimal to binary. Suppose we want to convert \(25\) to binary.
+<ul>
+    <li>Right-to-left:</li>
+    <ol>
+        <li>25 is odd, so last digit in binary is \(1\). We now have to represent (25-1)/2 = 12.</li>
+        <li>12 is even, so 2nd last digit in binary is \(0\). We now have to represent (12-0)/2 = 6.</li>
+        <li>6 is even, so 3rd last digit in binary is \(0\). We now have to represent (6-0)/2 = 3.</li>
+        <li>3 is odd, so 4th last digit in binary is \(1\). We now have to represent (3-1)/2 = 1.</li>
+        <li>We can represent 1 by \(1\).</li>
+    </ol>
+    which gives
+    \[11001\]
+    A Python implementation is given below:
+<pre><code class="language-python">def get_decimal_digits(d):
+  digits = []
+  while d != 0:
+    digits = [(d % 10)] + digits
+    d //= 10
+  return digits
+
+def get_binary_digits(d):
+  digits = []
+  while d != 0:
+    digits = [(d % 2)] + digits
+    d //= 2
+  return digits
+
+print(get_decimal_digits(521))
+print(get_binary_digits(25))</code></pre>
+    <li>Left-to-right:</li>
+    <ul>
+
+    <li>
+        The idea is that we want to write 25 as
+        \[25 = b_k2^k +b_{k-1}2^{k-1} + \cdots + b_12^1 + b_0\]
+        Are we able to figure out what \(k\) is? We can determine the <i>largest power of 2 that fits into 25,</i> which is \(2^4=16\). We still need to represent \(25-16=9\)
+    </li>
+    <li>
+        The largest power of 2 that can fit in 9 is \(2^3=8\). We then need to represent \(9-8=1\)
+    </li>
+    <li>
+        The largest power of 2 that can fit in 1 is \(2^0=1\). We are now done.
+    </li>
+    We have decomposed \(25\) into powers of 2. That is,
+    \[25 = 2^4 + 2^3 + 2^0 = 11001_\text{binary}.\]
+    </ul>
+</ul>
+For 8-bit binary numbers, the 0th digit is the sign and the other 7 bits are the quantity. For example,
+\[
+b_0b_1b_2b_3b_4b_5b_6b_7 = \begin{cases}
++(b_12^6 + b_22^5 + b_32^4+b_42^3 + b_52^2 + b_62^1 + b_7) & \text{if }b_0 = 0 \\
+-(b_12^6 + b_22^5 + b_32^4+b_42^3 + b_52^2 + b_62^1 + b_7) & \text{if }b_0 = 1
+\end{cases}
+\]
+This is not the only way to represent numbers. Different schemes exist for different types, though there are some standard conventions (i.e. IEEE 754 for floats).
+
+In Unicode, the first bit tells us whether we use ASCII characters (which we will use) or Unicode (which is more complicated).
+
+</div>
+    </div>
+    </div>
+    <footer>
+        By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+        &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as attribution to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not suggest that the original author endorses any adaptation. This permission to share, re-distribute and adapt is non-transferrable.
+    </footer>
+  </body>
+</html>
+
