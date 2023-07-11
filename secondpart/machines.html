@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCY17GV3DB');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date());
+    (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "//www.google-analytics.com/analytics.js",
+    "ga"
+  );
+
+  ga("create", "UA-19048260-11", "auto");
+  ga("send", "pageview");
+
+  hljs.highlightAll();
+
+  function goToTutor(){
+      encoded_code = encodeURIComponent(event.target.parentElement.querySelector("code").innerText);
+      url = `https://pythontutor.com/visualize.html#code=${encoded_code}&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=5&heapPrimitives=nevernest&origin=opt-frontend.js&py=c_gcc9.3.0&rawInputLstJSON=%5B%5D&textReferences=false`;
+      console.log('Are the headers included?: ', event.target.parentElement.querySelector("code").dataset.codeHeader, ' ok ', event.target.parentElement.querySelector("code").dataset);
+      window.open(url, '_blank').focus();
+  }
+
+</script>
+  </head>
+  <body data-bs-spy="scroll" data-target="#toc">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+      </div>
+      <div class="col-sm-9">
+
+    <h1 id="foreword">Foreword</h1>
+There are 2 dominant operating system types which present major differences in the command run and the programs used.
+First there is UNIX, which comprises of Apple and Linux machines.
+Then there is MSDOS, which comprises of Windows machines. (Note that Windows computers support UNIX commands through Powershell or by installing WSL Linux)
+<h1 id="file-system">File System</h1>
+<h2 id="unix-machines-and-wsl">UNIX machines and WSL</h2>
+Open your terminal and follow along. There's a good chance you'll open onto the home directory (<code>yourname/~</code>). You can double check this by running <code>pwd</code>.
+From here let's make an ESC190 folder: <code>mkdir esc190</code>
+Now let's navigate to it: <code>cd esc190</code> and list the files inside using <code>ls</code> (It should return empty since there are no files in our folder yet)
+<br>We can create a file in a few ways
+<ul>
+<li><code>touch FILENAME</code> creates an empty file </li>
+<li>Use your text editor, such as textedit, gedit, vscode or vim</li>
+</ul>
+For this example, let's write an easy hello world:
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main()
+{
+  printf("Hello ESC190!\n");
+  return 0;
+}
+</code></pre>
+Once you've created a file and saved it, return to your terminal and run <code>ls</code> again. Ta-Da we can see our file in the directory.
+Take some time to familiarise yourself with these commands and search online for a deeper understanding.
+<h2 id="msdos-machines">MSDOS machines</h2>
+Open your terminal and follow along. There's a good chance you'll open onto the home directory (<code>Users/yourname</code>). You can double check this by running <code>pwd</code>.
+Note that if you use Powershell, the above section can be useful as it supports UNIX commands
+From here let's make an ESC190 folder: <code>mkdir esc190</code>
+Now let's navigate to it: <code>cd esc190</code> and list the files inside using 'dir' (It should return empty since there are no files in our folder yet)
+We can create a file in a few ways
+<ul>
+<li><code> type FILENAME</code>creates an empty file </li>
+<li>Use your text editor, such as textedit, gedit, vscode or vim</li>
+</ul>
+For this example, let's write an easy hello world (I will call the file <code>main.c</code> but you can choose another name):
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main()
+{
+  printf("Hello ESC190!\n");
+  return 0;
+}
+</code></pre>
+Once you've created a file and saved it, return to your terminal and run <code>dir</code> again. Ta-Da we can see our file in the directory.
+Take some time to familiarise yourself with these commands and search online for a deeper understanding.
+
+
+</div>
+    </div>
+  </body>
+</html>
+

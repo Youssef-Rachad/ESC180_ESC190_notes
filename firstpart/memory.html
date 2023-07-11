@@ -243,16 +243,341 @@ int main()
 </div>
 
 
+<h1 id="L17">L17: Memory Model Review for Structs</h1>
+Consider the following code, which creates a student struct and attempts to change the name:
+<pre><code class="C">#include &lt;stdio.h&gt
+#include &lt;string.h&gt
+
+typedef struct student1{
+    char name[3];
+    int age;
+} student1;
+
+void change_name_wrong(student1 s)
+{
+    s.name[0] = 'a';
+}
+
+void change_name_right_a(student1 *p_s)
+{
+    p_s->name[0] = 'b';
+}
+
+void change_name_right_b(student1 *p_s)
+{
+    strcpy(p_s->name, "c");
+}
+
+int main(){
+    student1 s = {"x", 20};
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_wrong(s);
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_right_a(&s);
+    printf("%s %d\n", s.name, s.age);
+
+    change_name_right_b(&s);
+    printf("%s %d", s.name, s.age);
+}</code></pre>
+This will create the following memory table after calling <code>change_name_wrong()</code>.
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>'a','\0',[],[]</code> // function: s (temporary, created in <code>change_name_wrong</code> and lost after function call)</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td><code>20</code></s></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'x','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+where the <code>[]</code> represents padding (see lecture 10). After running <code>change_name_right_a()</code> we get the following memory table:
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>64</code> // function: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'b','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+After running <code>change_name_right_b()</code> we get the following memory table:
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td><code>64</code> // function: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td><code>'c','\0',[],[]</code> // main: s</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td><code>20</code></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">76</th>
+      <td><code>'c','\0'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">80</th>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+Note that in this function, the function first creates <code>'c','\0'</code> somewhere in memory and then uses the <code>strcpy</code> function to copy the string to the address of <code>s.name</code>. It is also important to remember that
+<h2 id="L17-equivalent">C equivalent of Python Code</h2>
+Suppose we have the following Python code:
+<pre><code class="python">def change_name(s):
+  s[0] = "b"
+
+if __name__ == '__name__':
+  s = ["x", 20]
+  change_name(s)
+</code></pre>
+How could we do the same thing in C? It is important to remember that in Python we are always dealing with addresses, we need to reflect this in our C code,
+<pre><code class="C">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+typedef struct student2{
+    char *name;
+    int *p_age;
+} student2;
+
+void change_name(student2 *p_s)
+{
+    p_s->name = "b";
+}
+int main(){
+    student2 *p_s = (student2*)malloc(sizeof(student2));
+
+    // Create a temporary student2
+    int *p_age = (int*)malloc(sizeof(int));
+    *p_age = 20;
+    student2 temp = {"x", p_age};
+
+    // Copy the temporary student2 into p_s
+    memcpy(p_s, &temp, sizeof(student2));
+
+    printf("%s %d\n", p_s->name, *(p_s->age));
+
+    change_name(p_s);
+    printf("%s %d\n", p_s->name, *(p_s->age));
+
+}</code></pre>
+which corresponds to the following memory table after properly setting up the structure.
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Address</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">40</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">44</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">48</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">52</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">56</th>
+      <td>108 // temp.name</td>
+    </tr>
+    <tr>
+      <th scope="row">60</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">64</th>
+      <td>120 // temp.p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">68</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">72</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">76</th>
+      <td>56 // main: p_s</td>
+    </tr>
+    <tr>
+      <th scope="row">80</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">84</th>
+      <td>120 // main: p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">88</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">92</th>
+      <td>108 // temp.name</td>
+    </tr>
+    <tr>
+      <th scope="row">96</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">100</th>
+      <td>120 // temp.p_age</td>
+    </tr>
+    <tr>
+      <th scope="row">104</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">108</th>
+      <td><code>'x','\0'</code></td>
+    </tr>
+    <tr>
+      <th scope="row">112</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">116</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">120</th>
+      <td>20</td>
+    </tr>
+  </tbody>
+</table>
+Now we can change the name of the student in the <code>change_name</code> function. We pass in <code>p_s</code> which is <code>56</code>, the address where the student is stored. We then access the name of the student via <code>p_s->name</code> and set it equal to <code>"b"</code>. Note that if we wrote <code>'b'</code> instead, there would be a segmentation fault when we try to later print it, since <code>'b'</code> corresponds to a character and <code>"b"</code> corresponds to an address (i.e. it points to the first character of a string).
+
 
 
 
 </div>
     </div>
-    </div>
     <footer>
         By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
         &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as attribution to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not suggest that the original author endorses any adaptation. This permission to share, re-distribute and adapt is non-transferrable.
     </footer>
+    </div>
   </body>
 </html>
 

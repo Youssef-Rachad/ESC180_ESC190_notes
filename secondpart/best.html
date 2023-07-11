@@ -1,0 +1,183 @@
+<h1 id="L16">L16: Best Practices</h1>
+Follow these three principles:
+<ul>
+  <li>Break down each task into smaller sub-tasks</li>
+  <li>Test frequently WHILE you are writing the program</li>
+  <li>When debugging, debug line by line.</li>
+</ul>
+The examples in this lecture will attempt to demonstrate these practices. Just note that because of how the lecture is structured (i.e. it walks through the developement process), it is difficult to faithfully reflect the lecture.
+<h2 id="L16-example-15">Walkthrough of Lab Question</h2>
+This is question 2 of Lab 4. Suppose we have a text file that lists several (not necessarily the below) constants, i.e. \(g=9.8\), \(e=2.72\), \(G=0.0000000000667\), and \(pi=3.14\) and we wish to compute the sum. How can we do this?
+<br><br>
+
+We should always be thinking of how we can test our code throughout the process, so we should first create the text file that will contain a sample test case, saved as <code>data.txt</code><br><br> We will have it consist of a simpler file first, to make it test easier.
+<code>
+  <pre>
+1. g = 9.8
+2. e = 2.728
+3.</pre>
+</code>
+where I used numbers to represent line numbers. Here, I am deciding ahead of time I will always leave an empty line at the end. This choice is arbitrary, as long as we remain consistent. Now we should break it up into sub-tasks.
+<ol>
+  <li><b>Task 1:</b> First, we need to be able to extract the appropriate number from each line.<br><br>
+
+    We can write a function with signature <code>const char* get_double_str(const char* line)</code> where the <code>const</code> is optional, but is a good practice because it tells us that we should not be changing the contents of the string.<br><br> It is important to note that <code>const char*</code> is different from <code>char* const</code>. The first gives us a pointer to a const char (in this case), while the second gives us a constant pointer to a char (where the value being pointed to can change but the pointer can't).
+    <br><br> There are several ways to approach this:
+    <ol>
+      <li>Using <code>strtok()</code>. This works, but is a bit complicated in figuring out how it works.</li>
+      <li>Finding the equal sign and then skipping a space.</li>
+      <li>Finding the first digit.</li>
+    </ol>
+    We will choose this last approach because it is more robust (and avoids issues where there is no space after the equal sign). We do this by creating other subtasks:<Br><br>
+
+      <b>Subtask:</b> Checking if a character is a digit. We can do this via,
+      <pre><code class="c">int is_digit(char c)
+{
+    return c >= '0' && c <= '9';
+}
+</code></pre>
+which works because the ASCII values of the digits are in order. Before we move on, we can test this:<br><br>
+<pre><code class="c">int main()
+{
+    for(int c = '0'; c <= '9'; c++)
+    {
+        printf("%c is digit: %d. Another way to
+        compute the value: %d\n", c, (int)c, c-'0');
+    }
+    printf("Is 'a' a digit? %d\n", is_digit('a'));
+    printf("Is '0' a digit? %d\n", is_digit('0'));
+    printf("Is '9' a digit? %d\n", is_digit('9'));
+    printf("Is ' ' a digit? %d\n", is_digit(' '));
+    printf("Is '4' a digit? %d\n", is_digit('4'));
+}
+</code></pre>
+which gives us the output:<br><br>
+<pre>0 is digit: 48. Another way to compute the value: 0
+1 is digit: 49. Another way to compute the value: 1
+2 is digit: 50. Another way to compute the value: 2
+3 is digit: 51. Another way to compute the value: 3
+4 is digit: 52. Another way to compute the value: 4
+5 is digit: 53. Another way to compute the value: 5
+6 is digit: 54. Another way to compute the value: 6
+7 is digit: 55. Another way to compute the value: 7
+8 is digit: 56. Another way to compute the value: 8
+9 is digit: 57. Another way to compute the value: 9
+Is 'a' a digit? 0
+Is '0' a digit? 1
+Is '9' a digit? 1
+Is ' ' a digit? 0
+Is '4' a digit? 1</pre>
+
+Now, we can finish the function:<br><br>
+<pre><code class="c">const char* get_double_str(const char* line)
+{
+    while(!is_digit(*line) && *line != '\0')
+    {
+        line++;
+    }
+    return line;
+}
+</code></pre>
+which is motivated by moving the pointer until we find a digit, or until it reaches the null character. We can test this as well in our main function,<br><br>
+<pre><code class="c">printf("%s\n", get_double_str("pi = 3.14"));
+printf("%s\n", get_double_str("G = 0.0000000000667"));
+printf("%s\n", get_double_str("e = 2.728"));</code></pre>
+  </li>
+which gives us the desired output. At this point, we should also be thinking if we thought of all the test cases. It turns out one thing we didn't think of is dealing with negatives! We can fix this by modifying the <code>is_digit()</code> function to also check if the character is a negative sign, via the following:
+<pre><code class="c">int is_digit_or_minus(char c)
+{
+    return (c >= '0' && c <= '9') || (c == '-');
+}
+</code></pre>
+We would also need to test this new code to check if it actually detects the negative sign AND if it still works with the regular digits AND that it is reflected correctly in <code>get_double_str.</code> But since we already have code that tests these functions, we only need to make minor modifications! The full code and test cases will be included at the end of this section.</li>
+<li>
+<b>Task 2:</b> Next, we need to be able to convert the string to an actual float. There is a default function for this, <code>atof()</code>, but we will write our own function for practice. The idea behind our function is that it will first get the sign, then get the integer part of the float, then get the decimal portion. To get the integer part, we note that as an example,
+\[542 = 10 \cdot (10 \cdot 5 + 4) + 2\]
+</li>
+so we can work insides out: we multiply \(5\) by ten, then add \(4\). Then multiply the combined result by \(10\), then add on the next digit. This allows us to work from left to right. We can write a function to do this,<br><br>
+<pre><code class="c">double my_atof(const char *str)
+{
+    // First figure out the sign
+    int sign = 1;
+    if(*str == '-'){
+        sign = -1;
+        str++;
+    }
+
+    // str is now a string that starts with a digit
+    double integer_part = 0;
+    while(is_digit_or_minus(*str)){
+        integer_part = 10*integer_part + (*str - '0');
+        str++;
+    }
+
+    return sign * integer_part;
+}
+</code></pre>
+and of course, test this part out <i>before</i> we move on to the float part. This allows us to very early on identify if there is a problem with the integer part. If we don't test right now, and test later, then we don't know if the problem is with the integer part or the float part.<br><br>
+
+<b>Always test code you are able to test, before writing more code.</b><br><br>
+
+Now how can we deal with the fractional part? We can try breaking down the decimal \(0.123\) in a similar way, writing it as:
+\[0.123 = 1 \cdot 10^{-1} + 2 \cdot 10^{-2} + 3 \cdot 10^{-3}.\]
+If we can keep track of the current power of 10 (which decreases by a factor of 10 each time), then we can read from left to right and add on the appropriate terms to the fractional part.
+
+This gives us,
+<pre><code class="c">double my_atof(const char *str)
+{
+    // First figure out the sign
+    int sign = 1;
+    if(*str == '-'){
+        sign = -1;
+        str++;
+    }
+
+    // str is now a string that starts with a digit
+    double integer_part = 0;
+    while(is_digit_or_minus(*str)){
+        integer_part = 10*integer_part + (*str - '0');
+        str++;
+    }
+
+    // Now we potentially have a fractional part
+    // Assume there is always a decimal point
+    str++; // Skip the decimal point
+
+    double fractional_part = 0;
+    double cur_pow10 = 0.1;
+    while(*str != '\0'){
+        fractional_part += (*str - '0') * cur_pow10;
+        cur_pow10 *= 0.1;
+        str++;
+    }
+
+    return sign * (integer_part + fractional_part);
+}</code></pre>
+which we should also test.
+</ol>
+We can now combine everything together.
+<pre><code class='c'>void print_sum_of_constants(const char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    if(fp == NULL){
+        printf("Error opening file %s\n", filename);
+        return;
+    }
+
+    double sum = 0;
+    char line[100]; // Assume no line is longer than 100 characters
+    while(fgets(line, 100, fp) != NULL){
+        const char *double_str = get_double_str(line);
+        sum += my_atof(double_str);
+    }
+
+    printf("Sum of constants in %s is %f\n", filename, sum);
+}</code></pre>
+However, if we try to this this code, we get \(12.148\) instead of \(12.528\). We can debug this by tracing the code line by line, and we will realize that we are not exiting the while loop correctly when computing the fractional part. We are only exiting it when we reach the null character, but we should also exit it when we reach the end of the line. We can fix this by changing it to
+<pre><code class='c'>while(*str != '\0' && *str != '\n'){
+  fractional_part += (*str - '0') * cur_pow10;
+  cur_pow10 *= 0.1;
+  str++;
+}</code></pre>
+and now it will work. See <a href="data.txt">data.txt</a> and <a href="read_doubles.c">read_doubles.c</a> for the full code and test cases.
+

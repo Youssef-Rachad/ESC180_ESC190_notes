@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCY17GV3DB');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date());
+    (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "//www.google-analytics.com/analytics.js",
+    "ga"
+  );
+
+  ga("create", "UA-19048260-11", "auto");
+  ga("send", "pageview");
+
+  hljs.highlightAll();
+
+  function goToTutor(){
+      encoded_code = encodeURIComponent(event.target.parentElement.querySelector("code").innerText);
+      url = `https://pythontutor.com/visualize.html#code=${encoded_code}&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=5&heapPrimitives=nevernest&origin=opt-frontend.js&py=c_gcc9.3.0&rawInputLstJSON=%5B%5D&textReferences=false`;
+      console.log('Are the headers included?: ', event.target.parentElement.querySelector("code").dataset.codeHeader, ' ok ', event.target.parentElement.querySelector("code").dataset);
+      window.open(url, '_blank').focus();
+  }
+
+</script>
+  </head>
+  <body data-bs-spy="scroll" data-target="#toc">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+      </div>
+      <div class="col-sm-9">
+
+<h1 id="compilation">Compilation</h1>
+<ul>
+<li>Now that we have a program in C, let's see (no pun intended) how to compile it.</li>
+</ul>
+<h2 id="unix-machines-and-wsl">UNIX machines and WSL</h2>
+<ul>
+<li>Open your terminal in the same directory as your C program (recall you can run 'ls' to check if the file is in your folder).</li>
+<li>The C compiler that is installed for Apple machines is called clang, and the one for Linux is called gcc. I will refer to both as \<compiler\></li>
+<li>Execute '\<compiler\> -o main main.c' (change 'main' to match your filename)<ul>
+<li>the o flag ('-o' in '-o main') tells the compiler that we want to name our executable 'main'.</li>
+</ul>
+</li>
+<li>Run 'ls' to see the compiled program. On my computer it is 'main'.</li>
+<li>To execute the compiled program run './main'.</li>
+</ul>
+<h2 id="windows-machines">Windows machines</h2>
+<ul>
+<li>Open your terminal in the same directory as your C program (recall you can run 'dir' to check if the file is in your folder).</li>
+<li>OH BOY, I hate mingw so much</li>
+<li>Execute 'gcc -o main main.c' (change 'main' to match your filename)<ul>
+<li>the o flag ('-o' in '-o main') tells the compiler that we want to name our executable 'main.out'.</li>
+</ul>
+</li>
+<li>Run 'dir' to see the compiled program. On my computer it is 'main.out'.</li>
+<li>To execute the compiled program run './main.out'.</li>
+</ul>
+<h1 id="header-files">Header Files</h1>
+<ul>
+<li>In programming, it is often useful to separate out code into files and import them.</li>
+<li>For this example, let's create a library for converting fahrenheit to Celsius.</li>
+<li>First, let's define the header file <code>conversion_temp.h</code>:
+<pre><code class="language-C">#ifndef CONVERSION
+#define CONVERSION
+
+float convertFtoC(float fahrenheit);
+#endif // CONVERSION
+</code></pre>
+<li>Then, let's implement 'convertFtoC' in <code>conversion_temp.c</code>: </li>
+</ul>
+<pre><code class="language-C">float convertFtoC(float fahrenheit)
+{
+        return (fahrenheit - 32) * 5 / 9;
+}</code></pre>
+
+And finally, update our main file:
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include "conversion_temp.h"; // path to header file
+int main()
+{
+  float temp = convertFtoC(68);
+  printf("It's %f degrees outside\n", temp);
+  printf("Hello ESC190!\n");
+  return 0;
+}
+</code></pre>
+Now, how do we compile our code? running 'gcc -o main main.c' fails because we didn't tell the compiler to include the header file. What's more, we need to tell the compiler that we defined 'convertFtoC' in conversion_temp.h and that we implemented it in conversion_temp.c.
+Instead, execute: 'gcc -o main main.c conversion_temp.c'
+Some motivation behind this is that C only allows for imports in header files.
+<h1 id="compilation-flags">Compilation Flags</h1>
+We saw in the previous example the o flag used '-o'.
+These flags inform the compiler about our program and the way we want to build our executable.
+This gets interesting when we want to write better and safer code.
+<ul>
+<li><code>-Wall</code> prints all warnings</li>
+<li><code>-Wpedantic</code> gives more information about warnings </li>
+<li><code>-Werror</code> treats warnings as errors. Note under this flag we should declare <code class="language-C">int main(void){...}</code>, make sure to add this.</li>
+</ul>
+<h1 id="introduction-to-makefiles-optional-">Introduction to Makefiles (optional)</h1>
+<ul>
+<li>All this compilation can get tedious. We can write a makefile to make this process automatic.</li>
+<li>This section assumes you have make or cmake installed already (for now)</li>
+<li>We can write a basic Makefile for our example above in a 'Makefile' file
+<pre><code class="language-make">CC       = gcc # or clang, depends on the compiler you use
+CFLAGS   = -Wall -Werror -Wpedantic # compilations flags
+TARGET   = main
+OBJFILES = conversion_temp.c main.c
+
+all: $(TARGET)
+
+$(TARGET): $(OBJFILES)
+    $(CC) $(CFLAGS) -o $(TARGET) $(OBJFILES)
+</code></pre>
+<ul>
+<li>NOTE that tabs must be used (not spaces). Why? Who would do this? It hurts inside.</li>
+<li>This becomes especially useful for a quick way to run tests during projects.</li>
+<li>Consider the following structure
+<pre>
+my_project_in_esc190/
+|- main.c
+|- conversion_temp.h
+|- conversion_temp.c
+|- tests/
+   |- tests_header.h
+   |- test_1.c
+   |- test_2.c
+</pre>
+<li>We would normally have to compile, for each test, the following way: <code>gcc -o testing_1 ./test_1.c main.c</code></li>
+<li>using a makefile, we write
+</ul>
+<pre><code class="language-make">CC       = gcc # or clang, depends on the compiler you use
+CFLAGS   = -Wall -Werror -Wpedantic # compilations flags
+TARGET   = main
+OBJFILES = conversion_temp.c main.c
+all: $(TARGET)
+
+$(TARGET): $(OBJFILES)
+    $(CC) $(CFLAGS) -o $(TARGET) $(OBJFILES)
+
+test1: $(OBJFILES) test_1.c
+    $(CC) $(CFLAGS) -o test1 $(OBJFILES) test_1.o &amp;&amp; test1
+
+test2: $(OBJFILES) test_2.c
+    $(CC) $(CFLAGS) -o test2 $(OBJFILES) test_2.o &amp;&amp; test2
+
+testall: test1 test2</code></pre>
+<ul>
+<li>Now, executing 'make testall' in terminal will execute all test cases in one command!</li>
+</ul>
+
+
+</div>
+    </div>
+  </body>
+</html>
+
+
