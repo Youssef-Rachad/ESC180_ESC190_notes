@@ -159,6 +159,36 @@ Why does C do this? Because compiler needs to assign the appropriate space in th
  Note that this is not how Python works. Changing the value of a variable will change the address of that variable. C is therefore <i>more</i> intuitive in the sense that variables are associated with a location in physical memory.
 
  Finally, the line <code>printf("%d\n",a)</code> tells us to print the value of <code>a</code>. The format specifier <code>%d</code> tells the program to interpret <code>a</code> as an integer, and <code>\n</code> tells the code to make a line break. Here is a list of <a href="https://www.tutorialspoint.com/format-specifiers-in-c">format specifiers.</a>
+<h2 id="mutability"> Mutability</h2>
+By default, variables in C are mutable.
+This means that you can change their values at any point in the code.
+If this behaviour is not desired (either because you want to enforce an immutable variable or because you are using a string literal), we can use the <code>const</code> keyword to declare a constant variable.
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+int main(void)
+{
+  const int year = 2023;
+  // The following throws an error
+  // year = 2024;
+  return 0;
+}</code></pre>
+
+<h2 id="unsigned">Signed and Unsigned Numbers</h2>
+By default any <code>int</code>, <code>float</code> or <code>double</code> is signed, meaning you can store positive and negative numbers alike
+Recall that an integer's size is 32 bits. Since the integer is signed, we repesent the negative sign as a 1 and the positive sign as a 0, meaning we are left with 31 bits to encode our integer.
+Therefore the range of signed integers is \([-2 147 483 648, 2 147 483 647]\). Note this is where the notion of \(-0\) comes from.
+
+Using an unsigned integer allows us to reclaim the 32nd bit and store numbers in the range \([0, 4 294 967 295]\). A similar effect is observed for doubles and floats.
+
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;limits.h&gt;
+
+int main() {
+  printf("Integers range in: \t[%d, %d]\n", INT_MIN, INT_MAX);
+  printf("Unsigned integers range in: \t[%d, %u]\n", 0, UINT_MAX);
+  return 0;
+}
+</code></pre>
+
 <h1 id="L3">L3: Binary representation of ints, floats</h1>
 At a fundamental level, computer memory can be seen as a physical table where in each cell, the voltage is either high (1) or low (0). It does not know anything about types. A single <code>0</code> or <code>1</code> is a bit, and
 <ul>
