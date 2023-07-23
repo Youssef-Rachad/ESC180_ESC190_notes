@@ -159,6 +159,133 @@ Why does C do this? Because compiler needs to assign the appropriate space in th
  Note that this is not how Python works. Changing the value of a variable will change the address of that variable. C is therefore <i>more</i> intuitive in the sense that variables are associated with a location in physical memory.
 
  Finally, the line <code>printf("%d\n",a)</code> tells us to print the value of <code>a</code>. The format specifier <code>%d</code> tells the program to interpret <code>a</code> as an integer, and <code>\n</code> tells the code to make a line break. Here is a list of <a href="https://www.tutorialspoint.com/format-specifiers-in-c">format specifiers.</a>
+
+  <h2>Datatypes in C</h2>
+
+  <h3>Basic Datatypes</h3>
+  <table class="table table-striped">
+    <thead class="thead-light">
+      <tr>
+        <th>Datatype</th>
+        <th>Size (bytes)</th>
+        <th>Range of Values</th>
+        <th>Example Usage</th>
+        <th>printf Formatter</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>int</td>
+        <td>4</td>
+        <td>\(-2,147,483,648\) to \(2,147,483,647\)</td>
+        <td><pre><code class='language-C'>int age = 30;</code></pre></td>
+        <td><code>printf("%d", age);</code></td>
+        <td>Most commonly used for representing whole numbers.</td>
+      </tr>
+
+      <tr>
+        <td>float</td>
+        <td>4</td>
+        <td>\(\pm 1.2 × 10^{−38}\) to \(\pm 3.4 × 10^{38}\)</td>
+        <td><pre><code class='language-C'>float planck = 6.62607;</code></pre></td>
+        <td><code>printf("%f", planck);</code></td>
+        <td>Used for single-precision floating-point numbers.</td>
+      </tr>
+
+      <tr>
+        <td>double</td>
+        <td>8</td>
+        <td>\(\pm5.0 × 10^{−324}\) to \(\pm1.7 × 10^{308}\)</td>
+        <td><pre><code class='language'>double pi = 3.14159;</pre></code></td>
+        <td><code>printf("%lf", pi);</code></td>
+        <td>Used for double-precision floating-point numbers.</td>
+      </tr>
+      <tr>
+        <td>char</td>
+        <td>1</td>
+        <td>\(-128\) to \(127\)</td>
+        <td><pre><code class='language-C'>char grade = 'A';</code></pre></td>
+        <td><code>printf("%c", grade);</code></td>
+        <td>Represents a single character.</td>
+      </tr>
+      <tr>
+        <td>bool</td>
+        <td>1</td>
+        <td>0 (false) or 1 (true)</td>
+        <td><pre><code class="language-C" style="white-space:pre-wrap">#include &lt;stdbool.h&gt;
+bool isValid = 1;</code></pre></td>
+        <td><code>printf("%d", isValid);</code></td>
+        <td>Used for boolean values (true or false).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Short and Long Modifiers</h3>
+  <p>
+        <code>short int</code>, <code>long int</code> and <code>long long int</code> modify the size of the <code>int</code> to 16, 32 and 64 bits respectively.
+  </p>
+
+  <h3>Typecasts and Consequences</h3>
+
+            The general syntax for typecasting is as follows:
+          </p>
+          <pre><code class="language-c">(target_type) value;</code></pre>
+          <p>
+            Typecasting can be done between compatible data types, such as numeric types or between char and numeric types.
+            However, it's important to note that not all types are directly compatible, and typecasting may lead to loss of precision or truncation of data.
+          </p>
+
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th>From Datatype</th>
+        <th>To Datatype</th>
+        <th>Consequence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>int</td>
+        <td>char</td>
+        <td>May result in loss of data or truncation if the integer value is too large or not representable as a character.</td>
+      </tr>
+      <tr>
+        <td>char</td>
+        <td>int</td>
+        <td>Usually safe, as the character can be represented by its ASCII value as an integer.</td>
+      </tr>
+      <tr>
+        <td>int</td>
+        <td>float/double</td>
+        <td>Usually safe, though the resulting float or double may have floating point inaccuracies.</td>
+      </tr>
+      <tr>
+        <td>float/double</td>
+        <td>int</td>
+        <td>Will truncate the fractional part, potentially leading to loss of information.</td>
+      </tr>
+      <tr>
+        <td>int</td>
+        <td>bool</td>
+        <td>The value 0 will be considered falsy, and any other value will be considered truthy. Note that you can use integers as falsy/truthy values in any case.</td>
+      </tr>
+      <tr>
+        <td>bool</td>
+        <td>int</td>
+        <td>0 (false) will be converted to 0, and 1 (true) will be converted to 1.</td>
+      </tr>
+    </tbody>
+  </table>
+          <h4>Examples of Typecasting</h4>
+          <h5>Casting Floats to Integers</h5>
+          <p>
+            When casting a float to an int, the fractional part of the float is truncated, and the result is an integer value. Here's an example:
+          </p>
+          <pre><code class="language-c">float floatNum = 3.14;
+int intNum = (int)floatNum;</code></pre>
+          <p>
+        
 <h2 id="mutability"> Mutability</h2>
 By default, variables in C are mutable.
 This means that you can change their values at any point in the code.
