@@ -1,0 +1,160 @@
+<h1 id="L23">L23: Midterm Question (PyInteger)</h1>
+In this lecture, we review the midterm: specifically question 5 where we are asked to implement the ADT <code>pyinteger</code> which allows us to represent arbitrarily large integers and perform the two basic operations,
+<ul>
+    <li><code>plusplus(n1)</code> adds <code>1</code> to the <code>pyinteger n1</code></li>
+    <li><code>add(n1, n2)</code> adds the <code>pyinteger n2</code> to the <code>pyinteger n1</code></li>
+</ul>
+We first set up our header file, <code>pyinteger.h</code>:
+<pre><code class="c">#if !defined(PYINTEGER_H)
+#define PYINTEGER_H
+
+typedef struct pyinteger{
+    int *digits;
+    int size;
+    int capacity;
+} pyinteger;
+
+void plusplus(void *pyint);
+void add(pyinteger *pyint1, pyinteger *pyint2);
+
+#endif</code></pre>
+where <code>pyinteger</code> is a struct that contains the following fields:
+<ul>
+    <li><code>digits</code> is a pointer to an array of integers that stores the digits of the integer</li>
+    <li><code>size</code> is the number of digits in the integer</li>
+    <li><code>capacity</code> is the maximum number of digits that can be stored in the array</li>
+</ul>
+Here, we are representing an integer via an array where each element in this array is a digit from 0-9. For example, the integer 1234 would be represented as <code>[1, 2, 3, 4]</code>. We use a similar approach to the one we used in Lecture 21 to update the <code>capacity.</code> Every time the capacity is reached and we need to add another digit, we double the capacity of the array.
+<h2 id="L22-creating">Creating the Struct</h2>
+Now we work in <code>pyinteger.c</code> and we wish to implement the ADT. But first, we can create an optional function that allows us to create a <code>pyinteger</code> struct which initially stores <code>int n</code>. What are some natural tasks that we must do?
+<ul>
+    <li>How can we determine the initial <code>capacity</code>? In other words, how do we make sure we initially allocated enough space for our array?</li>
+    <li>How can we put the digits into the array <code>*digits</code>? To do this, we need to find a good way of extracting the digits from the initial integer.</li>
+</ul>
+To determine the initial capacity, we need to determine the number of digits <code>int n</code> has.
+<div class="alert alert-primary" role="alert">
+I claim that the formula for the number of digits of \(n\) is given by
+\[\text{num of digits} = \text{floor}(\log_{10}(n)) + 1.\]</div>
+<div class="alert alert-dark" role="alert">
+<i>Proof:</i> A \(k\)-digit number can be written as
+\[n = a_{k-1}10^{k-1} + a_{k-2}10^{k-2} + \cdots + a_110^1 + a_.\]
+where the leading coefficient \(a_{k-1} \neq 0\). To double-check this, note that \(15 = 1 \times 10^1 + 5\) so the leading power is \(k-1\). Note that:
+\[10^{k-1} \le n < 10^k.\]
+It is important that the right inequality is strict! This is because \(10^k\) has \(k+1\) digits while \(n\) only has \(k\) digits. For those who want more rigour, note that each \(a_i\) is smaller or equal to \(9\) so we can bound \(n \le \sum_{i=0}^{k-1} 9 \cdot 10^{i}\).<br><br>
+
+Since the logarithm is a monotonically increasing function, we have
+\[\log_{10}(10^{k-1}) \le \log_{10}(n) < \log_{10}(10^k)\]
+or equivalently,
+\[k-1 \le \log_{10}(n) < k.\]
+Therefore, \(\text{floor}(\log_{10}(n))=k-1\) so
+\[k = \text{floor}(\log_{10}(n)) + 1\]
+as expected.<br><br>
+
+<b>However:</b> If \(n=0\) then we get something that is undefined, so we have to treat this case separately.</div>
+Obviously, you are not expected to prove this on the midterm, but I provided the proof here for those who are interested and for the rigour. It's a handy fact to know though, so you don't need to be stressed about weird edge cases!
+
+The process of extracting the digits from the integer is a bit tricky, but it's something that we've done before! To get the last digit, we can compute
+\[n \% 10.\]
+To get the second to last digit, we can shift all the digits by diving the number by \(10\) and ignoring the decimal part. Then we can repeatedly apply this same algorithm until we have no more digits left. Therefore, we should start from the end of the array and work our way backwards. Here is the code:
+<pre><code class="C">void create_integer(pyinteger **pyint, int n){
+    // Allocate memory for the pyinteger struct
+    *pyint = (pyinteger*)malloc(sizeof(pyinteger));
+
+    // Proven in a theorem
+    if (n == 0){
+        (*pyint)->capacity = 1;
+    }
+    else{
+        (*pyint)->capacity = (int)(log10(n)) + 1;
+    }
+
+    // Currently the number of digits is the same as the capacity
+    (*pyint)->num_digits = (*pyint)->capacity;
+
+    // Allocate memory for the digits
+    (*pyint)->digits = (int*)malloc(sizeof(int) * (*pyint)->capacity);
+
+    // Fill the digits
+    for (int loc = (*pyint)->num_digits - 1; loc >= 0; loc--){
+        (*pyint)->digits[loc] = n % 10;
+        n /= 10;
+    }
+}</code></pre>
+<h2 id="L22-plus-plus">Implementing PlusPlus</h2>
+Now we need to implement the function <code>plusplus</code>. This function should add <code>1</code> to the integer. Why might this be a tricky task? Well, the naive approach is to just add <code>1</code> to the units digit, but if the units digit is \(9\), then something weird might happen. Let's break it up into two cases, and work with the easier case first (this is a good idea in a test situation, since you know there will definitely be partial marks)
+<ul>
+    <li>Case 1: The units digit is not 9. We simply get the value at index <code>pyint->num_digits - 1</code> and check if it's a 9. If not, then we increment it by 1!</li>
+    <li>Case 2: We draw analogy from long addition. We change the 9 into a 0, then carry over to the previous digit. If that digit is not 9, we add 1. If it is 9, we change it into a 0 and continue.</li>
+</ul>
+we can implement it (with a small hiccup we'll discuss in a bit) as follows:
+<pre><code class="c">void plusplus(pyinteger *pyint){
+    int loc;
+    for (loc = pyint->num_digits - 1; loc >= 0; loc--){
+        if (pyint->digits[loc] == 9){
+            pyint->digits[loc] = 0;
+        } else {
+            pyint->digits[loc]++;
+            break;
+        }
+    }
+}</code></pre>
+Note that at this stage, there is one more hiccup. If everything is 9, then the size of the number can increase! This specific case is a bit annoying, but just doing everything up to this point will give you 8/10 points. <i>If you can't fully figure how to solve a question, solving it partially can still land you a lot of points!</i>
+<br><br>
+
+So how do we fix this? To deal with this case, we ask the following natural questions:
+<ul>
+    <li>How can we even detect if we need to do this case?</li>
+    <li>How do we decide if we need to re-allocate memory?</li>
+    <li>How do I shift the digits? (This is actually a bit misleading, as we'll see in a bit)</li>
+</ul>
+To detect if we even need to consider this case, there are many ways to do so. One way is to check the value of <code>loc</code> after the for loop finishes. If the for loop exits via the break statement, we should have <code>loc >= 0.</code> If it doesn't exit via the break statement, that means the first digit was also a 9, so <code>loc == 0.</code><br><br>
+
+How can we check if we need to re-allocate memory? At this point, we know that the number of digits has increased by 1, so we can update <code>num_digits.</code> Now we can check if the number of digits is greater than the capacity. If it is, then we need to re-allocate memory. We can do this by doubling the capacity.<br><br>
+
+Finally, we need to be able to shift all the digits over. At least, this was my first thought when I saw the problem. However, if we work through a simple example (or think about it), at this point, every single digit should be 0! Therefore, all we need to do here is set the first digit to 1. Easy!
+<pre><code class="c">void plusplus(pyinteger *pyint){
+    int loc;
+    for (loc = pyint->num_digits - 1; loc >= 0; loc--){
+        if (pyint->digits[loc] == 9){
+            pyint->digits[loc] = 0;
+        } else {
+            pyint->digits[loc]++;
+            break;
+        }
+    }
+
+    if(loc == -1){
+        pyint->num_digits++;
+        if(pyint->num_digits > pyint->capacity){
+            pyint->capacity *= 2;
+            // Reallocate memory for the digits
+            pyint->digits = (int*)realloc(pyint->digits, sizeof(int) * pyint->capacity);
+        }
+
+        // First digit is 1
+        pyint->digits[0] = 1;
+
+        // Last digit is 0
+        pyint->digits[pyint->num_digits - 1] = 0;
+    }
+}</code></pre>
+<h2 id="L22-add">Implementing Add</h2>
+Now we need to implement adding. First, why might this be a hard task? It's because the digits are not aligned in a "nice" manner. When we learn long addition in elementary school, we align the rightmost digit (ones digit) of the two numbers. But the way we implemented it here, we align the leftmost digit.<br><br>
+
+Note: we did not get to finish this in class, but here are some ideas for solutions
+<ul>
+    <li>Partial Solution: You can call <code>plusplus()</code> multiple times. This is very easy to implement, since all you have to figure out is how to implement a for loop that adds 1 to <code>n1</code> a total of <code>n2</code> times.<br><br>
+
+    One way to do this is to create a helper function to compare two pyintegers. Then we can create a temporary <code>pyinteger</code> and initialize it to 0. We then increment both this temporary pyinteger and <code>n1</code> until the temporary pyinteger is equal to <code>n2</code>.<br><br>
+
+    This is not optimal, since the time complexity is \(\mathcal{O}(n\log n)\) while the optimal complexity is \(\mathcal{O}(\log n)\). Because we care about time complexity in this course, you will not receive full marks, but it's possible to receive 8/10 points.
+</li>
+<li>
+    Another way to solve this is to get rid of the annoying problem. Modify the <code>pyintegers</code> such that the units digit align. This can be done by shifting the digits over and filling everything before the leading digit with 0s. Then we can apply the standard long addition algorithm we learned in elementary school. Just remember to shift the digits back after we're done!
+</li>
+<li>
+    Another way uses the same idea as above, but instead of shifting the digits, we can reformulate the standard "long addition" algorithm with indices, to make it easier to implement with code. Then all we have to do is write the algorithm with the C language!
+</li>
+</ul>
+Note: This section will get updated depending on the direction of Friday's class.
+

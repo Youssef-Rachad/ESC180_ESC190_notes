@@ -1,0 +1,54 @@
+<h2 id="L22-stack">Stack ADT</h2>
+<div class="alert alert-success" role="alert"><br>
+    A <b>stack</b> is a collection of elements with the operations <code>push</code> and <code>pop</code>
+    <ul>
+        <li><code>push</code> inserts the elements into the collection</li>
+        <li><code>pop</code> removes the most <i>recently added element that's not yet removed and returns it</i></li>
+    </ul>
+</div>
+Intuitively, we can think of this as a stack of blocks. We can only add blocks to the top of this stack and remove it from the top. This is known as LIFO (last in first out). If we start with an empty list <code>[ ]</code> then run the following commands, we have:
+<ol>
+    <li><code>push(1)</code></li>
+    <li><code>push(50)</code></li>
+    <li><code>pop()</code> (returns 50)</li>
+    <li><code>push(100)</code></li>
+    <li><code>pop()</code> (returns 100)</li>
+    <li><code>pop()</code> (returns 1)</li>
+</ol>
+Note: Note that our "stack of blocks" analogy is an analogy of how we could implement a stack. It is a very natural way of implementing it, since if we put new items at the top of the stack, then popping them from the top automatically fulfills the requirement of removing the most recently added element.<br><br>
+
+However, we could have implemented a stack differently, since a stack is an ADT, and ADTs don't tell us the implementation details.
+<h2 id="L22-implementation-stack">Implementation of Stack</h2>
+We can use a python list to act as a stack very naturally,
+<pre><code class="python">class Stack:
+    def __init__(self):
+        self.data = []
+
+    def push(self, item):
+        self.data.append(item)
+
+    def pop(self):
+        return self.data.pop()</code></pre>
+This is because the Python <code>pop()</code> already acts like the stack <code>pop()</code> operation. It removes the last element of the list and returns it. While the above works perfectly fine, for the sake of learning, we will implement a stack without using these default methods (which allows us to extend concepts to other ADT implementations). We have,
+<pre><code class="python">class Stack:
+    def __init__(self):
+        self.data = []
+
+    def push(self, item):
+        self.data.append(item)
+
+    def pop(self):
+        # return self.data.pop()
+        ret_val = self.data[-1]
+        del self.data[-1]
+        return ret_val
+
+if __name__ == '__main__':
+    s = Stack()
+    s.push(1)
+    s.push(50)
+    print(s.pop())
+    s.push(100)
+    print(s.pop())
+    print(s.pop())</code></pre>
+which will output <code>50, 100, 1</code> as we predicted earlier.

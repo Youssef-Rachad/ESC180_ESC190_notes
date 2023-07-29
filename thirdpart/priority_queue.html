@@ -1,0 +1,64 @@
+
+<h1 id="L25">Priority Queue</h1>
+<div class="alert alert-success" role="alert"><br>
+    A <b>priority queue</b> is a queue where the first element dequeued is the one with the highest priority.
+    <ul>
+        <li><code>Insert(S,x)</code> adds a new element with priority <code>x</code> to priority queue <code>S</code></li>
+        <li><code>min(S)</code> returns the element with the smallest value from the priority queue</li>
+        <li><code>extract_min(S)</code> removes and returns the element with the smallest value from the priority queue</li>
+    </ul>
+</div>
+This has many uses. It can simulate real-world systems queues organized by priority (i.e. patients in a hospital or files requested from a server). Alternatively, it can be used in searching algorithms (i.e. in games) such as A* (A Star).
+<h2 id="L25-Naive-Implementation">Slow Method 1</h2>
+The naive implementation is to store everything in an (unsorted) array. Every time that we wish to extract the minimum, we have to search through the entire array to find the minimum. See the below code,
+<pre><code class="python">class PriorityQueueSlow:
+    def __init__(self):
+        self.data = []
+        self.size = 0
+
+
+    def insert(self, value):
+        self.data.append(value)
+        self.size += 1
+
+    def extract_min(self):
+        if self.size == 0:
+            return None
+
+        cur_min = self.data[0]
+        cur_min_loc = 0
+        for i in range(1, self.size):
+            if self.data[i] < cur_min:
+                cur_min = self.data[i]
+                cur_min_loc = i
+
+        del self.data[cur_min_loc]
+        self.size -= 1
+        return cur_min</code></pre>
+What is the time complexity? Inserting is effectively O(1) as discussed last time, and extracting the minimum is O(n), since we need to search through the entire array.
+<h2 id="L25-Naive-Implementation-2">Slow Method 2</h2>
+One idea is to keep the data sorted, so we don't need to look for the minimum. This is not enough though: we want to ensure we are deleting the last element of the array (which takes constant time), not the first one (which takes linear time, due to the need to shift all the elements over). Therefore, we need to keep <code>self.data</code> sorted in non-increasing order. We have,
+<pre><code class="python">class PriorityQueueSlow2:
+    def __init__(self):
+        self.data = []
+        self.size = 0
+
+    def insert(self, value):
+        i = 0
+        while i < self.size:
+            if value > self.data[i]:
+                break
+            i += 1
+
+        # i is the index before which we can insert value
+        self.data.insert(i, value)
+        self.size += 1
+
+    def extract_min(self):
+        if self.size == 0:
+            return None
+        self.size -= 1
+        return self.data.pop() # O(1)</code></pre>
+Here, linear search is being done to find the index to insert the new element, so while <code>extract_min()</code> now takes constant time, inserting takes linear time. Someone bright might claim that we can use binary search to find the index to insert the new element, but this does not solve the problem. This is because inserting also takes linear time, as everything needs to be shifted.<br><br>
+
+That's a bit of a bummer! It seems like no matter how we structure things, we cannot escape the \(\mathcal{O}(n)\) complexity of inserting/removing an element. This introduces the concept of heaps.

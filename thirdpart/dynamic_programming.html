@@ -1,0 +1,332 @@
+<h2 id="L26-dynamic-programming">Dynamic Programming</h2>
+Dynamic programming is not a very well-defined term, but it encompasses a set of techniques for problem solving. Specifically, it breaks up a problem into sub-tasks and uses the results from those sub-tasks to solve the original problem. We start off with a simple question:
+<div class="alert alert-info" role="alert">
+    Compute the \(n^\text{th}\) Fibonacci number.
+  </div>
+  The naieve ESC180 implementation is via:
+<pre><code class="python">def fib(n):
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    return fib(n-1) + fib(n-2)
+</code></pre>
+While this works, it is extremely inefficient because it calculates the same values over and over again. This is because the function calls itself twice with the same argument in the recursive case. As a result, the time complexity of this implementation is exponential, which means it grows very quickly with increasing values of n.<br><br>
+
+To fix this problem, we use a technique called <b>memoization</b> (which is <i>not</i> a typo, but you can think of "memorization" as an analogy). This involves maintaining a table of values that were already computed so that we don't have to recompute them. We then have:
+<pre><code class="python">def fib(n, mem = {}):
+    if n in mem:
+        return mem[n]
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    mem[n] = fib(n-1, mem) + fib(n-2, mem)
+    return mem[n]
+</code></pre>
+Therefore, if we have already computed something, we don't have to go through an entire series of recursive calls! The time complexity of this implementation is now linear, because we only have to do \(3n\) recursive calls. Note that this analysis assumes addition is constant in time, which is true for doubles, but may not be true for other data types (since fibonacci integers can increase exponentially)<br><br>
+
+We can also solve the same problem <b>without</b> recursion by having a list that gets updated as we go along. Specifically, we have
+<pre><code class="python">def fib_iter(int n):
+    fib_list = [0] * n
+    fib_list[0:2] = [0, 1]
+    for i in range(2, n + 1):
+        fib_list[i] = fib_list[i-1] + fib_list[i-2]
+    return fib_list[n]
+</code></pre>
+<div class="alert alert-info" role="alert">
+    <b>Follow-up question:</b> the size of this array is linear in <code>n.</code> Can you do this task in constant space (i.e. the size of the array does not depend on <code>m</code>?)
+  </div>
+  In general, for dynamic programming:
+  <ol>
+    <li>Divide a complex problem into a number of simpler overlapping problem.</li>
+    <li>Defined a relationship between solutions to more complex problems and solutions to simpler problems. This is known as a Bellman Equation.</li>
+    This is an important step. For the Fibonacci example, we had
+    \[ F_i = \begin{cases} 0&i=0 \\ 1 & i=1 \\ F_{i-1} + F_{i-2} & i \ge 2 \end{cases}\]
+    <li>Store solutions to each subproblem, solving each subproblem once (i.e. using <code>fib_list</code> to store solutions)</li>
+    <li>Use stored solutions to solve the original problem.</li>
+  </ol>
+  Now, suppose we had a harder problem.
+  <div class="alert alert-info" role="alert">
+    <b>Problem:</b> There are a row of <code>n</code> houses, each house can be painted with one of the three colors: red, blue or green. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.
+<br><br>
+The cost of painting each house with a certain color is represented by a <code>nx3</code> cost matrix. For example, <code>costs[0][0]</code> is the cost of painting house 0 with color red; <code>costs[1][2]</code> is the cost of painting house 1 with color green, and so on... Find the minimum cost to paint all houses.</div>
+Note that the above wording was stolen from a LeetCode <i>medium</i> problem, but encodes the same information as the problem in the lecture. (Generally, coding interviews will contain questions at this level, so it is good practice to do medium-level Leetcode problems fast if you are trying to get software engineering PEY positions at top companies.)<br><br>
+
+The subproblem we are trying to solve is the minimum cost to paint the \(i^\text{th}\) house. We can define the following relationship:
+\[
+\begin{align}
+R(i) &= cost(i,red) + min(G(i-1), B(i-1)) \\
+G(i) &= cost(i,green) + min(R(i-1), B(i-1)) \\
+B(i) &= cost(i,blue) + min(R(i-1), G(i-1)) \\
+Cost(i) &= min(R(i), G(i), B(i))
+\end{align}
+\]
+Here, \(R(i),G(i),B(i)\) are the optimal cost if the \(i^\text{th}\) house was painted red, green, or blue respectively. Note that these equations also reflect that no two adjacent houses can be painted the same colour.<br><br>
+
+From here, the python implementation is straightforward. See <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W10/houses.py">here</a> for details.
+
+<h1 id="L28">Example: Coin Change Problem</h1>
+<h2 id="L28-problem">Setup + Strategy</h2>
+<div class="alert alert-info" role="alert">
+    Consider coin denominations of <code>[1, 4, 5]</code> and a target of <code>8</code>. What is the smallest number of coins that can be used to make the target? Can you generalize this to an efficient algorithm?
+</div>
+For the above example, it is clear that the answer is <code>2</code> (just take 2 coins of value <code>4</code>). But how can we write an algorithm to do this in general? Note that this problem doesn't actually come up in everyday life, as the standard set of denominations <code>5, 10, 25, 100</code> is set up in such a way we can always use a greedy algorithm (i.e. when finding the coins, we take the largest coin possible at each step). But it is clear from our simple example that a greedy algorithm will not work.<br><br>
+
+Instead, we take a dynamic programming approach. Let us define
+\[OPT(i) := \text{smallest number of coins to make } i.\]
+with the base case of
+\[OPT(0) = 0\]
+and to make life easier, we can also define
+\[OPT(\text{negative number}) = \infty\]
+to illustrate that we can't make negative numbers with coins. We can then construct the Bellman equation
+\[OPT(i) = \min_{d \in \text{denoms}} \left\{OPT(i-d) + 1\right\}.\]
+Where does this equation come from? We can think of several cases. In each case, we select a coin of value \(d\) (which gives our \(+1\)), and then we are left with \(i-d\) to make, which takes an optimal number of \(OPT(i-d)\) coins to make. If we take the minimum of all these cases, we get the optimal solution.<br><br>
+
+In the simple example above, we have
+\[OPT(8) = 1 + \min \left\{OPT(7) , OPT(4) , OPT(3)\right\}\]
+<h2 id="L28-implementation">Implementation</h2>
+To implement it in Python, we can set up the function
+<pre><code class="python">import numpy as np
+def make_change(denom, target):
+    OPT = np.inf * np.ones(target + 1)
+    OPT[0] = 0
+    # to be continued
+</code></pre>
+This sets up the array:
+\[OPT = [\underbrace{0}_{\text{#coins to make 0}},\underbrace{\infty}_{\text{#coins to make 1}},\dots,\underbrace{\infty}_{\text{#coins to make target}}]\]
+where we have initialized all entries to infinity at the very start (where \(\infty\) means that it's impossible to make a coin of that value). This is helpful, especially in using the <code>numpy</code> package in Python because <code>np.inf</code> obeys the following properties:<br><br>
+<ul>
+    <li>You can add/subtract numbers from infinity (<code>np.inf + 1</code> returns <code>np.inf</code>)</li>
+    <li>You can compare infinity to numbres (<code>np.inf < 5</code> returns <code>False</code>)</li>
+</ul>
+Therefore, we can very naturally use <code>np.inf</code> and incorporate it into our Bellman equation. Also notice that we have set up our array in such a way that we can have the correspondence
+\[OPT(i) = \verb#OPT[i]#\]
+where the LHS is a function and the RHS is the array. We can now finish the function
+<pre><code class="python">import numpy as np
+    def make_change(denom, target):
+        OPT = np.inf * np.ones(target + 1)
+        OPT[0] = 0
+
+        for amount in range(1, target + 1):
+
+            # check all denominations
+            for d in denom:
+
+                # can we use this denomination?
+                if amount - d >= 0:
+
+                    # is this the best way to make this amount?
+                    if OPT[amount - d] + 1 < OPT[amount]:
+
+                        # update the optimal solution
+                        OPT[amount] = OPT[amount-d] + 1
+
+        return OPT[target]</code></pre>
+Let's break this down. Remember that in order to compute \(OPT(\text{target})\) we need to know what \(OPT(\text{target}-1)\) is, which in order to compute that, we need to know what \(OPT(\text{target}-2)\) is, and so forth, all the way to \(OPT(1)\). One way to achieve this is via recursion, but as we've seen in the Fibonacci problem case, using recursion is dangerous because there are a lot of duplicates. Therefore, we will use a <b>bottom-up</b> approach.<br><br>
+
+Let's first compute \(OPT(1)\) (which requires the value of \(OPT(0)\) to do so). It'll be either \(OPT(0) + 1 = 1\) if there exists a coin with denominations \(1\) or it'll be \(\infty\) if all coins have a denomination greater than \(1\).<br><br>
+
+Then we can compute \(OPT(2)\) which relies on the value of \(OPT(0)\) and \(OPT(1)\). In general, \(OPT(n)\) will rely on the value of \[OPT(0), OPT(1), \dots, OPT(n-1).\] To compute it, we use the following steps:
+<ol>
+    <li>Go through each of the possible denominations \(d\). This corresponds to <code>for d in denom</code></li>
+    <li>Check if we can use this denomination to make the amount we are considering. This corresponds to checking <code>amount - d >= 0</code></li>
+    <li>If possible, then after using this denomination, we still need to make a total value of <code>amount - d</code>. But this is given by <code>OPT[amount - d]</code> which we already made optimal (since it comes before). The total number of coins we use if we choose this denomination is thus <code>1 + OPT[amount - d]</code>. If this number is smaller than the current optimal number, then we update our optimal number. This corresponds to the last if statement.</li>
+</ol>
+<h2 id="L28-concrete-example">Concrete Example</h2>
+<b>Note:</b> This section is a bit repetitive as I have included very specific steps to help you understand the algorithm if you are still confused. If you are comfortable with the algorithm, you can skip this section.<br><br>
+
+Let us run the code on our example from before. Let us define
+<pre><code class="python">denom = [1, 4, 5]; target = 8</code></pre>
+Then <code>OPT</code> is initialized to
+\[\verb#OPT# = [0,\infty,\infty,\infty,\infty,\infty,\infty,\infty,\infty]\]
+Now we loop through the amounts. Let <code>amount = 1</code>. We will now loop through all the denominations. We have:
+<ul>
+    <li>\(\text{amount} - 1 = 0\) so we move on to the next if statement. We have \(\verb#OPT#[\text{amount} - 1] + 1 = 1\) which is smaller than \(\infty\) so we update the array: <code>OPT[1] = 1</code>.</li>
+    <li>\(\text{amount} - 4 = -3\) which is smaller than zero, so we can't use this denomination and thus we move on.</li>
+    <li>\(\text{amount} - 5 = -4\) which is smaller than zero, so we can't use this denomination and thus we move on. </li>
+</ul>
+Our <code>OPT</code> is now
+\[\verb#OPT# = [0,1,\infty,\infty,\infty,\infty,\infty,\infty,\infty]\]
+Now we loop through the amounts. Let <code>amount = 2</code>. We will now loop through all the denominations. We have:
+<ul>
+    <li>\(\text{amount} - 1 = 1\) so we move on to the next if statement. We have \(\verb#OPT#[\text{amount} - 1] + 1 = 2\) which is smaller than \(\infty\) so we update the array: <code>OPT[2] = 2</code>.</li>
+    <li>\(\text{amount} - 4 = -2\) which is smaller than zero, so we can't use this denomination and thus we move on.</li>
+    <li>\(\text{amount} - 5 = -3\) which is smaller than zero, so we can't use this denomination and thus we move on. </li>
+</ul>
+Our <code>OPT</code> is now
+\[\verb#OPT# = [0,1,2,\infty,\infty,\infty,\infty,\infty,\infty]\]
+
+Let <code>amount = 3</code> We will now loop through all the denominations. We have:
+<ul>
+    <li>\(\text{amount} - 1 = 2\) so we move on to the next if statement. We have \(\verb#OPT#[\text{amount} - 1] + 1 = 3\) which is smaller than \(\infty\) so we update the array: <code>OPT[3] = 3</code>.</li>
+    <li>\(\text{amount} - 4 = -1\) which is smaller than zero, so we can't use this denomination and thus we move on.</li>
+    <li>\(\text{amount} - 5 = -2\) which is smaller than zero, so we can't use this denomination and thus we move on. </li>
+</ul>
+Our <code>OPT</code> is now
+\[\verb#OPT# = [0,1,2,3,\infty,\infty,\infty,\infty,\infty]\]
+
+Let <code>amount = 4</code>. We will now loop through all the denominations. We have:
+<ul>
+    <li>\(\text{amount} - 1 = 3\) so we move on to the next if statement. We have \(\verb#OPT#[\text{amount} - 1] + 1 = 4\) which is smaller than \(\infty\) so we update the array: <code>OPT[4] = 4</code>.</li>
+    <li>\(\text{amount} - 4 = 0\) so we move on to the next if statement. We have \(\verb#OPT#[\text{amount} - 4] + 1 = 1\) which is smaller than \(\verb#OPT[4]#=4\) so we update the array: <code>OPT[4] = 1</code>.</li>
+    <li>\(\text{amount} - 5 = -1\) which is smaller than zero, so we can't use this denomination and thus we move on. </li>
+</ul>
+Our <code>OPT</code> is now
+\[\verb#OPT# = [0,1,2,3,1,\infty,\infty,\infty,\infty]\]
+
+Let <code>amount = 5</code>. We will now loop through all the denominations. We have:
+<ul>
+    <li>\(\text{amount} - 1 = 4\) so we move on to the next if statement. We have \(\verb#OPT#[\text{amount} - 1] + 1 = 2\) which is smaller than \(\infty\) so we update the array: <code>OPT[5] = 2</code>.</li>
+    <li>\(\text{amount} - 4 = 1\) so we move on to the next if statement. We have \(\verb#OPT#[\text{amount} - 4] + 1 = 2\) which is equal to \(\verb#OPT[5]#=2\), so we don't update the array.</li>
+    <li>\(\text{amount} - 5 = 0\) so we move on to the next if statement. We have \(\verb#OPT#[\text{amount} - 5] + 1 = 1\) which is smaller than \(\verb#OPT[5]#=2\) so we update the array: <code>OPT[5] = 1</code>.</li>
+</ul>
+Our <code>OPT</code> is now
+\[\verb#OPT# = [0,1,2,3,1,1,\infty,\infty,\infty]\]
+
+Continuing this process for the remaining amounts, we obtain the final <code>OPT</code> array:
+\[\verb#OPT# = [0,1,2,3,1,1,2,2,2]\]
+
+Thus, our function returns <code>OPT[target] = OPT[8] = 2</code>, which is the minimum number of coins needed to make the target amount of 8 using the given denominations.
+<h2 id="L28-optimal-solution">Retrieving the Solution</h2>
+So what if we know what the optimal number is? It doesn't help us unless we can retrieve th actual combination of coins in order for this to happen. Let us define
+\[OPT\_soln(i) := \text{a best solution to make i\}\]
+Note that this is not well-defined. There could be several best solutions, but we only need to pick 1. The idea here is that every time we update <code>OPT[amount]</code> we want to also update <code>OPT_soln[amount]</code> so that we can retrieve the solution later. If we write <code>OPT_soln</code> as a dictionary, we can initialize it via
+<pre><code class="python">OPT_soln = {}
+OPT_soln[0] = []
+</code></pre>
+Then whenever we update <code>OPT[amount] = OPT[amount - d] + 1</code> where we are using <code>d</code> as a valid denomination, we can update our dictionary
+<pre><code class="python">OPT_soln[amount] = OPT_soln[amount - d] + [d]</code></pre>
+The above code appends two lists together. This gets overwritten every time <code>OPT[amount]</code> gets updated, but this is a good thing since <code>OPT[amount]</code> gets updated only when we find a better solution, so <code>OPT_soln[amount]</code> becomes a shorter list. Our final code is as follows:
+<pre><code class="python">import numpy as np
+    def make_change(denom, target):
+        OPT = np.inf * np.ones(target + 1)
+        OPT[0] = 0
+
+        OPT_soln = {}
+        OPT_soln[0] = []
+
+        for amount in range(1, target + 1):
+
+            # check all denominations
+            for d in denom:
+
+                # can we use this denomination?
+                if amount - d >= 0:
+
+                    # is this the best way to make this amount?
+                    if OPT[amount - d] + 1 < OPT[amount]:
+
+                        # update the optimal solution
+                        OPT[amount] = OPT[amount-d] + 1
+                        OPT_soln[amount] = OPT_soln[amount-d] + [d]
+
+        return OPT_soln[target]</code></pre>
+After running this code on our example, we get the following <code>OPT_soln</code>
+<pre>{0: [],
+1: [1],
+2: [1, 1],
+3: [1, 1, 1],
+4: [4],
+5: [5],
+6: [5, 1],
+7: [5, 1, 1],
+8: [4, 4]}</pre>
+One problem with this algorithm is that sometimes there is no solution. In our example, we are guaranteed a solution since a coin with value \(1\) exists. If this didn't exist, then there's no way we can make something of value \(1\). To fix this, all we need to do is replace the return statement with
+<pre><code class="python">return OPT_soln.get(target, None)</code></pre>
+where it tries to get the value with key <code>target</code> but if it doesn't exist (i.e. there's no solution) it returns <code>None.</code>
+<h2 id="L28-recursive-solution">Recursive Solution</h2>
+We can write a recursive solution (which isn't efficient at all) but it's quick to write! We have
+<pre><code class="python">def make_change(denom, target):
+    if target == 0
+        return 0
+    if target < 0
+        return None
+    min_coins = np.inf
+    for d in denom:
+        cur_min = make_change(denom, target - d) + 1
+        if cur_min < min_coins:
+            min_coins = cur_min
+    return min_coins</code></pre>
+The structure actually isn't too much different. For the most part, we've swapped from square brackets to round brackets. Instead of getting a value at an index, we are calling a function instead. Hoever, this is very inefficient.<br><br>
+
+Suppose we have three denominations. Then to compute \(OPT(t)\) we need to compute three functions \(OPT(t-1),OPT(t-4),OPT(t-5)\). For each of these three functions, I need to compute three more functions. We have the following tree.
+<pre>
+                          (t)
+                        /  |  \
+                      /    |    \
+                    /      |      \
+                 (t-1)   (t-4)    (t-5)
+                / | \    / | \    / | \
+</pre>
+At each level \(k\), we call at most \(3^k\) functions, where the maximum number of \(k\) is <code>target</code>. Therefore, the total number of calls we make is bounded by
+\[3^0+3^1+3^2+\cdots + 3^t = \frac{3^{t+1}-1}{3-1} = \mathcal{O}(3^t).\]
+In general, the time complexity, without memoization, is \[\mathcal{O}(d^t)\] where \(d\) is the number of denominations and \(t\) is the target amount. If we use <i>memoization</i> we can save a lot of time. We have the code
+<pre><code class="python">def make_change_recursive(denom, target, memo={}):
+    if target in memo:
+        # already computed, don't need to re-compute
+        return memo[target]
+
+    if target == 0:
+        memo[0] = 0
+        return 0
+
+    if target < 0:
+        memo[target] = np.inf
+        return np.inf
+
+    min_coins = np.inf
+    for d in denom:
+        cur_min = make_change_recursive(denom, target - d, memo) + 1
+        if cur_min < min_coins:
+            min_coins = cur_min
+
+    memo[target] = min_coins
+
+    return min_coins</code></pre>
+The main idea is that we stop recursive calls whenever we've already computed the value, which we're storing in the dictionary <code>memo</code>. How can we get the actual solution here? We do a similar thing as before, where <b>every time we update the optimal number, we also update a dictionary that keeps track of the solution that corresponds to this optimal number (i.e. optimal path)</b>. This is a common trick in dynamic programming problems that will be used over and over again.
+<pre><code class="python">def make_change_recursive(denom, target, memo={}, solns={}):
+    if target in memo:
+        return memo[target], solns[target]
+
+    if target == 0:
+        memo[0] = 0
+        solns[0] = []
+        return 0, []
+
+    if target < 0:
+        memo[target] = np.inf
+        solns[target] = None
+        return np.inf, None
+
+    min_coins = np.inf
+    optimal_soln = None
+    for d in denom:
+        cur_min, cur_soln = make_change_recursive(denom, target - d, memo, solns)
+        if cur_min < min_coins:
+            min_coins = cur_min + 1
+            optimal_soln = cur_soln + [d]
+
+    memo[target] = min_coins
+    solns[target] = optimal_soln
+
+    return min_coins, optimal_soln</code></pre>
+
+The time complexity analysis is left to the next class.
+<!-- <h2 id="L27-Optimality">BONUS: Greedy Algorithm</h2>
+The course calendar provides a link to a proof for the <a href="https://math.stackexchange.com/questions/2433735/proving-that-greedy-coin-change-algorithm-gives-optimal-solution-under-certain-c">greedy algorithm</a> for the case where the denominations all divide each other. However, this is not the most general case, and doesn't apply to our regular denomination system of \(1,5,10,25\) since \(25\) is not a multiple of \(10\).<br><br>
+
+For those who are interested, here is a <a href="https://arxiv.org/abs/0809.0400v2">paper</a> that covers the most general conditions for a denomination system to be able to use a greedy algorithm, which they call <i>canonical.</i>
+-->
+<h2 id="L28-recursive-complexity">Complexity Analysis for Memoization Solution</h2>
+The time complexity is \(\mathcal{O}(d*t)\) where \(d\) is the number of denominations and \(t\) is the target amount. We can compute this by determining how many times we call the recursive function \(\verb#make_change_recursive()#\). For each target, we recursively call the function \(d\) times (this is where the for loop is). The maximum number of targets is \(t+1\) (this is only an upper bound because sometimes we don't need to call the function for a target). Therefore, the total number of calls is \(d*(t+1))\).<br><br>
+
+It remains to verify that the other operations are constant time. Clearly, the base case is constant time since it involves only comparing numbers and changing the value of an array at a particular index. The only other part that might not be constant time is the line
+<pre><code class="python">optimal_soln = cur_soln + [d]</code></pre>
+because it involves creating a new list. This line is lazy writing and could be solved by pre-allocating enough space for the list so we don't need to create a new list every time, so we can make this part constant time as well. Since all other operations are in constant time, the time complexity is equal to the number of calls, which is \(\mathcal{O}(d*t)\).
+
+<h2 id="L28-memoization-vs-iterative">Memoization vs Iterative</h2>
+In many cases, both memoization and iterative (bottom-up) dynamic programming can be used to solve a problem. However, sometimes memoization might be slightly more efficient. This is because in memoization, we take a top-down approach. This means we don't need to compute the optimal values for every number below our target. We only make recursive calls to the numbers that we actually need.<br><br>
+
+We lose this ability when we take a bottom-up approach with the iterative method as we need to compute the optimal values for every number below our target. Therefore, if there are few denominations that are very spread out and we have a large target, it's going to take much longer for an iterative solution to compute the optimal solution, since it will be computing so many unnecessary values.
+

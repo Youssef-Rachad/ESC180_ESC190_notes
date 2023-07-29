@@ -1,0 +1,124 @@
+<h2 id="L22-queue">Queue ADT</h2>
+<div class="alert alert-success" role="alert"><br>
+    A <b>queue</b> is a collection of elements with the operations <code>enqueue</code> and <code>dequeue</code>
+    <ul>
+        <li><code>enqueue</code> inserts the elements into the collection</li>
+        <li><code>dequeue</code> removes the <i>earliest added element that's not yet removed and returns it</i></li>
+    </ul>
+</div>
+The anlogy for queues is a physical queue (i.e. a line of people). If we have a queue of people waiting to get into the Praxis lecture, the first person in the queue is the first person to get in (and therefore leave the queue). This is known as FIFO (first in first out). An example starting with an empty list:
+<ol>
+    <li><code>enqueue(1)</code></li>
+    <li><code>enqueue(50)</code></li>
+    <li><code>dequeue()</code> (returns 1)</li>
+</ol>
+<h2 id="L22-implementation-queue">Implementation of Queue</h2>
+I claim that this is trivial to do if we have the previous section. Why is this the case?
+<br><br>
+
+The reason is that the only difference between a stack and a queue is whether we choose to remove the most recent element or the earliest element. This means making a small change in the index is sufficient (i.e. <code>-1</code> to <code>0</code>)
+<pre><code class="python">class Queue:
+    def __init__(self):
+        self.data = []
+
+    def enqueue(self, item):
+        self.data.append(item)
+
+    def dequeue(self):
+        ret_val = self.data[0]
+        del self.data[0]
+        return ret_val
+
+if __name__ == '__main__':
+    s = Queue()
+    s.enqueue(1)
+    s.enqueue(50)
+    print(s.dequeue())
+    s.enqueue(100)
+    print(s.dequeue())
+    print(s.dequeue())</code></pre>
+which prints out <code>1 50 100</code> as expected.
+<h2 id="L22-improvement">Improving Queues</h2>
+Our naive implementation of a queue is very inefficient. Intuitively, a simple task such as removing the leftmost element can be done in constant time, so how can we fix this?<br><br>
+
+We can use linked lists!
+<center>
+    <img src="diagrams/linked_list_queue.png.jpg" class="img-fluid" alt="...">
+</center>
+Refer to the above diagram. The basic idea is that if we remove the first element, instead of shifting everything to the left, we can just change the <code>HEAD</code> pointer of the linked list to direct to the second element, which takes \(\mathcal{O}(1)\) time. We can implement this as follows:
+<pre><code class="python">import linkedlist
+
+class LLQueue:
+    def __ini__(self):
+        self.data = linkedlist.LinkedList()
+
+    def enqueue(self):
+        self.data.append(item)
+
+    def dequeue(self):
+        ret_value = self.data.head.value
+        self.data.head = self.data.head.next</code></pre>
+where <code>linkedlist</code> is the code we wrote in Lecture 21. Note that there is one problem. In order to append, we had to traverse the entire linked list, so the time complexity for <code>enqueue</code> is now \(\mathcal{O}(n)\). We can fix this by modifying the linked list implementation to keep track of the tail of the linked list, so that appending is \(\mathcal{O}(1)\). That is,
+<pre><code class="python">class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None</code></pre>
+Note that we now have to edit our existing functions so that it updates the tail pointer as well when we append and insert. See (and visualize) the changes that were made <a href="https://github.com/QiLinXue/esc190-notes/commit/3fe8daba4b99358152a34e187fcba656932ccba6">here!</a> The updated linked list file is
+<pre><code class="python">class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def get_i(self, i):
+        # return the value at index i
+        cur = self.head
+        for j in range(i):
+            cur = cur.next
+        return cur.value
+
+    def append(self, value):
+        '''Add a new node with the value value to the end of the list'''
+        # Create a new node
+        new_node = Node(value)
+
+        if self.head == None:
+            self.head = new_node
+            self.tail = new_node
+
+        self.tail.next = new_node
+        self.tail = new_node
+
+    def insert(self, value, i):
+        '''Insert a node with the value value at index i'''
+        new_node = Node(value)
+
+        if i == 0:
+            new_node.next = self.head
+            self.head = new_node
+
+        else:
+            cur = self.head
+            for j in range(i-1):
+                cur = cur.next
+            new_node.next = cur.next
+            cur.next = new_node
+
+        if new_node.next == None:
+            self.tail = new_node
+
+    def __str__(self):
+        cur = self.head
+        s = ""
+        if(cur == None):
+            return "Empty list :("
+
+        while cur != None:
+            print(cur)
+            s += str(cur) + " -> "
+            cur = cur.next
+        return s[:-4] # remove last arrow
+</code></pre>
+Note that the lecture had a minor typo. In the lecture, <code>self.tail</code> was initially set to <code>None</code> but it was never initialized, so running something like <code>self.tail.next = new_node</code> would lead to an error. <br><br>
+
+This is one very practical case where linked lists come in handy. The native implementation of queues in Python is via <code>collections.deque</code> which does it via doubly linked list, similar to what we constructed above.
+

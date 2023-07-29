@@ -1,0 +1,12 @@
+<!-- this is related to stacks and queue -->
+<h2 id="L22-complexity">Complexity</h2>
+This seems boring for such a simple data structure, but it is actually very exciting! First, note that the time complexity of <code>push</code> and <code>enqueue</code> is the same as the time complexity of appending to a list. This is \(\mathcal{O}(1)\) but it's not obvious why this is the case!
+<ul>
+    <li>If we were to implement this in C via an array, we can allocate extra memory such that writing to the array is \(\mathcal{O}(1)\). However, if we add enough elements to the array, then we run out of space and need to re-allocate memory, making the worst case scenario \(\mathcal{O}(n)\).</li>
+    <li>However in practice, this worst case scenario above isn't actually that bad. If every time we run out of memory, we double the allocated space, then there's only so many times we need to reallocate space (since exponents grow very fast). Note that this is a very common strategy people use.</li>
+</ul>
+In Python, lists are implemented <a href="https://wiki.python.org/moin/TimeComplexity">internally</a> as an array, so the above analysis applies as well.<br><br>
+
+Retrieving elements in an array by index and deleting the last element of an array are both \(\mathcal{O}(1)\) so the time complexity of <code>pop</code> is \(\mathcal{O}(1)\)<br><br>
+
+However, <code>dequeue</code> is \(\mathcal{O}(n)\). This is because once the item at index 0 is removed, the item that used to be at index 1 needs to be at index 0. In order for this to happen, the rest of the elements need to be shifted to the left, so a total of 10 operations are done.
