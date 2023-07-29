@@ -89,10 +89,27 @@
 An array is a block of memory containing a sequence of elements, of the same type. Arrays always have a pre-specified size. We can initialize an array using curly braces.<br><br>
 <pre><code class="language-C">int arr[5] = {1,2,3,4,5};</code></pre>
 This is unlike Python, where we do not need to specify a size, and arrays can dynamically change in size. If you are familiar with <code>numpy,</code> C arrays are much more similar to <code>numpy</code> arrays. We are allowed to retrieve and modify array elements,<br><br>
+
+We can also declare an empty array with a specified size, then populate it later.
 <pre><code class="language-C">#include &lt;stdio.h&gt
 int main()
 {
-  int arr[5] = {1,2,3,4,5};
+  int arr[10];
+  for (int i = 0; i < 10; i++)
+  {
+    arr[i] = 2 * i + 1;
+  }
+  
+  printf("The 4th element is: %d", arr[3]);
+  printf("%ud, %ud\n", sizeof(arr), sizeof(arr[0])) // prints 20, 4
+  printf("#of elements in arr is %d\n", sizeof(arr) / sizeof(arr[0]))
+}
+</code></pre>          
+<pre><code class="language-C">#include &lt;stdio.h&gt
+int main()
+{
+  int arr[] = {1,2,3,4,5};// The compiler infers the length of the array
+                           // Note the length is still fixed
   printf("%d\n", arr[2]); // prints 3
   arr[2] = 6;
 
@@ -149,8 +166,45 @@ printf("%ud", 3);
   printf("%d\n",arr[0]); // prints 0
 }
 </code></pre>
+<div class="card">
+  <h2 class="card-header" id="array-challenge">Put in Practise</h5>
+  <div class="card-body">
+    Write a function that takes an array of integers as argument and doubles each element.
+
+<p>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#L3Example" role="button" aria-expanded="false" aria-controls="L3Example">
+    Show Solution
+  </a>
+</p>
+<div class="collapse" id="L3Example">
+  <div class="card card-body">
+  <pre><code class="language-C">#include &lt;stdio.h&gt
+  void doubleArray(int *arr, int len)
+  {
+    for(int i = 0; i < len; ++i)
+    {
+      arr[i] *= 2;
+    }
+  }
+
+  int main()
+  {
+      int arr[4] = {1, 3, 5, 7};
+      int length = sizeof(arr) / sizeof(arr[0]);
+      doubleArray(*arr, length);
+      return 0;
+  }
+  </code></pre>
+
+  </div>
+</div>
+
+</div>
+</div>
+
 </div>
     </div>
+      
     <footer>
         By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
         &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as attribution to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not suggest that the original author endorses any adaptation. This permission to share, re-distribute and adapt is non-transferrable.
