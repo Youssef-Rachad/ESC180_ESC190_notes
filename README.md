@@ -2,7 +2,7 @@
 
 Repository to maintain ESC180 and 190 course notes.
 
-ESC190 has website deployed [here](https://youssef-rachad.github.io/ESC180_ESC190_notes/esc190/index.html).
+ESC190 has website deployed [here](https://youssef-rachad.github.io/ESC180_ESC190_notes/index.html).
 
 Supervisor: Professor Michael Guerzhoy
 
