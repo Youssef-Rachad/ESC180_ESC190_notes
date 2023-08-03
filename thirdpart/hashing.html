@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-YCY17GV3DB');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen"
+        charset="utf-8">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+    <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            (i[r] =
+                i[r] ||
+                function () {
+                    (i[r].q = i[r].q || []).push(arguments);
+                }),
+                (i[r].l = 1 * new Date());
+            (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m);
+        })(
+            window,
+            document,
+            "script",
+            "//www.google-analytics.com/analytics.js",
+            "ga"
+        );
+
+        ga("create", "UA-19048260-11", "auto");
+        ga("send", "pageview");
+
+        hljs.highlightAll();
+    </script>
+</head>
+
+<body data-bs-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-sm-9">
+
+
+                <h1 id="-esc190-lecture-notes">Hashing</h1>
+                <p>See all lecture notes <a href="../">here</a>.</p>
+                </p>
+
+                This lecture will cover the basics of how sets and dictionaries work.
+                <div class="alert alert-success" role="alert"><br>
+                    A <b>map</b> is a collection of <i>(key, value)</i> pairs, where the keys are unique, but the values
+                    may not be. The two operations are:
+                    <ul>
+                        <li><code>get(key)</code> gets the value at the specific key</li>
+                        <li><code>put(key, value)</code> puts the pair (key,value) in the map</li>
+                    </ul>
+                </div>
+                For example, a python dictionary is an implementation of a map. How can we implement this?
+                <ul>We can use a binary tree (specifically an AVL tree, don't need to know this). The pairs are stored
+                    as entries on this tree, sorted using a function that compares the keys. The operations
+                    \(\verb#get#\) and \(\verb#put#\) take \(\mathcal{O}(\log n)\) time</ul>
+                <ul>Use an array of values. We permit only integer keys and if the integers are big, the array may need
+                    to be large. If I want to store 100 pairs but one of my keys is \(10000\), then my array will have a
+                    size of at least \(10000\)! The advantage is takes constant time for \(\verb#get#\) and
+                    \(\verb#put#\)</ul>
+                <ul>Use hash tables. This is an extension of the array idea, but we don't need very large arrays, and
+                    keys are no longer limited to integers!</ul>
+                <h2 id="hash-tables">Hash Tables</h2>
+                To implement a hash table, we can define a table (i.e. array) of length \(\verb#TableSize#\). Then we
+                can define a function \(hash(key)\) that maps keys to integer indices in the range
+                \(0,\dots,\verb#TableSize#-1\).
+
+                Assuming that \(hash(key)\) takes constant time, then we can implement the \(\verb#get#\) and
+                \(\verb#put#\) operations in constant time. Specifically, we want this function to be an
+                <b>injection.</b> In other words, there is a one-to-one map between keys and indices. This is because if
+                we have two keys that map to the same index, then we have a collision.<br><br>
+
+                However, in reality this is not possible. There are a <a
+                    href="https://en.wikipedia.org/wiki/Countable_set">countably</a> infinite number of keys, but only a
+                finite \(\verb#TableSize#\) entries in the array.
+
+                This isn't that bad though! For the most part, we can try to avoid collisions by distributing items
+                evenly, and if there are collisions, we just need to find a way to resolve them.
+                <h2 id="hash-function">Hash Functions</h2>
+                From now on, we'll be working with integer keys. If we have a string as a key, we can simply convert it
+                to its ASCII value. Remember from before that we want to save space, so we want to make
+                \(\verb#TableSize#\) as small as possible, and for that reason, the hash function \(hash(x)=x\) is bad.
+                Instead, we can try
+                \[hash(x) = x \% \verb#TableSize#\]
+                where the symbol \(%\) is the modulo operator. This is a good hash function because it maps all integers
+                to the range \(0,\dots,\verb#TableSize#-1\). However, it's not a good hash function because it's not an
+                injection. For example, if we have a table of size \(10\) and we have the keys
+                \(\{0,10,20,30,\dots,90\}\), then they will all map to the same index.<br><br>
+
+                Therefore, this hash function is only good if the keys we are working with are well distributed, in the
+                sense that the hash function will map them to a relatively even distribution.<br><br>
+
+                If the key is a compound object (i.e. using a tuple as a key), we can construct the hash function
+                \[hash(s,x) = (hash_1(s) \times p_1 + hash_2(x) \times p_2)\% \verb#TableSize#\]
+                where \(p_1\) and \(p_2\) are two prime numbers. The reason we want \(p_1,p_2\) to be prime is so that
+                we don't have empty space. If they shared a factor, i.e. the number \(2\), then it'ls possible that
+                we're skipping all the odd cells in the table.
+                <h2 id="collisions-chain">Collisions (Chaining)</h2>
+                No matter how good our hash function is, we'll always have collisions. How can we deal with them? One
+                method is via <b>separate chaining</b> The idea is that we can keep all the items that map to the same
+                index in a linked list.<br><br>
+
+                The runtime depends on the number of elements in a list on average. We can define the <b>load factor</b>
+                \[\lambda = \frac{N}{\verb#TableSize#}\]
+                where \[N\] is the total number of entries. It represents the average number of items in a linked list.
+                While the worst-case run time is still \(\mathcal{O}(n)\), because everything could collide with
+                everything.
+
+                However, if we have a good hash function and everything is distributed evenly, then the average run time
+                is \(\mathcal{O}(\lambda)\). This is because if we're trying to lookup an item and it fails, we need to
+                search all the nodes to ensure that, which is \(\lambda\) operations. If it succeeds, then on average we
+                need to perform \(\lambda/2\) operations. Either way, we get \(\mathcal{O})(\lambda)\).<br><br>
+
+                To ensure that we still have constant time operations, we want \(\lambda \approx 1\) and we increase the
+                table size whenever needed. However, we can't simply <i>only</i> double the size of the table, because
+                the same hash function will no longer work for the keys stored previously. This is because the hash
+                function depends on the table size! To resolve this, we'll double the table size and then rehash all the
+                keys.
+                <h2 id="collisions-Probing">Collisions (Probing)</h2>
+                Another way to deal with collisions is via <b>probing</b>. The idea is that we don't store the items in
+                a linked list, but instead we store them in the table itself. If there is a collision, we can try to
+                find another empty cell to store the item.<br><br>
+
+                For example, if we have <b>linear</b> probing, whenever we have a collision, we can try to store the
+                item in the next cell. If that cell is occupied, then we try the next cell, and so on. This is easy to
+                implement but in practice, it's not very good. The reason is that if we have a lot of collisions in
+                close proximity to each other, it creates a cluster of occupied slots, making it more likely for
+                subsequent collisions to occur in the same cluster, further exacerbating the problem.<br><br>
+
+                There are more advanced methods of probing that can fix this issue. <br><br>
+
+                The loading factor \(\lambda\) can be defined the same way, but note that with probing, we have
+                \[\lambda \le 1\]
+                and the table is full if \(\lambda = 1\). Therefore, the interpretation is slightly different.
+
+            </div>
+        </div>
+        <footer>
+            By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+            &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as
+            attribution
+            to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu
+            that you
+            intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not
+            suggest that
+            the original author endorses any adaptation. This permission to share, re-distribute and adapt is
+            non-transferrable.
+        </footer>
+    </div>
+</body>
+
+</html>
