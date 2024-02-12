@@ -1,35 +1,37 @@
-<h1 id="L23">L23: Midterm Question (PyInteger)</h1>
-In this lecture, we review the midterm: specifically question 5 where we are asked to implement the ADT <code>pyinteger</code> which allows us to represent arbitrarily large integers and perform the two basic operations,
+<h1 id="L23">PyInteger (Yummy and does not end)</h1>
+In this lecture, we review a concept from last year's midterm: we were asked to implement the ADT <code>pyinteger</code> which allows us to represent arbitrarily large integers and perform the two basic operations,
 <ul>
-    <li><code>plusplus(n1)</code> adds <code>1</code> to the <code>pyinteger n1</code></li>
-    <li><code>add(n1, n2)</code> adds the <code>pyinteger n2</code> to the <code>pyinteger n1</code></li>
+    <li>Adding an integer to the <code>pyint</code></li>
+    <li>Adding 2 <code>pyint</code>s together</li>
 </ul>
 We first set up our header file, <code>pyinteger.h</code>:
-<pre><code class="c">#if !defined(PYINTEGER_H)
-#define PYINTEGER_H
+<pre><code class="c">#if !defined(PYINT_H)
+#define PYINT_H
+typedef struct pyint{
+    int *buffer;
+    int length;
+} pyint;
 
-typedef struct pyinteger{
-    int *digits;
-    int size;
-    int capacity;
-} pyinteger;
-
-void plusplus(void *pyint);
-void add(pyinteger *pyint1, pyinteger *pyint2);
+void create_pyint(pyint *p, int length);
+void destroy_pyint(pyint *p);
+void set_pyint(pyint *p, int value);
+void print_pyint(pyint *p);
+void add_pyints(pyint *p, pyint *q);
+void add_pyint_scalar(pyint *p, int value);
 
 #endif</code></pre>
-where <code>pyinteger</code> is a struct that contains the following fields:
+where <code>pyint</code> is a struct that contains the following fields:
 <ul>
-    <li><code>digits</code> is a pointer to an array of integers that stores the digits of the integer</li>
-    <li><code>size</code> is the number of digits in the integer</li>
-    <li><code>capacity</code> is the maximum number of digits that can be stored in the array</li>
+    <li><code>buffer</code> is a pointer to an array of integers that stores the digits of the integer</li>
+    <li><code>length</code> is the number of digits in the integer</li>
 </ul>
-Here, we are representing an integer via an array where each element in this array is a digit from 0-9. For example, the integer 1234 would be represented as <code>[1, 2, 3, 4]</code>. We use a similar approach to the one we used in Lecture 21 to update the <code>capacity.</code> Every time the capacity is reached and we need to add another digit, we double the capacity of the array.
+Here, we are representing an integer via an array where each element in this array is a digit from 0-9. For example, the integer 1234 would be represented as <code>[1, 2, 3, 4]</code>. 
+Note that we will handle cases where the number we want to store exceeds the number of digits currently allocated in the buffer (and will typically double the array to avoid having to reallicate memory too often).
 <h2 id="L22-creating">Creating the Struct</h2>
-Now we work in <code>pyinteger.c</code> and we wish to implement the ADT. But first, we can create an optional function that allows us to create a <code>pyinteger</code> struct which initially stores <code>int n</code>. What are some natural tasks that we must do?
+Now we work in <code>pyint.c</code> and we wish to implement the ADT. But first, we can create a function that allows us to create a <code>pyint</code> struct which initially stores <code>int n</code>. What are some natural tasks that we must do?
 <ul>
-    <li>How can we determine the initial <code>capacity</code>? In other words, how do we make sure we initially allocated enough space for our array?</li>
-    <li>How can we put the digits into the array <code>*digits</code>? To do this, we need to find a good way of extracting the digits from the initial integer.</li>
+    <li>How can we determine the initial <code>length</code>? In other words, how do we make sure we initially allocated enough space for our array?</li>
+    <li>How can we put the digits into the array <code>*buffer</code>? To do this, we need to find a good way of extracting the digits from the initial integer.</li>
 </ul>
 To determine the initial capacity, we need to determine the number of digits <code>int n</code> has.
 <div class="alert alert-primary" role="alert">
