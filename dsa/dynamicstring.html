@@ -56,17 +56,20 @@
 
                 <h1 id="LDynamicStrings">Dynamic (Infinite) Strings</h1>
 
-                We've seen previously how to declare strings - static, using pointers, as constants - and noticed all
-                approaches share a similar pattern of declaring some fixed size of memory and storing characters. What
-                if we wanted to shorten or lenghthen our string?
+                <p>We've seen previously how to declare strings - static, using pointers, as constants - and noticed all
+                    approaches share a similar pattern of declaring some fixed size of memory and storing characters.
+                    What
+                    if we wanted to shorten or lenghthen our string?</p>
 
-                This is a luxury we took for granted when programming in Python! We could declare some variable and give
-                it any string we wanted, modifying it liberally without second thought. Armed with pointers and structs,
-                we will attempt to emulate this desired behaviour in C!
+                <p>This is a luxury we took for granted when programming in Python! We could declare some variable and
+                    give
+                    it any string we wanted, modifying it liberally without second thought. Armed with pointers and
+                    structs,
+                    we will attempt to emulate this desired behaviour in C!</p>
 
-                Let's define a custom string struct <code>mystr</code> as follows
+                <p>Let's define a custom string struct <code>mystr</code> as follows</p>
 
-                <pre><code class="c"> #if !defined(MYSTR_H)
+                <pre><code class="c">#if !defined(MYSTR_H)
 #define MYSTR_H
 typedef struct mystr{
     char *str;
@@ -77,6 +80,7 @@ typedef struct mystr{
 void mystr_create(mystr *p_s, const char *str, int len);
 void mystr_cat(mystr *p_dest, const mystr *p_src);
 void mystr_destroy(mystr *p_s);
+mystr mystr_substr(mystr *p_s, int i, int j);
 
 #endif
 </code>
@@ -87,15 +91,13 @@ void mystr_destroy(mystr *p_s);
 
                 We will also go ahead and declare some basic functionality for our string: allocating/freeing and
                 concatenation.
-                Let's flesh out these functions
-
-                <pre><code class="c">
-#include &gt;stdio.h&lt;
-#include &gt;stdlib.h&lt;
-#include &gt;string.h&lt;
+                Let's flesh out these functions!
+                <pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
 #include "mystr.h"
 </code></pre>
-                <pre><code class="c"> void mystr_create(mystr *p_s, const char *str, int len)
+                <pre><code class="c">void mystr_create(mystr *p_s, const char *str, int len)
 {
     // allocate p_s-&lt;str, and copy str to p_s-&lt;str
     // could instead say p_s-&lt;str = str;
@@ -110,23 +112,46 @@ void mystr_destroy(mystr *p_s);
         printf("Malloc failed\n");
         exit(1);
     }
-    strcpy(p_s-&lt;str, str);
+    memcpy(p_s-&lt;str, str, len); // since 1 char is 1 byte, 
+                            // len * sizeof(char) can be simplified  
 
 }
 </code></pre>
+                Notice in the above that we've made similar design choices to the string implementation in Python:
+                <ol>
+                    <li>We allocate the correct memory size for <code>p_s-&gt;str</code></li>
+                    <li>Then we copy the contents of <code>str</code> into <code>p_s-&gt;str</code></li>
+                </ol>
+                But why do we do this?
 
+                There are 2 subtleties to address here:
+                <ol>
+                    <li>Using <code>memcpy</code> instead of <code>strcpy</code> is important here because our substring
+                        function will likely not encounter a null terminator <code>\0</code> and thus
+                        <code>strcpy</code> will continue to copy.
+                        Instead, we use <code>memcpy</code>, ensuring that we pass in the correct length to directly
+                        control the memory size independent of null termination.</li>
+                    <li>Copying the contents of <code>str</code> in the first place is a better design choice since we
+                        can assume no knowledge about <code>str</code>; is it a dynamic string that I must free? is it a
+                        const char that I can't modify? If we instead assigned
+                        <pre><code class="c">p_s&gt;str = str</code></pre>
+                        Then our mystr string would simply alias to whatever str was and it would be trickier to use
+                        this in our program. Even if no memory issues arose, modifying str down the line would also
+                        modify our mystr string which is not a great behaviour to accept.
+                    </li>
+                </ol>
 
-                <pre><code class="c">
-void mystr_cat(mystr *p_dest, const mystr *p_src)
+                Let's continue with concatenation:
+                <pre><code class="c">void mystr_cat(mystr *p_dest, const mystr *p_src)
 {
-    p_dest-&lt;str = (char *)realloc(p_dest-&lt;str,
-     (p_dest-&lt;len + p_src-&lt;len + 1) * sizeof(char));
-    if (p_dest-&lt;str == NULL){
+    p_dest-&gt;str = (char *)realloc(p_dest-&gt;str,
+     (p_dest-&gt;len + p_src-&gt;len + 1) * sizeof(char));
+    if (p_dest-&gt;str == NULL){
         printf("Realloc failed\n");
         exit(1);
     }
-    p_dest-&lt;len += p_src-&lt;len;
-    strcat(p_dest-&lt;str, p_src-&lt;str);
+    p_dest-&gt;len += p_src-&gt;len;
+    strcat(p_dest-&gt;str, p_src-&gt;str);
 }
 
 void mystr_destroy(mystr *p_s)
@@ -135,18 +160,21 @@ void mystr_destroy(mystr *p_s)
     p_s-&lt;str = NULL;
     p_s-&lt;len = 0;
 }
-</code></pre>
 
+mystr mystr_substr(mystr *p_s, int i, int j)
+{
+    mystr substr;
+    mystr_create(&substr, p_s-&gt;str + i, j - i);
+
+    return substr;
+}
+</code></pre>
+                <h1>Passing by Reference, Passing by Value</h1>
                 Let's take a closer look at the <code>mystr_create()</code> function. Notice that we are passing
                 <code>mystr s</code> "by value" into the function. What does that mean?
 
                 Well, let's give it a spin! When we try to create a <code>mystr</code> and print its contents like so
-                <pre><code class="c">mystr *p_s;
-mystr_create(&amp;p_s, "hello world", 11);
-</code></pre>
-
-                <pre><code class="c">
-void mystr_create(mystr s, const char *str, int len)
+                <pre><code class="c">void mystr_create(mystr s, const char *str, int len)
 {
 
     if (len &lt;= s.len) {
@@ -157,7 +185,16 @@ void mystr_create(mystr s, const char *str, int len)
     s.len = len;
     strcpy(s.str, str);
 }
+int main()
+{
+    mystr s;
+    mystr_create(&amp;s, "hello world", 11);
+    printf("%s\n", s.str);
+
+    exit(0);
+}   
 </code></pre>
+                What do we print in this case? Can you relate passing by reference/ by value to using static/ dynamic memory?
             </div>
         </div>
         <footer>

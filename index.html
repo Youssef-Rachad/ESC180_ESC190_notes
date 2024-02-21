@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  
+
 <head>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
@@ -11,18 +11,17 @@
   <title>ESC190 Lecture Notes</title>
   <!-- Bootstrap Style -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
   <!-- TOC CSS -->
   <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
 
-  <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen"
-      charset="utf-8">
+  <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen" charset="utf-8">
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"></script>
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-      crossorigin="anonymous"></script>
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
   <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -31,19 +30,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 
   <script type="text/javascript">
-      (function (i, s, o, g, r, a, m) {
-          i["GoogleAnalyticsObject"] = r;
-          (i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments); }),
-              (i[r].l = 1 * new Date());
-          (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-          a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
-      })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+    (function (i, s, o, g, r, a, m) {
+      i["GoogleAnalyticsObject"] = r;
+      (i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments); }),
+        (i[r].l = 1 * new Date());
+      (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+      a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+    })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
 
-      ga("create", "UA-19048260-11", "auto"); ga("send", "pageview");
+    ga("create", "UA-19048260-11", "auto"); ga("send", "pageview");
 
-      hljs.highlightAll();
+    hljs.highlightAll();
   </script>
 </head>
+
 <body data-bs-spy="scroll" data-target="#toc">
   <div class="container">
     <div class="row">
@@ -53,128 +53,136 @@
       <div class="col-sm-9">
 
 
-<h1 id="-esc190-lecture-notes">ESC190 Lecture Notes</h1>
-    <p>These are official course notes for ESC190: Computer Algorithms and Data Structures.
-      <br><br>
-      I will do my best to update notes within 24 hours of the lecture recording being posted. If you have any feedback, questions, clarifications, or if you see a typo or a mistake, feel free to email me at <a href="mailto:youssef.rachad@mail.utoronto.ca">youssef.rachad@mail.utoronto.ca</a>. Thanks to QiLin for starting the notes!
-      <br><br>
-      Cheers!<br>
-      Youssef
-    </p>
-  <h1 id="toc">Table of Contents</h1>
-  <ol>
-    <li>
-        <!-- <a href="part1.html">-->Part 1 Introduction to the C Memory Model, Strings, Arrays, Functions, Structs.<!--</a>-->
-    </li>
-      <ul>
-    <li>
-      <a href="firstpart/variables.html">Variables</a>
-    </li>
-    <li>
-      <a href="firstpart/functions.html">Functions</a>
-    </li>
-    <li>
-      <a href="firstpart/array.html">Arrays</a>
-    </li>
-    <li>
-      <a href="firstpart/strings.html">Strings</a>
-    </li>
-    <li>
-      <a href="firstpart/pointers.html">Pointers</a>
-    </li>
-    <li>
-      <a href="firstpart/structs.html">Structs</a>
-    </li>
-    <li>
-      <a href="firstpart/memory.html">Memory Model of C</a>
-    </li>
-      </ul>
-    <li>
-      Part 2 Meta Programming
-      <ul>
-        <li>
-            <a href="secondpart/machines.html">File Systems </a>
-        </li>
-        <li>
-            <a href="secondpart/project.html">Compiling and Header Files</a>
-        </li>
-        <li>
-            <a href="secondpart/debugging.html">Debugging and Memory Leaks</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      Part 3 Data Structures and Algorithms
-      <ul>
-        <li>
-            <a href="thirdpart/sorting.html">Intro to Sorting</a>
-        </li>
-        <li>
-            <a href="thirdpart/fileio.html">Reading Files</a>
-        </li>
-        <li>
-            <a href="thirdpart/bbsort.html">Bubble Sort</a>
-        </li>
-        <li>
-            <a href="dsa/linkedlist.html">Linked Lists</a> (<span style="color:red">new!</span>)
-        </li>
-        <li>
-            <a href="thirdpart/adt.html">Abstract Data Types</a>
-        </li>
-        <li>
-            <a href="thirdpart/classes.html">Python Classes</a>
-        </li>
-        <li>
-            <a href="thirdpart/precedence.html">Operator Precedence</a>
-        </li>
-        <li>
-            <a href="thirdpart/stacks.html">Stacks</a>
-        </li>
-        <li>
-            <a href="thirdpart/queue.html">Queue</a>
-        </li>
-        <li>
-            <a href="dsa/pyinteger.html">PyInteger</a> (<span style="color:red">new!</span>)
-        </li>
-        <li>
-            <a href="dsa/dynamicstring.html">Dynamic Strings</a> (<span style="color:red">new!</span>)
-        </li>
-        <li>
-            <a href="thirdpart/heaps.html">Heaps</a>
-        </li>
-        <li>
-            <a href="thirdpart/priority_queue.html">Priority Queue</a>
-        </li>
-        <li>
-            <a href="thirdpart/dynamic_programming.html">Dynamic Programming</a>
-        </li>
-        <li>
-            <a href="thirdpart/graphs.html">Graphs</a>
-        </li>
-        <li>
-            <a href="thirdpart/bfs.html">Breadth First Search</a>
-        </li>
-        <li>
-            <a href="thirdpart/dfs.html">Depth First Search</a>
-        </li>
-        <li>
-            <a href="thirdpart/dijkstra.html">Dijkstra's Algorithm</a>
-        </li>
-        <li>
-            <a href="thirdpart/astar.html">A* Algorithm</a>
-        </li>
-        <li>
-            <a href="thirdpart/hashing.html">Hashing</a>
-        </li>
-      </ul>
-    </li>
-  </ol>
-<br><br><br><br><br>
-    <footer>
-        By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
-        &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as attribution to the original author is given, and as long as you notify the original author at guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way and in a way that does not suggest that the original author endorses any adaptation. This permission to share, re-distribute and adapt is non-transferrable.
-    </footer>
-</div>
+        <h1 id="-esc190-lecture-notes">ESC190 Lecture Notes</h1>
+        <p>These are official course notes for ESC190: Computer Algorithms and Data Structures.
+          <br><br>
+          I will do my best to update notes within 24 hours of the lecture recording being posted. If you have any
+          feedback, questions, clarifications, or if you see a typo or a mistake, feel free to email me at <a
+            href="mailto:youssef.rachad@mail.utoronto.ca">youssef.rachad@mail.utoronto.ca</a>. Thanks to QiLin for
+          starting the notes!
+          <br><br>
+          Cheers!<br>
+          Youssef
+        </p>
+        <h1 id="toc">Table of Contents</h1>
+        <ol>
+          <li>
+            Part 1 C Programming Fundamentals
+          </li>
+          <ul>
+            <li>
+              <a href="firstpart/variables.html">Variables</a>
+            </li>
+            <li>
+              <a href="firstpart/functions.html">Functions</a>
+            </li>
+            <li>
+              <a href="firstpart/array.html">Arrays</a>
+            </li>
+            <li>
+              <a href="firstpart/strings.html">Strings</a>
+            </li>
+            <li>
+              <a href="firstpart/pointers.html">Pointers</a>
+            </li>
+            <li>
+              <a href="firstpart/structs.html">Structs</a>
+            </li>
+            <li>
+              <a href="firstpart/memory.html">Memory Model of C</a>
+            </li>
+          </ul>
+          <li>
+            Part 2 Files and Compilers
+            <ul>
+              <li>
+                <a href="secondpart/machines.html">File Systems </a>
+              </li>
+              <li>
+                <a href="secondpart/project.html">Compiling and Header Files</a>
+              </li>
+              <li>
+                <a href="secondpart/debugging.html">Debugging and Memory Leaks</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            Part 3 Data Structures and Algorithms
+            <ul>
+              <li>
+                <a href="thirdpart/sorting.html">Intro to Sorting</a>
+              </li>
+              <li>
+                <a href="thirdpart/fileio.html">Reading Files</a>
+              </li>
+              <li>
+                <a href="thirdpart/bbsort.html">Bubble Sort</a>
+              </li>
+              <li>
+                <a href="dsa/linkedlist.html">Linked Lists</a> (<span style="color:red">new!</span>)
+              </li>
+              <li>
+                <a href="thirdpart/adt.html">Abstract Data Types</a>
+              </li>
+              <li>
+                <a href="thirdpart/classes.html">Python Classes</a>
+              </li>
+              <li>
+                <a href="thirdpart/precedence.html">Operator Precedence</a>
+              </li>
+              <li>
+                <a href="dsa/stack.html">Stacks</a> (<span style="color:red">new!</span>)
+              </li>
+              <li>
+                <a href="dsa/queue.html">Queue</a> (<span style="color:red">new!</span>)
+              </li>
+              <li>
+                <a href="dsa/pyinteger.html">PyInteger</a> (<span style="color:red">new!</span>)
+              </li>
+              <li>
+                <a href="dsa/dynamicstring.html">Dynamic Strings</a> (<span style="color:red">new!</span>)
+              </li>
+              <li>
+                <a href="thirdpart/heaps.html">Heaps</a>
+              </li>
+              <li>
+                <a href="thirdpart/priority_queue.html">Priority Queue</a>
+              </li>
+              <li>
+                <a href="thirdpart/dynamic_programming.html">Dynamic Programming</a>
+              </li>
+              <li>
+                <a href="thirdpart/graphs.html">Graphs</a>
+              </li>
+              <li>
+                <a href="thirdpart/bfs.html">Breadth First Search</a>
+              </li>
+              <li>
+                <a href="thirdpart/dfs.html">Depth First Search</a>
+              </li>
+              <li>
+                <a href="thirdpart/dijkstra.html">Dijkstra's Algorithm</a>
+              </li>
+              <li>
+                <a href="thirdpart/astar.html">A* Algorithm</a>
+              </li>
+              <li>
+                <a href="thirdpart/hashing.html">Hashing</a>
+              </li>
+            </ul>
+          </li>
+        </ol>
+        <br><br><br><br><br>
+        <footer>
+          By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+          &copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as
+          attribution to the original author is given, and as long as you notify the original author at
+          guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way
+          and in a way that does not suggest that the original author endorses any adaptation. This permission to share,
+          re-distribute and adapt is non-transferrable.
+        </footer>
+      </div>
     </div>
-  </body>
+</body>
+
 </html>
