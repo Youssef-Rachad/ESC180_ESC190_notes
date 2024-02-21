@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', 'G-YCY17GV3DB');</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen"
+        charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            (i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments); }),
+                (i[r].l = 1 * new Date());
+            (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+            a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+        })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+
+        ga("create", "UA-19048260-11", "auto"); ga("send", "pageview");
+
+        hljs.highlightAll();
+    </script>
+</head>
+
+<body data-bs-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-sm-9">
+                Let's think about the overarching narrative:
+                <ul>
+                    <li>Motivation and Explanation of Linked Lists</li>
+                    <li>Definition as an ADT</li>
+                    <li>Implementation in C with Best Practises</li>
+                    <li>Implementation in Python with Classes</li>
+                </ul>
+                <h1>Linked Lists</h1>
+                <h1>Implementation in C</h1>
+                <h2>Insert Operation</h2>
+                <h2>Get Operation</h2>
+                <h2>Remove Operation</h2>
+                <h2>Best Practises</h2>
+                <h1>Implementation in Python</h1>
+
+                <h1>Linked Lists</h1>
+
+                Motivation: We cannot dynamically add an element to an existing array or block of memory easily, as
+                there could be no space there! The only option we have is to re-allocate everything to a new location
+                with enough space. This is inefficient, especially for larger arrays. Instead, we can use a special data
+                structure called a <b>linked list</b>.
+                <ul>
+                    <li>A linked list consists of a data structure called a <code>node</code>, which consists of the
+                        following information:</li>
+                    <ul>
+                        <li><code>data:</code> the actual data you need to store</li>
+                        <li><code>next:</code> the address of the next node</li>
+                    </ul>
+                    <li>We can then make an array by creating a chain of these nodes, where we can find the next node by
+                        following the <code>next</code> pointer. While this uses up more space than a regular array, it
+                        has the benefit of preventing re-allocating everything. For example, if we want to add an
+                        element to the end of the list, we can simply create a new node and set the <code>next</code>
+                        pointer of the last node to point to the new node (+ a minor detail we'll touch on in a bit).
+                    </li>
+                    <li>See the <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W07/LL.pdf">lecture slides</a> for
+                        a visual of linked lists and their operations.</li>
+                </ul>
+                <h1 id="L19">L19: Abstract Data Type</h1>
+                An <b>abstract data type</b> (ADT) is any collection of values, together with operations on those
+                values. For example:
+                <ul>
+                    <li><code>ints</code> with operations <code>+,-*,/,%</code></li>
+                    <li><code>lists</code> with operations insert, remove, get</li>
+                </ul>
+                An ADT specifies what values are represented and what operations can be performed, but not how to store
+                them or how to carry them out. They allow for modularity and reuse, as it is independent of
+                implementation. A <b>data structure</b> is an implementation of an ADT as it is a way to represent the
+                values, and algorithms for each operation.<br><br>
+
+                Example: Consider a <code>list</code> which is an ordered collection of data items that supports the
+                following operations:
+                <ul>
+                    <li><code>Insert(list, i, x)</code>: add item <code>x</code> at index <code>i</code> of
+                        <code>list</code>. The item previously at index <code>i</code>, and all following items, are
+                        shifted up by one index to make room for <code>x</code>.
+                    </li>
+                    <li><code>Remove(list, i)</code>: remove item at index <code>i</code> of <code>list</code>. The item
+                        previously at index <code>i+1</code>, and all following items, are shifted down by one index to
+                        fill the gap.</li>
+                    <li><code>Get(list, i)</code>: return the item at index <code>i</code> of <code>list</code>.</li>
+                </ul>
+                We define this ADT very abstractly, such that we only describe the outcome of each operation, but not
+                how to implement it. For example, lists can be implemented using arrays, but it can also be implemented
+                using linked lists.
+
+                <h1>Implementation in C</h1>
+                <h2>Insert Operation</h2>
+                <h2>Get Operation</h2>
+                <h2>Remove Operation</h2>
+                <h2>Best Practises</h2>
+                <h1>Implementation in Python</h1>
+
+
+                <h2 id="L18-LL-operations">Linked List Operations</h2>
+                We want to implement the following operations: Inserting, Removing, and Searching.
+                <ul>
+                    <li>Inserting: Suppose we already have a pointer to a node, and we wish to insert a node after that.
+                        What we can do is create this new node, and set its <code>next</code> pointer to point to the
+                        node that the original node pointed to. Then, we can set the original node's <code>next</code>
+                        pointer to point to the new node we just created.</li>
+                    <ul>
+                        <li><b>Analogy:</b> A popular children's activity is to form a <i>human train,</i> where each
+                            person puts their hand on the shoulder of the person in front of them, forming a chain
+                            (linked list). If a new participant Bob (the new node) wants to join the train in front of
+                            Alice (who is holding Carol's shoulder), Bob can do so by holding onto Carol's shoulder, and
+                            then Alice can hold onto Bob's shoulder. </li>
+                    </ul>
+                    <li>Removing: Suppose we already have a pointer to a node, and we wish to delete that node. We can
+                        do so by setting the <code>next</code> pointer of the node before the node we want to delete to
+                        point to the node after the node we want to delete. Finally, we free up the memory.</li>
+                    <ul>
+                        <li><b>Analogy:</b> If Bob wants to leave the train, he can simply let go of Carol's shoulder,
+                            and Alice can hold onto Carol's shoulder. </li>
+                    </ul>
+                    <li>Getting: Suppose we wish to find a node (i.e. its pointer) at a certain index (i.e. the
+                        <code>i</code>th node) In the previous 2 operations, we assumed we already had this pointer. We
+                        can do so by iterating through the linked list by following the <code>next</code> pointer until
+                        we find the node we want.
+                    </li>
+                    <ul>
+                        <li><b>Analogy:</b> If a teacher wants to find the 7th student, they can start from the very
+                            beginning of the train and follow it to the end until the 7th student is found.</li>
+                    </ul>
+                    </li>
+                </ul>
+                In summary, we can delete and insert nodes in constant time, which is faster than array operations which
+                are O(n). However, getting the <code>i</code>th node is linear time, while we can do that in constant
+                time for arrays.
+                <h2 id="L18-LL-implementation">Linked List Implementation</h2>
+                We can implement the linked list as follows:
+                <pre><code class="c">#include &lt;stdio.h&gt
+#include &lt;string.h&gt
+#include &lt;stdlib.h&gt
+
+typedef struct node{
+    int data;
+    struct node *next;
+} node;
+
+typedef struct LL{
+    node *head;
+    int size;
+} LL;
+
+void create_node(node **p_n, int data)
+{
+    *p_n = (node*)malloc(sizeof(node));
+    (*p_n)->data = data;
+    (*p_n)->next = NULL;
+}
+
+
+void create_LL_from_data(LL **p_LL, int *data_arr, int size)
+{
+    (*p_LL) = (LL*)malloc(sizeof(LL));
+    (*p_LL)->size = 0; // initialize size to 0
+    
+    // keep track of the last node of the linked list
+    node *tail = 0;
+
+    for(int i = 0; i < size; i++){
+
+        // n is a pointer to a node with data = data[i], next = NULL
+        node *n;
+        create_node(&n, data_arr[i]);
+
+        // If the last node is the 1st node
+        if(tail == 0){
+            (*p_LL)->head = n;
+        }
+
+        // If the last node is not the 1st node
+        else{
+            // append the new node to the end of the linked list
+            tail->next = n;
+        }
+
+        // update the tail
+        tail = n;
+
+        // update the size
+        (*p_LL)->size++;
+    }
+}
+
+int main(){
+    int data_arr[] = {1, 2, 3, 4, 5};
+    LL *p_LL;
+    create_LL_from_data(&p_LL, data_arr, 5);
+}</code></pre>
+                Here are some observations:
+                <ul>
+                    <li>The idea behind the <code>create_LL_from_data</code> function is to keep track of the last node
+                        of the linked list (known as the tail) and constantly update it such that every time we create a
+                        new node, the tail's <code>next</code> pointer points to the new node. </li>
+                    <li>Initializing a new node like <code>node *n</code> will cause the <code>next</code> pointer to be
+                        <code>0</code> i.e. <code>NULL</code>. This is how we can tell we reached the end of a linked
+                        list.
+                    </li>
+                    </li>
+                    <li>we need to use pointers to pointers because we want to be able to modify the value of the
+                        <code>LL</code> pointer (i.e. the memory address it points to), rather than just the value of
+                        the data it points to.
+                    </li>
+                </ul>
+
+                <h2 id="L19-LL-insert">Insert for Linked List</h2>
+                In the previous lecture, we defined the linked list struct as follows:
+                <pre><code class="c">typedef struct node{
+  int data;
+  struct node *next;
+} node;
+
+typedef struct LL{
+  node *head;
+  int size;
+} LL;
+</code></pre>
+                We also talked about how to implement insertions conceptually. We can implement it as follows:
+                <pre><code class="c">
+void LL_insert(LL *my_list, int new_elem, int index)
+{
+  // Create the new node 
+  node *n;
+  create_node(&n, new_elem);
+
+  // If the list is empty
+  if(my_list->head == NULL){
+    my_list->head = n;
+    my_list->size++;
+    return;
+  }
+
+  // To insert at the very beginning
+  if(index == 0){
+    n->next = my_list->head;
+    my_list->head = n;
+    my_list->size++;
+    return;
+  }
+
+  // Errors
+  if (index < 0 || index > my_list->size-1){
+    fprintf(stderr, "Invalid index %d", index);
+    exit(1); // exits the program, returns 1 to the OS
+  }
+
+  // Traverse to the desired index
+  node *cur = my_list->head;
+  for(int i = 0; i < index; i++){
+    cur = cur->next;
+  }
+
+  n->next = cur->next;
+  cur->next = n;
+  my_list->size++;
+}
+</code></pre>
+                Note that we deal with a few edge cases:
+                <ul>
+                    <li>If the list is empty, which we can check if the head is <code>NULL</code>, then we proceed to
+                        make the new node the first (and only) element of the linked list.</li>
+                    <li>We want to implement it such that inserting it at index <code>0</code> corresponds to inserting
+                        it at the very beginning. To do this, not only do we need to update the <code>next</code>
+                        pointer of the new node, but the <code>head</code> pointer of our linked list. The order here is
+                        important. If we instead ran <code>my_list->head = n;</code> first, we lose information on where
+                        the original head is located.</li>
+                    <li>If the index is invalid, there are a few possibilities of what we can do.<ol>
+                            <li>Just Crash: Sometimes this is a good idea, if we are trying to optimize the code. It's
+                                on the user to give valid parameters.</li>
+                            <li>Don't crash and don't insert. Instead, set a global variable to indicate an error. The
+                                reason we need a global variable here is that there's no other thing we can return that
+                                will indicate this. For example, if we are trying to return the element at an invalid
+                                index, a naive idea would be to return something like <code>-1</code> or
+                                <code>"Error"</code>, but how do we know that this is actually an error and their list
+                                doesn't actually include this!
+                            </li>
+                            <li>Print an error message. In particular the best way to print an error is using
+                                <code>fprintf(stderr, "message")</code> because it prints to the standard error stream,
+                                which is different from the standard output stream. Unlike <code>printf</code> (which
+                                sometimes doesn't show in terminal), this will always show, and allows regular print
+                                statements and error messages to be separated.
+                            </li>
+                        </ol>
+
+                    </li>
+                </ul>
+                In the other cases, we first need to traverse to the desired index. Because this is not an array, we
+                need to follow the linked list via the <code>next</code> pointers. Once we reach the desired index, we
+                can update the <code>next</code> pointers of the new node and the node before it. Similar to above, the
+                order of updating the <code>next</code> pointers matter!
+                <h2 id="L19-LL-remove">Remove and Get for Linked List</h2>
+                The code to remove and get for linked lists can be found <a
+                    href="https://www.cs.toronto.edu/~guerzhoy/190/labs/linkedlist.c">here</a> and is very similar to
+                the code for insert. For deletion, we just need to remember to update the <code>next</code> pointer of
+                the node before the one we are deleting, and freeing up the memory. Like most cases, the order here is
+                important.
+
+                Getting is actually partially implemented in insertion and deletion, as we need to find the
+                <code>i</code>th element. Error handling for all three functions are also similar.
+                <h2 id="L19-Coding-Practices">Good Coding Practices</h2>
+                Suppose you have a piece of code, that relies on an abstract data structure (i.e. a list). We can define
+                this structure in a header file <a
+                    href="https://www.cs.toronto.edu/~guerzhoy/190/labs/list.h">list.h</a>. Recall that an ADT doesn't
+                include how it is implemented, just the operations. <br><br>
+
+                We can now implement this ADT in a separate file. For example, we can either implement it using <a
+                    href="https://www.cs.toronto.edu/~guerzhoy/190/labs/linkedlist.c">linkedlist.c</a> or <a
+                    href="https://www.cs.toronto.edu/~guerzhoy/190/labs/arraylist.c">arraylist.c</a>. For example, if
+                our <code>list.h</code> file looks like
+                <pre><code class="c">#if !defined(LIST_H)
+#define LIST_H
+void create_list_from_data(void **p_list, int *data_arr, int size);
+void list_append(void *list, int new_elem);
+void list_insert(void *list, int new_elem, int index);
+void list_delete(void *list, int index);
+void list_free_all(void *list);
+int list_get(void *list, int index);
+#endif</code></pre> Then our <code>linkedlist.c</code> file needs to contain these functions. If we already have code
+                (i.e. the earlier ones we wrote), we don't need to modify them. Instead, we can just create a new
+                function that calls them in order to have the right form. For example,
+                <pre><code class="c">void list_insert(void *list, int new_elem, int index)
+{
+    LL_insert((LL*)list, new_elem, index);
+}
+
+int list_get(void *list, int index)
+{
+    return LL_get(list, index);
+}</code></pre>
+                Notice that the functions in <code>list.h</code> take in void pointers, because we want them to be as
+                general as possible (i.e. could be implemented using either an array or linked list). These additional
+                functions we write in <code>linkedlist.c</code> are just wrappers. One final note is that although we
+                can cast the void pointer to the correct type <code>(LL*)</code>, it is not necessary.<br><br>
+
+                We can do this for both <code>linkedlist.c</code> and <code>arraylist.c</code>, and when we want to
+                compile our main program, we can choose to compile it with either <code>linkedlist.c</code> or
+                <code>arraylist.c</code>. For example, we can run
+                <pre><code class="language-bash">gcc linkedlist.c -c -o linkedlist.o</code></pre>
+                to create the object file <code>linkedlist.o</code>. We can then compile <code>main.c</code> alongside
+                <code>linkedlist.o</code> to create an executable. We can do this by running
+                <pre><code class="language-bash">gcc main.c linkedlist.o -o main</code></pre>
+                If we instead wanted to compile using the array list implementation, we can run
+                <pre><code class="language-bash">gcc main.c arraylist.o -o main</code></pre>
+                This has several advantages:
+                <ul>
+                    <li>Modularity and Reusability: When writing our main code, we don't have to worry about how certain
+                        functions are implemented. Also, if we already have code that can implement abstract data
+                        structures, we can just re-use them for future projects without changing too much!</li>
+                    <li>Faster compilation: Using a precompiled object like <code>linkedlist.o</code> can save
+                        compilation time. Although this is not a big problem now, compilation time can be an issue for
+                        larger and more complex projects.</li>
+                </ul>
+                <h1 id="L21">L21: Linked Lists II</h1>
+                In this lecture, we will discuss how to implement a linked list in Python. Most of the time, you won't
+                need to use a linked list in Python (we'll see an example next Monday), but it is still important to
+                understand how linked lists work, and the work done in this lecture will be useful for implementing
+                other data structures in Python for the rest of this course. The advantage of Python over C is
+                pedagogical here, we want to focus on the data structure and not the specific implementation
+                details.<br><br>
+
+                If you are not familiar with classes, please see the last part of L19. Consider the Node class,
+                <pre><code class="python">class Node:
+  def __init__(self, value):
+      self.value = value
+      self.next = None
+  
+  def __str__(self):
+      return f"{self.value}"</code></pre>
+                By default, we have set <code>self.next = None</code> to indicate that the next node is not yet defined.
+                We can then create a linked list by creating a series of nodes and linking them together. For example,
+                <pre><code class="python">if __name__ == '__main__':
+  n1 = Node(12)
+  n2 = Node(15)
+  n3 = Node(500)
+
+  n1.next = n2
+  n2.next = n3</code></pre>
+                Recall that in the Python memory model, values are not copied. Everything is passed by reference.
+                Therefore, something like <code>n1.next = n2</code> means we make <code>n1.next</code> refer to the
+                address of <code>n2</code> (so they are treated as the "same" thing). In C, the analogy would be
+                <pre><code class="c">node *n1 = create_node(12)
+node *n2 = create_node(15)
+n1->next = n2;
+</pre></code>
+                where the function <code>create_node()</code> performs the memory allocation for you, which is what
+                Python is doing behind the scenes. We can also make a linked list class and include some functions. For
+                example,
+                <pre><code class="python">class LinkedList:
+  def __init__(self):
+      self.head = None
+  
+  def get_i(self, i):
+      # return the value at index i
+      cur = self.head
+      for j in range(i):
+          cur = cur.next
+      return cur.value
+
+  def append(self, value):
+      '''Add a new node with the value value to the end of the list'''
+      # Create a new node
+      new_node = Node(value)
+      print(new_node)
+
+      if self.head == None:
+          self.head = new_node
+      else:
+          # Find the last node
+          cur = self.head
+          while cur.next != None:
+              cur = cur.next
+          cur.next = new_node
+  
+  def insert(self, value, i):
+      '''Insert a node with the value value at index i'''
+      new_node = Node(value)
+
+      if i == 0:
+          new_node.next = self.head
+          self.head = new_node
+      else:
+          cur = self.head
+          for j in range(i-1):
+              cur = cur.next
+          new_node.next = cur.next
+          cur.next = new_node
+
+  def __str__(self):
+      cur = self.head
+      s = ""
+      if(cur == None):
+          return "Empty list :("
+      
+      while cur != None:
+          s += str(cur) + " -> "
+          cur = cur.next
+      return s[:-4] # remove last arrow</code></pre>
+                Note that we didn't do anything new here. We took the existing code we had in L18 and transformed it
+                into Python equivalents. The only new thing is the <code>__str__</code> function, which allows us to
+                easily print out the linked list. For this function we have two cases: if the list is empty, we print
+                something, and if the list is non-empty we print out the values of each node, connected with the ->
+                symbol. We can then test our code,
+                <pre><code class="python">if __name__ == '__main__':
+  LL = LinkedList()
+  LL.append(3)
+  LL.append(50)
+  LL.append(100)
+
+  print(LL)</code></pre>
+
+            </div>
+        </div>
+        <footer>
+            By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+            <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and
+                adaptation is allowed for non-commercial purposes as long as
+                attribution to the original author is given, and as long as you notify the original author at
+                guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable
+                way
+                and
+                in a way that does not suggest that the original author endorses any adaptation. This permission to
+                share,
+                re-distribute and adapt is non-transferrable.</div>
+        </footer>
+    </div>
+</body>
