@@ -68,41 +68,18 @@
                 <h1>Implementation in Python</h1>
 
                 <h1>Linked Lists</h1>
-
-                Motivation: We cannot dynamically add an element to an existing array or block of memory easily, as
-                there could be no space there! The only option we have is to re-allocate everything to a new location
-                with enough space. This is inefficient, especially for larger arrays. Instead, we can use a special data
-                structure called a <b>linked list</b>.
-                <ul>
-                    <li>A linked list consists of a data structure called a <code>node</code>, which consists of the
-                        following information:</li>
-                    <ul>
-                        <li><code>data:</code> the actual data you need to store</li>
-                        <li><code>next:</code> the address of the next node</li>
-                    </ul>
-                    <li>We can then make an array by creating a chain of these nodes, where we can find the next node by
-                        following the <code>next</code> pointer. While this uses up more space than a regular array, it
-                        has the benefit of preventing re-allocating everything. For example, if we want to add an
-                        element to the end of the list, we can simply create a new node and set the <code>next</code>
-                        pointer of the last node to point to the new node (+ a minor detail we'll touch on in a bit).
-                    </li>
-                    <li>See the <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W07/LL.pdf">lecture slides</a> for
-                        a visual of linked lists and their operations.</li>
-                </ul>
-                <h1 id="L19">L19: Abstract Data Type</h1>
-                An <b>abstract data type</b> (ADT) is any collection of values, together with operations on those
-                values. For example:
-                <ul>
-                    <li><code>ints</code> with operations <code>+,-*,/,%</code></li>
-                    <li><code>lists</code> with operations insert, remove, get</li>
-                </ul>
-                An ADT specifies what values are represented and what operations can be performed, but not how to store
-                them or how to carry them out. They allow for modularity and reuse, as it is independent of
-                implementation. A <b>data structure</b> is an implementation of an ADT as it is a way to represent the
-                values, and algorithms for each operation.<br><br>
-
-                Example: Consider a <code>list</code> which is an ordered collection of data items that supports the
-                following operations:
+                <!-- Motivation -->
+                <p>Motivation: We cannot dynamically add an element to an existing array or block of memory easily, as
+                    there could be no space there! The only option we have is to re-allocate everything to a new
+                    location
+                    with enough space. This is inefficient, especially for larger arrays. Instead, we can use a special
+                    data
+                    structure called a <b>linked list</b>.</p>
+                <!-- ADT implementation of list -->
+                <p>Linked lists are in fact a data structure which implement the list abstract data type (<a
+                        href="./adt.html">ADT</a>).
+                    A <code>list</code> is an ordered collection of data items that supports the
+                    following operations:
                 <ul>
                     <li><code>Insert(list, i, x)</code>: add item <code>x</code> at index <code>i</code> of
                         <code>list</code>. The item previously at index <code>i</code>, and all following items, are
@@ -113,14 +90,72 @@
                         fill the gap.</li>
                     <li><code>Get(list, i)</code>: return the item at index <code>i</code> of <code>list</code>.</li>
                 </ul>
-                We define this ADT very abstractly, such that we only describe the outcome of each operation, but not
+                </p>
+                <!-- ruh roh we need to define lists, maybe in ADT directly?? -->We define this ADT very abstractly,
+                such that we only describe the outcome of each operation, but not
                 how to implement it. For example, lists can be implemented using arrays, but it can also be implemented
                 using linked lists.
 
+                <!-- What is a linked list -->
+                <p>A linked list consists of a data structure called a <code>node</code>, which consists of the
+                    following information:
+                <ul>
+                    <li><code>data:</code> the actual data you need to store</li>
+                    <li><code>next:</code> the address of the next node</li>
+                </ul>
+                </p>
+                <p>We can then make an array by creating a chain of these nodes, where we can find the next node by
+                    following the <code>next</code> pointer. While this uses up more space than a regular array, it
+                    has the benefit of preventing re-allocating everything. For example, if we want to add an
+                    element to the end of the list, we can simply create a new node and set the <code>next</code>
+                    pointer of the last node to point to the new node (+ a minor detail we'll touch on in a bit).
+                </p>
+                <p>See the <a href="https://www.cs.toronto.edu/~guerzhoy/190/lec/W07/LL.pdf">lecture slides</a> for a
+                    visual of linked lists and their operations.</p>
+
+                <h2 id="L18-LL-operations">Linked List Operations</h2>
+                We want to implement the following operations: Inserting, Removing, and Searching.
+                <ul>
+                    <li>
+                    <li>
+                    <li>
+                    </li>
+                </ul>
+                In summary, we can delete and insert nodes in constant time, which is faster than array operations which
+                are O(n). However, getting the <code>i</code>th node is linear time, while we can do that in constant
+                time for arrays.
+
                 <h1>Implementation in C</h1>
                 <h2>Insert Operation</h2>
+                Inserting: Suppose we already have a pointer to a node, and we wish to insert a node after that.
+                        What we can do is create this new node, and set its <code>next</code> pointer to point to the
+                        node that the original node pointed to. Then, we can set the original node's <code>next</code>
+                        pointer to point to the new node we just created.</li>
+                    <ul>
+                        <li><b>Analogy:</b> A popular children's activity is to form a <i>human train,</i> where each
+                            person puts their hand on the shoulder of the person in front of them, forming a chain
+                            (linked list). If a new participant Bob (the new node) wants to join the train in front of
+                            Alice (who is holding Carol's shoulder), Bob can do so by holding onto Carol's shoulder, and
+                            then Alice can hold onto Bob's shoulder. </li>
+                    </ul>
                 <h2>Get Operation</h2>
+                Getting: Suppose we wish to find a node (i.e. its pointer) at a certain index (i.e. the
+                        <code>i</code>th node) In the previous 2 operations, we assumed we already had this pointer. We
+                        can do so by iterating through the linked list by following the <code>next</code> pointer until
+                        we find the node we want.
+                    </li>
+                    <ul>
+                        <li><b>Analogy:</b> If a teacher wants to find the 7th student, they can start from the very
+                            beginning of the train and follow it to the end until the 7th student is found.</li>
+                    </ul>
                 <h2>Remove Operation</h2>
+                Removing: Suppose we already have a pointer to a node, and we wish to delete that node. We can
+                        do so by setting the <code>next</code> pointer of the node before the node we want to delete to
+                        point to the node after the node we want to delete. Finally, we free up the memory.</li>
+                    <ul>
+                        <li><b>Analogy:</b> If Bob wants to leave the train, he can simply let go of Carol's shoulder,
+                            and Alice can hold onto Carol's shoulder. </li>
+                    </ul>
                 <h2>Best Practises</h2>
                 <h1>Implementation in Python</h1>
 
