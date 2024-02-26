@@ -55,8 +55,8 @@
 
 
 
-                <h1 id="Queue">Queues</h1>
-                <div class="alert alert-success" role="alert"><br>
+                <h1 id="Queue">The Queue ADT</h1>
+                <div class="alert alert-success" role="alert">
                     A <b>queue</b> is a collection of elements with the operations <code>enqueue</code> and
                     <code>dequeue</code>
                     <ul>
@@ -74,6 +74,34 @@
                     <li><code>enqueue(50)</code></li>
                     <li><code>dequeue()</code> (returns 1)</li>
                 </ol>
+
+                <h2 id="L22-implementation-queue">Implementation of Queue</h2>
+
+                The only difference between a stack and a queue is whether we choose to remove the
+                most recent element or the earliest element. This means making a small change in the index is sufficient
+                (i.e. <code>-1</code> to <code>0</code>)
+                <pre><code class="python hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Queue</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        self.data = []
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">enqueue</span>(<span class="hljs-params">self, item</span>):
+        self.data.append(item)
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dequeue</span>(<span class="hljs-params">self</span>):
+        ret_val = self.data[<span class="hljs-number">0</span>]
+        <span class="hljs-keyword">del</span> self.data[<span class="hljs-number">0</span>]
+        <span class="hljs-keyword">return</span> ret_val
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    s = Queue()
+    s.enqueue(<span class="hljs-number">1</span>)
+    s.enqueue(<span class="hljs-number">50</span>)
+    <span class="hljs-built_in">print</span>(s.dequeue())
+    s.enqueue(<span class="hljs-number">100</span>)
+    <span class="hljs-built_in">print</span>(s.dequeue())
+    <span class="hljs-built_in">print</span>(s.dequeue())</code></pre>
+                which prints out <code>1 50 100</code> as expected.
+
             </div>
         </div>
         <footer>

@@ -55,8 +55,8 @@
 
 
 
-                <h1 id="Stacks">Stacks</h1>
-                <div class="alert alert-success" role="alert"><br>
+                <h1 id="Stacks">The Stack ADT</h1>
+                <div class="alert alert-success" role="alert">
                     A <b>stack</b> is a collection of elements with the operations <code>push</code> and
                     <code>pop</code>
                     <ul>
@@ -83,6 +83,44 @@
 
                 However, we could have implemented a stack differently, since a stack is an ADT, and ADTs don't tell us
                 the implementation details.
+                <h2 id="L22-implementation-stack">Implementation of Stack</h2>
+                We can use a python list to act as a stack very naturally,
+                <pre><code class="python hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Stack</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        self.data = []
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">push</span>(<span class="hljs-params">self, item</span>):
+        self.data.append(item)
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">pop</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">return</span> self.data.pop()</code></pre>
+                This is because the Python <code>pop()</code> already acts like the stack <code>pop()</code> operation.
+                It removes the last element of the list and returns it. While the above works perfectly fine, for the
+                sake of learning, we will implement a stack without using these default methods (which allows us to
+                extend concepts to other ADT implementations). We have,
+                <pre><code class="python hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Stack</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        self.data = []
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">push</span>(<span class="hljs-params">self, item</span>):
+        self.data.append(item)
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">pop</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-comment"># return self.data.pop()</span>
+        ret_val = self.data[-<span class="hljs-number">1</span>]
+        <span class="hljs-keyword">del</span> self.data[-<span class="hljs-number">1</span>]
+        <span class="hljs-keyword">return</span> ret_val
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    s = Stack()
+    s.push(<span class="hljs-number">1</span>)
+    s.push(<span class="hljs-number">50</span>)
+    <span class="hljs-built_in">print</span>(s.pop())
+    s.push(<span class="hljs-number">100</span>)
+    <span class="hljs-built_in">print</span>(s.pop())
+    <span class="hljs-built_in">print</span>(s.pop())</code></pre>
+                which will output <code>50, 100, 1</code> as we predicted earlier.
+
             </div>
         </div>
         <footer>
