@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', 'G-YCY17GV3DB');</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen"
+        charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            (i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments); }),
+                (i[r].l = 1 * new Date());
+            (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+            a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+        })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+
+        ga("create", "UA-19048260-11", "auto"); ga("send", "pageview");
+
+        hljs.highlightAll();
+    </script>
+</head>
+
+<body data-bs-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-sm-9">
+                <h1 id="LDynamicStrings">The Priority Queue ADT</h1>
+                <div class="alert alert-success" role="alert">
+                    A <b>priority queue</b> is a queue where the first element dequeued is the one with the highest
+                    priority.
+                    <ul>
+                        <li><code>Insert(S,x)</code> adds a new element with priority <code>x</code> to priority queue
+                            <code>S</code>
+                        </li>
+                        <li><code>min(S)</code> returns the element with the smallest value from the priority queue</li>
+                        <li><code>extract_min(S)</code> removes and returns the element with the smallest value from the
+                            priority queue</li>
+                    </ul>
+                </div>
+                This has many uses. It can simulate real-world systems queues organized by priority (i.e. patients in a
+                hospital or files requested from a server). Alternatively, it can be used in searching algorithms (i.e.
+                in
+                games) such as A* (A Star).
+                <h2 id="L25-Naive-Implementation">Slow Method 1</h2>
+                The naive implementation is to store everything in an (unsorted) array. Every time that we wish to
+                extract
+                the minimum, we have to search through the entire array to find the minimum. See the below code,
+                <pre><code class="python hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PriorityQueueSlow</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        self.data = []
+        self.size = <span class="hljs-number">0</span>
+    
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">insert</span>(<span class="hljs-params">self, value</span>):
+        self.data.append(value)
+        self.size += <span class="hljs-number">1</span>
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">extract_min</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">if</span> self.size == <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>
+
+        cur_min = self.data[<span class="hljs-number">0</span>]
+        cur_min_loc = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, self.size):
+            <span class="hljs-keyword">if</span> self.data[i] &lt; cur_min:
+                cur_min = self.data[i]
+                cur_min_loc = i
+
+        <span class="hljs-keyword">del</span> self.data[cur_min_loc]
+        self.size -= <span class="hljs-number">1</span>
+        <span class="hljs-keyword">return</span> cur_min</code></pre>
+                What is the time complexity? Inserting is effectively O(1) as discussed last time, and extracting the
+                minimum is O(n), since we need to search through the entire array.
+                <h2 id="L25-Naive-Implementation-2">Slow Method 2</h2>
+                One idea is to keep the data sorted, so we don't need to look for the minimum. This is not enough
+                though: we
+                want to ensure we are deleting the last element of the array (which takes constant time), not the first
+                one
+                (which takes linear time, due to the need to shift all the elements over). Therefore, we need to keep
+                <code>self.data</code> sorted in non-increasing order. We have,
+                <pre><code class="python hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PriorityQueueSlow2</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        self.data = []
+        self.size = <span class="hljs-number">0</span>
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">insert</span>(<span class="hljs-params">self, value</span>):
+        i = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">while</span> i &lt; self.size:
+            <span class="hljs-keyword">if</span> value &gt; self.data[i]:
+                <span class="hljs-keyword">break</span>
+            i += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># i is the index before which we can insert value</span>
+        self.data.insert(i, value)
+        self.size += <span class="hljs-number">1</span>
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">extract_min</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">if</span> self.size == <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>
+        self.size -= <span class="hljs-number">1</span>
+        <span class="hljs-keyword">return</span> self.data.pop() <span class="hljs-comment"># O(1)</span></code></pre>
+                Here, linear search is being done to find the index to insert the new element, so while
+                <code>extract_min()</code> now takes constant time, inserting takes linear time. Someone bright might
+                claim
+                that we can use binary search to find the index to insert the new element, but this does not solve the
+                problem. This is because inserting also takes linear time, as everything needs to be shifted.<br><br>
+
+                That's a bit of a bummer! It seems like no matter how we structure things, we cannot escape the
+                \(\mathcal
+                O(n)\)
+            </div>
+        </div>
+    </div>
+    <footer>
+        By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+        <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and adaptation
+            is allowed for non-commercial purposes as long as
+            attribution to the original author is given, and as long as you notify the original author at
+            guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way
+            and
+            in a way that does not suggest that the original author endorses any adaptation. This permission to share,
+            re-distribute and adapt is non-transferrable.</div>
+    </footer>
+    </div>
+</body>

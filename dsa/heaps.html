@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', 'G-YCY17GV3DB');</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen"
+        charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            (i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments); }),
+                (i[r].l = 1 * new Date());
+            (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+            a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+        })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+
+        ga("create", "UA-19048260-11", "auto"); ga("send", "pageview");
+
+        hljs.highlightAll();
+    </script>
+</head>
+
+<body data-bs-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-sm-9">
+
+
+
+                <h1 id="LDynamicStrings">The Heap Data Structure</h1>
+                <p>Careful! Heaps implement priority queues in an efficient manner, hence they are a data structure and not an ADT. We will see that heaps implement <b>heap ordering</b> which is a specific way to arrange the elements it stores.</p>
+
+                To understand heaps and where we draw more efficient algorithms, we first need to introduce <b>trees</b>.
+<div class="alert alert-success" role="alert">
+    A <b>tree</b> is a collection of nodes, where each node has two children, except the <b>leaves</b> (nodes at the bottom with no children), and every leaf is as far left as possible on the last level.  
+</div>
+Usually, we deal with binary trees (meaning each node has at most 2 children). For example, the below is a <b>complete</b> binary tree (a tree where all nodes except leaves have two children and each leaf is as far left as possible).
+<center>
+    <img src="../assets/complete_tree.jpg" />
+</center>
+For heaps (specifically a min-heap), we desire a <b>heap order property</b> which means that each node is smaller than its children. A heap is a complete graph and when we add a new element, we first add it to the leftmost position in the bottom row.<br><br>
+
+In order to satisfy the heap order property, we <i>percolate</i> the node upwards, exchanging it with the parent if it is smaller than the parent. For example, if we add 14 to a heap (boxed), we can swap it with the parent until the heap order property is satisfied, as shown below.
+<center>
+    <img src="../assets/up-heap.jpg" style="width:90%"/>
+</center>
+One way to implement a heap is to use a linked list where each node has a <code>left_child</code> and <code>right_child</code> and while this is more intuitive, it is often faster to implement it via an array and use mathematics to perform index gymnastics. Note that this only works because a heap is a complete binary tree. We store the first tree in this section as
+\[ [\_, a, b,c,d,e,f,g,h,i,j,k,l,m,\dots] \]\
+where the first index is left blank for convenience, which will be made clear in just a bit. Given a node at index \(i\) we can get the parent and the children via the following formulas:
+\[\text{parent}(i) = i/2\]
+\[\text{left}(i) = 2i\]
+\[\text{right}(i) = 2i+1\]
+Why does this work? First note that the index of the leftmost element of each row is given by \(2^0,2^1,2^2,\dots\) since the binary tree is complete. So <code>a</code> has index 1, <code>b</code> has index 2, <code>d</code> has index 4, and <code>h</code> has index 8. These nice numbers are only possible since we are neglecting index 0, which is empty in our array.
+<div class="alert alert-dark" role="alert">
+<i>Proof:</i> We first prove that \(\text{left}(i)=2i\). As we have already mentioned, the leftmost element of each row has index \(2^0,2^1,2^2,\dots\). Therefore, if \(i=2^{k}\), then it is clear that its left child is just the leftmost element of the next row, so for this case, we verify \(\text{left}(i)=2i\). Now we prove via induction that \(\text{left}(i)=2i\) for all \(i\).<br><br>
+
+Assume that this is true for some \(2^k \le i < 2^{k+1} - 1\). Then, the left child of \(i+1\) is located \(2\) to the right of the left child of \(i\). That is, 
+\[\text{left}(i+1) \overset{\#}{=} \text{left}(i) + 2 = 2i+2 = 2(i+1)\]
+where the equality given by \(\#\) is true via induction. We've already shown this is true for the base case \(i=2^k\) so we're done.<br><br>
+
+Note that this automatically implies that the formula \(\text{right}(i) = 2i+1\) is also true, since the right element has index 1 more than the left element. Note tha with the exception of \(i=1\), if \(i\) is even, then it is the left child of its parent, and if \(i\) is odd, then it is the right child of its parent. Thus, it remains to show that \(\text{parent}(i) = 2i\). This is easy if we consider the inverse of the above formula.<br><br>
+
+If \(i\) is even, then its parent is \(\text{left}^{-1}(i) = i/2\). If \(i\) is odd, then its parent is \[\text{right}^{-1}(i) = (i-1)/2 = i/2\]
+if we treat \(i/2\) as an operation that rounds down to the nearest integer (i.e. <code>i//2</code> in Python).
+</div>
+<h1 id="L26">L26: Implementing Heaps and Dynamic Programming</h1>
+<h2 id="L26-insert">Insert</h2>
+How do we insert an element into a heap? We have the pseudocode
+<pre><code class="pseudocode">Insert(x):
+    k=n+1
+    pq[k] = x
+    while k > 1 and pq[k/2] > pq[k]
+        swap(pq[k], pq[k/2])
+        k = k / 2
+    n = n + 1 // increment the size of the heap
+</code></pre>
+To think of this, treat <code>k</code> as current node, and treat <code>k/2</code> as parent node (by the formulas given in the previous lecture). Then the rest is just applying the <i>percolation</i> described earlier.
+<h2 id="L26-extra-min">Extracting the Minimum</h2>
+Getting the minimum element is very easy. It's the first element! (i.e. at index 1.) However, how can we remove it and still maintain a binary tree where the heap-order property is satisfied?<br><br>
+
+To do so, we apply a clever trick. First, replace the first element with the last element (but remember to save it first!) The heap-order property is not satisfied, but we can <i>percolate</i> this element down until the heap-order property is satisfied. Note that there is a subtle difference:
+<ul>
+    <li>When percolating up, only one comparison needs to be made. We need to compare it with the left child and the right child. If it's bigger than either one, then we swap it with the one it's bigger than.</li>
+    <li>It is possible for the current node we're percolating down to be bigger than both children. In that case, we should swap it with the smaller child, since the smaller child can be a parent of the larger one.</li>
+</ul>
+The pseudocode is given by,
+<pre><code class="pseudocode">extract_min():
+    min = pq[1]
+    swap(pq[1], pq[n])
+    n = n - 1
+    k = n
+    while(2*k <= n):
+        j = 2*k
+        if j < n and pq[j] > pq[j+1]:
+            j = j + 1
+        if pq[k] <= pq[j]:
+            break
+        swap(pq[k], pq[j])
+        k = j
+    return min
+</code></pre>
+In the above code, the <code>j < n and pq[j] > pq[j+1]</code> condition ensures that the current node has two children and if it does, selects the index of the smaller one. One example of how this works is shown below, where we have already replaced the smallest element with the last element, which in this case is 32.
+<img src="../assets/down-heap.jpg" style="width:90%"/>
+
+<p>
+The python implementation can be found <a href="https://www.cs.toronto.edu/~guerzhoy/190/labs/heaps.py">here.</a>
+</p>
+<h2 id="L26-time-complexity">Time Complexity</h2>
+We define the <b>height</b> \(h\) of a tree to be the longest path from a node to a leaf. Note that from a geometric series, we can bound the number of elements in a tree of height \(h\) by
+\[n \le 2^0 + 2^1 + \cdots + 2^{h} = 2^{h+1} - 1\]
+For a complete tree with height \(h\) the number of nodes must be greater than the maximum number of nodes for a tree with height \(h-1\), which gives 
+\[n > 2^0 + 2^1 + \cdots + 2^{h-1} = 2^{h} - 1\]
+For \(h \ge 1\) we have 
+\[h-1 \le \log_2(2^h-1) \le \log_2 n \le \log_2(2^{h+1}-1) < h+1\]
+where the middle inequality is due to the above inequalities we derived, and applying the fact that logarithms are monotonic. The inequalities at the two ends are due to the fact that 
+\[2^{h}/2 \le 2^{h} - 1\]
+and 
+\[2^{h+1} -1 < 2^{h+1}.\]
+Therefore, we have \(\log(n) \sim h\) and thus since both inserting and extracting the minimum needing at most \(h\) swaps, the time complexity is 
+\[\mathcal{O}(h) = \mathcal{O}(\log(n)).\]
+            </div>
+        </div>
+        <footer>
+            By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+            <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as
+            attribution to the original author is given, and as long as you notify the original author at
+            guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way
+            and
+            in a way that does not suggest that the original author endorses any adaptation. This permission to share,
+            re-distribute and adapt is non-transferrable.</div>
+        </footer>
+    </div>
+</body>
