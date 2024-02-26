@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', 'G-YCY17GV3DB');</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen"
+        charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            (i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments); }),
+                (i[r].l = 1 * new Date());
+            (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+            a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+        })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+
+        ga("create", "UA-19048260-11", "auto"); ga("send", "pageview");
+
+        hljs.highlightAll();
+    </script>
+</head>
+
+<body data-bs-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-sm-9">
+
+
+
+                <h1 id="LDynamicStrings">Python Classes</h1>
+                Structures in C are similar to classes in Python (Classes in Python are actually much much more
+                powerful, but that's not the point in this section). We can define a <code>Student</code> class in
+                Python as follows,
+                <pre><code class="language-python hljs"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span>:
+  <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name, gpa</span>):
+      self.name = name
+      self.gpa = gpa
+  
+  <span class="hljs-keyword">def</span> <span class="hljs-title function_">__str__</span>(<span class="hljs-params">self</span>):
+      <span class="hljs-keyword">return</span> self.name + <span class="hljs-string">": "</span> + <span class="hljs-built_in">str</span>(self.gpa)
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:
+  s = Student(<span class="hljs-string">'Fred'</span>, <span class="hljs-number">3.7</span>)
+  <span class="hljs-built_in">print</span>(s.name, s.gpa)
+</code></pre>
+                Here, <code>__str__</code> is a built-in function, and we can call it via either:
+                <pre><code class="python hljs language-python">s.__str__()
+Student.__str__(s)
+</code></pre>
+                Here, the first line is just shorthand notation for the second line. What makes this built-in function
+                useful is that we can call <code>print(s)</code> and it will treat this as
+                <code>print(s.__str__())</code> instead.<br><br>
+
+                We can also write a function to compare two classes, so that we can use operators such as
+                <code>&lt;</code>, <code>&gt;</code>, and <code>==</code>. For example,
+                <pre><code class="language-python hljs"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span>:
+  <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name, gpa</span>):
+      self.name = name
+      self.gpa = gpa
+  
+  <span class="hljs-keyword">def</span> <span class="hljs-title function_">__str__</span>(<span class="hljs-params">self</span>):
+      <span class="hljs-keyword">return</span> self.name + <span class="hljs-string">": "</span> + <span class="hljs-built_in">str</span>(self.gpa)
+  
+  <span class="hljs-keyword">def</span> <span class="hljs-title function_">__lt__</span>(<span class="hljs-params">self, other</span>):
+      <span class="hljs-comment"># Return True if self has lower gpa than other</span>
+      <span class="hljs-comment"># If GPAs are tied, compare names</span>
+
+      <span class="hljs-keyword">if</span> self.gpa &lt; other.gpa:
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+      <span class="hljs-keyword">elif</span> self.gpa == other.gpa:
+        <span class="hljs-keyword">return</span> self.name &lt; other.name
+      <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:
+  fred = Student(<span class="hljs-string">'Fred'</span>, <span class="hljs-number">3.7</span>)
+  bob = Student(<span class="hljs-string">'Bob'</span>, <span class="hljs-number">2.0</span>)
+  <span class="hljs-built_in">print</span>(Student.__lt__(fred, bob))
+  <span class="hljs-built_in">print</span>(fred &lt; bob)
+</code></pre>
+                Recall that this is very similar to the compare function we wrote for <code>qsort.</code> Because we can
+                compare different students, we can also sort them using the default sorted function in Python. For
+                example,
+                <pre><code class="language-python hljs">L = [Student(<span class="hljs-string">"Fred"</span>, <span class="hljs-number">3.7</span><span class="hljs-string">"), Student("</span>Bo<span class="hljs-string">b", 3.7), Student("</span>Alice<span class="hljs-string">", 3.9)]
+L.sort()
+print(L) # [Bob: 3.7, Fred: 3.7, Alice: 3.9]
+</span></code></pre>
+                will allow us to sort and print out the list of students in a very convenient way (using both the custom
+                print and compare functions we wrote)!
+
+                Note that this is a more flexible method of sorting classes in Python. The "traditional" way (for simple
+                comparison functions), we will write a function to get a numerical value from the class and sort using
+                that key. For example,
+                <pre><code class="python hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_name</span>(<span class="hljs-params">s</span>):
+  <span class="hljs-keyword">return</span> s.name
+L.sort(key=get_name)
+</code></pre>
+                will sort the list of students in <code>L</code> alphabetically. Alternatively, we can use anonymous
+                functions (lambda functions) which we can write in one line to save space. For example,
+                <pre><code class="python hljs language-python">L.sort(key=<span class="hljs-keyword">lambda</span> s: s.name)</code></pre>
+                achieves the same purpose.<br><br>
+
+                However, it is difficult (but not impossible) to modify the "traditional" way and come up with a way to
+                map a more complicated comparison function to a numerical value. Note: comparison functions can be as
+                complex as we want, but they need to be <i>transitive</i> in order to get meaningful results.
+
+
+
+
+
+
+            </div>
+        </div>
+        <footer>
+            By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+            <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and
+                adaptation is allowed for non-commercial purposes as long as
+                attribution to the original author is given, and as long as you notify the original author at
+                guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable
+                way
+                and
+                in a way that does not suggest that the original author endorses any adaptation. This permission to
+                share,
+                re-distribute and adapt is non-transferrable.</div>
+        </footer>
+    </div>
+</body>
