@@ -52,30 +52,74 @@
                 <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
             </div>
             <div class="col-sm-9">
-
-
-
-                <h1 id="L19">L19: Abstract Data Type</h1>
-                An <b>abstract data type</b> (ADT) is any collection of values, together with operations on those
-                values. For example:
+                <h1 id="L19">Abstract Data Type</h1>
+                <p>
+                    We've seen so far that C is a strongly typed language and that we should be specific about our
+                    <code>int</code>s, <code>char</code>s and more.
+                    These were some of the primitive data types that we've worked with and they came with a few
+                    operations which are built-in to most languages like C or Python.
+                </p>
+                <p>
+                    What if we wanted more, like having a list of values that we could manipulate in an intuitive way?
+                    You might have a few ideas to achieve this so to stay general, we will introduce the concept of an
+                    ADT.
+                </p>
+                <p>
+                    An <b>abstract data type</b> (ADT) is any collection of values, together with operations on those
+                    values. For example:
                 <ul>
                     <li><code>ints</code> with operations <code>+,-*,/,%</code></li>
                     <li><code>lists</code> with operations insert, remove, get</li>
                 </ul>
-                An ADT specifies what values are represented and what operations can be performed, but not how to store
+                An <b>ADT</b> specifies what values are represented and what operations can be performed, but not how to
+                store
                 them or how to carry them out. They allow for modularity and reuse, as it is independent of
                 implementation. A <b>data structure</b> is an implementation of an ADT as it is a way to represent the
-                values, and algorithms for each operation.<br><br>
+                values, and algorithms for each operation.</p>
+                <h2>Lists</h2>
+                <p>Let's take a closer look at the list ADT.</p>
+                <div class="alert alert-success" role="alert">
+                    A list is an ordered collection of data items that supports the following operations:
+                    <ul>
+                        <li><code>Insert(list, i, x)</code>: add item <code>x</code> at index <code>i</code> of
+                            <code>list</code>. The item previously at index <code>i</code>, and all following items, are
+                            shifted up by one index to make room for <code>x</code>.
+                        </li>
+                        <li><code>Remove(list, i)</code>: remove item at index <code>i</code> of <code>list</code>. The
+                            item previously at index <code>i+1</code>, and all following items, are shifted down by one
+                            index to fill the gap.</li>
+                        <li><code>Get(list, i)</code>: return the item at index <code>i</code> of <code>list</code>.
+                        </li>
+                    </ul>
+                </div>
+                <p>
+                We define this ADT very abstractly, such that we only describe the outcome of each operation, but not
+                how to implement it.
+                For example, lists can be implemented using arrays, but it can also be implemented using linked lists.
+                </p><p>
+                It is important to distinguish between ADTs and data structures, but it's also an easy distinction to
+                make in most cases:
+                <ul>
+                    <li>Is it an idea? Is its functionality described hand wavily? Then it's likely an ADT.</li>
+                    <li>Could this be implemented in a few different ways? Then it's likely an ADT.</li>
+                    <li>Does it have very specific mechanisms like defining pointers to nodes in a specific fashion?
+                        Then it's likely a data structure.</li>
+                    <li>Is this code? Then it's definitely a datastructure.</li>
+                </ul>
+                </p>
             </div>
         </div>
         <footer>
             By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
-            <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as
-            attribution to the original author is given, and as long as you notify the original author at
-            guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way
-            and
-            in a way that does not suggest that the original author endorses any adaptation. This permission to share,
-            re-distribute and adapt is non-transferrable.</div>
+            <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and
+                adaptation is allowed for non-commercial purposes as long as
+                attribution to the original author is given, and as long as you notify the original author at
+                guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable
+                way
+                and
+                in a way that does not suggest that the original author endorses any adaptation. This permission to
+                share,
+                re-distribute and adapt is non-transferrable.</div>
         </footer>
     </div>
 </body>
