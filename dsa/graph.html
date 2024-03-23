@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', 'G-YCY17GV3DB');</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen"
+        charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+    <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            (i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments); }),
+                (i[r].l = 1 * new Date());
+            (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+            a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+        })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+
+        ga("create", "UA-19048260-11", "auto"); ga("send", "pageview");
+
+        hljs.highlightAll();
+    </script>
+</head>
+
+<body data-bs-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-sm-9">
+
+
+
+                <h1 id="Graph">Graphs</h1>
+                Graphs can be viewed as very general trees! In fact, a linked-list is a special case of a graph; one
+                where each node has 2 directed edges (except for the root and tail nodes of course.)
+                <div class="alert alert-success" role="alert"><br>
+                    A <b>graph</b> \(G=(V,E)\) consists of a set of vertices (nodes) \(V\) and a set of edges \(E\).
+                </div>
+                Is a graph an ADT or a data structure? Well, there isn't a prescribed way to implement a graph so it
+                must be an ADT. We will see how to implement a graph shortly, in the meantime think about how you would
+                do so (in Python for example).
+
+                For example, the following is a graph,
+                <center>
+                    <script type="text/tikz">
+                      \begin{tikzpicture}[scale=3]
+                            \tikzstyle{vertex}=[circle,fill=black!25,minimum size=40pt,inner sep=2pt]
+                            \node[vertex] (G_1) at (-1,1)  {\(V_1\)};
+                            \node[vertex] (G_2) at (0,0)  {\(V_2\)};
+                            \node[vertex] (G_3) at (-2,-.5)  {\(V_3\)};
+                            \node[vertex] (G_4) at (0,-1) {\(V_4\)};
+                            \node[vertex] (G_5) at (-1.5,-1.5) {\(V_5\)};
+
+                            \draw (G_1) -- node[midway, above, font=\Large] {\(e_1\)} (G_2);
+                            \draw (G_2) -- node[midway, above, font=\Large] {\(e_2\)} (G_3);
+                            \draw (G_2) -- node[midway, right, font=\Large] {\(e_3\)} (G_4);
+                            \draw (G_5) -- node[midway, right, font=\Large] {\(e_4\)} (G_3);
+                        \end{tikzpicture}
+                      </script>
+                </center>
+                where
+                \[
+                \begin{align*}
+                G &= (V,E) \\
+                V &= \{v_1, v_2, v_3, v_4, v_5\} \\
+                E &= \{e_1, e_2, e_3, e_4, e_\} \\
+                e_1 &= (v_1, v_2) \\
+                e_2 &= (v_2, v_3) \\
+                e_3 &= (v_2, v_4) \\
+                e_4 &= (v_3, v_5)
+                \end{align*}
+                \]
+            </div>
+        </div>
+        Here, the edges can either be undirected or directed. If no arrows are drawn, we assume the edges are undirected
+        (so we can travel from \(v_1\) to \(v_2\) and from \(v_2\) to \(v_1\)) and we treat \((v_1,v_2)\) as an
+        unordered pair.<br><br>
+
+        Why might we use graphs?
+        <ul>
+            <li>Vertices are cities, edges are direct flights between cities: Want to find the best route between cities
+            </li>
+            <ul>
+                <li>Reformulate: Find the shortest distance between two nodes on a graph</li>
+            </ul>
+            <li>Vertices are school classes, edges connect classes whose schedules overlap: Want to find scheduling
+                times/locations for classes</li>
+            <ul>
+                <li>Reformulate: Find a set of nodes that are completely disconnected from each other (i.e. no two nodes
+                    share an edge)</li>
+            </ul>
+            <li>
+                Vertices are objects in memory, edges connect objects that refer to each other: Want to know when an
+                object can be freed
+            </li>
+            <ul>
+                <li>Reformulate: Find the set of nodes that connect to a certain node</li>
+            </ul>
+        </ul>
+        as just a few examples. The reason this is important is that there are already standard algorithms for dealing
+        with these types of problems, so if we can take our problem and reformulate it as a graph problem, we
+        automatically get the solution. Some different types of graphs:
+        <ul>
+            <li><b>Directed Graphs ("digraphs"):</b> Edges have directions associated with them</li>
+            <center>
+                <script type="text/tikz">
+                    \begin{tikzpicture}[scale=3]
+                        \tikzstyle{vertex}=[circle,fill=black!25,minimum size=40pt,inner sep=2pt]
+                        \node[vertex] (G_1) at (-1,1)  {\(V_1\)};
+                        \node[vertex] (G_2) at (0,0)  {\(V_2\)};
+                        \node[vertex] (G_3) at (-2,-.5)  {\(V_3\)};
+                        \node[vertex] (G_4) at (0,-1) {\(V_4\)};
+                        \node[vertex] (G_5) at (-1.5,-1.5) {\(V_5\)};
+
+                        \draw [->] (G_1) -- node[midway, above] {\(e_1\)} (G_2);
+                        \draw [<-] (G_2) -- node[midway, above] {\(e_2\)} (G_3);
+                        \draw [->] (G_2) -- node[midway, right] {\(e_3\)} (G_4);
+                        \draw [->, transform canvas={xshift=4pt,yshift=4pt},shorten >= -1pt]  (G_5) -- node[midway, right, font=\Large] {\(e_4\)} (G_3);
+                        \draw [<-, transform canvas={xshift=-4pt,yshift=-4pt},shorten <= -1pt]  (G_5) -- node[midway, left, font=\Large] {\(e_5\)} (G_3);
+                    \end{tikzpicture}
+                </script>
+            </center>
+            Here, we write \(e_1 = (v_2,v_1)\) where the order matters now. The first element is the predecessor (or
+            source) and the second element is the successor (or target).
+            <li><b>Weighted graphs:</b> Each edge has a weight associated to it</li>
+            <center>
+                <script type="text/tikz">
+                        \begin{tikzpicture}[scale=3]
+                            \tikzstyle{vertex}=[circle,fill=black!25,minimum size=40pt,inner sep=2pt]
+                            \node[vertex] (G_1) at (-1,1)  {\(V_1\)};
+                            \node[vertex] (G_2) at (0,0)  {\(V_2\)};
+                            \node[vertex] (G_3) at (-2,-.5)  {\(V_3\)};
+                            \node[vertex] (G_4) at (0,-1) {\(V_4\)};
+                            \node[vertex] (G_5) at (-1.5,-1.5) {\(V_5\)};
+
+                            \draw (G_1) -- node[midway, above] {\(9\)} (G_2);
+                            \draw (G_2) -- node[midway, above] {\(17\)} (G_3);
+                            \draw (G_2) -- node[midway, right] {\(40\)} (G_4);
+                            \draw (G_5) -- node[midway, right] {\(23\)} (G_3);
+                            \draw (G_5) -- node[midway, right] {\(12\)} (G_2);
+                        \end{tikzpicture}
+                </script>
+            </center>
+        </ul>
+        and some terminology:
+        <ul>
+            <li>Vertex \(v_1\) is <b>adjacent</b> to vertex \(v_2\) if an edge connects them.</li>
+            <li>A <b>path</b> is a sequence of vertices that are connected by edges. The length of the path is the
+                number of <i>edges</i> in it</li>
+            <li>A <b>cycle</b> is a path that starts and ends at the same vertex</li>
+            <li>A graph with no cycles is called a <b>acyclic graph</b></li>
+            <li>A directed acyclic graph is abbreviated as <b>DAG</b></li>
+            <li>A <b>simple path</b> is a path that does not contain any repeated vertices</li>
+            <li>
+                A <b>simple cycle</b> is a cycle that does not contain any repeated vertices (except for the first and
+                last vertex)
+            </li>
+            <li>
+                Two vertices are <b>connected</b> if there is a path between them
+            </li>
+            <li>
+                A subset of vertices is a <b>connected component</b> if every pair of vertices in the subset is
+                connected
+            </li>
+            <li>
+                The <b>degree</b> of vertex \(v\) is the number of edges that connect to it
+            </li>
+        </ul>
+        This may seem like a lot to take in but most of these definitions are what you would expect them to be
+        naturally.
+
+        <h2>Datastructure Implementations</h2>
+        There are 2 common ways to implement a graph:
+        <ul>
+            <li>
+                We can use a <b>Adjacency Matrix</b>, which is a \(n\times n\) matrix where \(\verb#M[i][j]=1#\) if
+                there is an edge between vertex \(i\) and vertex \(j\), and \(\verb#M[i][j]=0#\) otherwise.
+            </li>
+            <li>
+                We can use an <b>Adjacency List</b>, which is a list of lists where \(\verb#L[i]#\) is a list of all the
+                vertices that are adjacent to vertex \(i\).
+                Note here that we do not specify how lists are implemented immediately and in fact we will see them
+                implemented using arrays and using linked lists.
+                Such is the joy of ADTs!
+            </li>
+        </ul>
+        <h2>Adjacency List Implementation</h2>
+        <h3>Arrays</h3>
+        We can implement an adjacency list in Python as follows:
+        <pre><code class="python">class Node:
+    def __init__(self, data):
+        self.data = data
+        self.adjacent = []
+
+node1 = Node('TO')
+node2 = Node('Ottawa')
+node3 = Node('Orlando')
+
+node1.adjacent.append(node2)
+node1.adjacent.append(node3)
+node2.adjacent.append(node1)
+node3.adjacent.append(node1)
+</code></pre>
+        which gives the following graph:
+        <br><br>
+        <center>
+            <script type="text/tikz">
+        \begin{tikzpicture}[scale=3]
+        \tikzstyle{vertex}=[circle,fill=black!25,minimum size=40pt,inner sep=2pt]
+        \node[vertex] (G_1) at (0,2)  {TO};
+        \node[vertex] (G_2) at (0.7,1)  {Ottawa};
+        \node[vertex] (G_3) at (-0.7,1)  {Orlando};
+
+        \draw (G_1) -- (G_2);
+        \draw (G_1) -- (G_3);
+        \end{tikzpicture}
+      </script>
+        </center>
+        For an undirected graph, if there are \(N\) edges, then the sum of the lengths of all the adjacency lists is
+        \(2N\).
+        <h3>Linked Lists</h3>
+        We can also implement an adjacency list with linked lists.
+        <center>
+            <!-- <script type="text/tikz">
+                
+                \begin{tikzpicture}
+                % NODE
+                \draw (-1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                \draw (0,0) rectangle (1,1);
+                \node at (0.5,0.5) {5};
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                % NODE
+                \draw (0,0) rectangle (1,1);
+                \node at (0.5,0.5) {5};
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                % NODE
+                \draw (-1,-1) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                \draw (0,-1) rectangle (1,1);
+                \node at (0.5,-0.5) {5};
+                \draw (1,-1) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                % NODE
+                \draw (-1,-2) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                \draw (0,-2) rectangle (1,1);
+                \node at (0.5,-1.5) {5};
+                \draw (1,-2) rectangle (2,1);
+                \fill (1.5,-1.5) circle (2pt); % dot at center
+                % NODE
+                \draw (-1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                \draw (0,0) rectangle (1,1);
+                \node at (0.5,0.5) {5};
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                % NODE
+                \draw (0,0) rectangle (1,1);
+                \node at (0.5,0.5) {5};
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                % NODE
+                \draw (0,0) rectangle (1,1);
+                \node at (0.5,0.5) {5};
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                % NODE
+                \draw (-1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                \draw (0,0) rectangle (1,1);
+                \node at (0.5,0.5) {5};
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                % NODE
+                \draw (0,0) rectangle (1,1);
+                \node at (0.5,0.5) {5};
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                % NODE
+                \draw (0,0) rectangle (1,1);
+                \node at (0.5,0.5) {5};
+                \draw (1,0) rectangle (2,1);
+                \fill (1.5,0.5) circle (2pt); % dot at center
+                
+\end{tikzpicture}
+            </script>-->
+            <script type="text/tikz">
+                \begin{tikzpicture}[scale=3]
+                            \tikzstyle{vertex}=[circle,fill=black!25,minimum size=40pt,inner sep=2pt]
+                            \node[vertex] (G_1) at (0,0) {\(V_1\)};
+                            \node[vertex] (G_2) at (0,-1) {\(V_2\)};
+                            \node[vertex] (G_3) at (0,1) {\(V_3\)};
+                            \node[vertex] (G_4) at (0,2) {\(V_4\)};
+                            \node[vertex] (G_5) at (0,3) {\(V_5\)};
+                            \node[vertex] (G_6) at (-1,-1) {\(V_6\)};
+                            \node[vertex] (G_7) at (-1,0) {\(V_7\)};
+                            \node[vertex] (G_8) at (1,1) {\(V_8\)};
+                            
+
+                            \draw [->] (G_1) -- (G_7);
+                            \draw [->] (G_7) -- (G_6);
+                            \draw [->] (G_6) -- (G_2);
+                            \draw [->] (G_1) -- (G_3);
+                            \draw [->] (G_3) -- (G_4);
+                            \draw [->] (G_4) -- (G_5);
+                            \draw [->] (G_4) -- (G_8);
+                            \draw [->] (G_8) -- (G_3);
+                        \end{tikzpicture}   
+            </script>
+            <script type="text/tikz">
+                \begin{tikzpicture}
+                    % HEAD
+                    \draw (-1,0) rectangle (0,1);
+                    \fill (-0.5,0.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (1,0) rectangle (2,1);
+                    \node at (0.5,0.5) {5};
+                    \draw (2,0) rectangle (3,1);
+                    \fill (1.5,0.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (5,0) rectangle (6,1);
+                    \node at (0.5,0.5) {5};
+                    \draw (6,0) rectangle (7,1);
+                    \fill (1.5,0.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-1) rectangle (0,0);
+                    \fill (-0.5,-0.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-1) rectangle (1,0);
+                    \node at (0.5,0.5) {5};
+                    \draw (1,-1) rectangle (2,0);
+                    \fill (1.5,0.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-2) rectangle (0,-1);
+                    \fill (-0.5,-1.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-2) rectangle (1,-1);
+                    \node at (0.5,0.5) {5};
+                    \draw (1,-2) rectangle (2,-1);
+                    \fill (1.5,0.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-3) rectangle (0,-2);
+                    \fill (-0.5,-2.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-3) rectangle (1,-2);
+                    \node at (0.5,0.5) {5};
+                    \draw (1,-3) rectangle (2,-2);
+                    \fill (1.5,0.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-4) rectangle (0,-3);
+                    \fill (-0.5,-3.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-4) rectangle (1,-3);
+                    \node at (0.5,0.5) {5};
+                    \draw (1,-4) rectangle (2,-3);
+                    \fill (1.5,0.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-5) rectangle (0,-4);
+                    \fill (-0.5,-4.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-5) rectangle (1,-4);
+                    \node at (0.5,0.5) {5};
+                    \draw (1,-5) rectangle (2,-4);
+                    \fill (1.5,0.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-6) rectangle (0,-5);
+                    \fill (-0.5,-5.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-6) rectangle (1,-5);
+                    \node at (0.5,0.5) {5};
+                    \draw (1,-6) rectangle (2,-5);
+                    \fill (1.5,0.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-6) rectangle (1,-5);
+                    \node at (0.5,0.5) {5};
+                    \draw (1,-6) rectangle (2,-5);
+                    \fill (1.5,-5.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-7) rectangle (0,-6);
+                    \fill (-0.5,-6.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-8) rectangle (0,-7);
+                    \fill (-0.5,-7.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-8) rectangle (1,-7);
+                    \node at (0.5,-7.5) {5};
+                    \draw (1,-8) rectangle (2,-7);
+                    \fill (1.5,-7.5) circle (2pt); % dot at center
+                    % NODE
+                    \draw (0,-8) rectangle (1,-7);
+                    \node at (0.5,-7.5) {5};
+                    \draw (1,-8) rectangle (2,-7);
+                    \fill (1.5,-7.5) circle (2pt); % dot at center
+
+                    % HEAD
+                    \draw (-1,-9) rectangle (0,-8);
+                    \fill (-0.5,-8.5) circle (2pt); % dot at center
+                \end{tikzpicture}
+            </script>
+        </center>
+        This can be useful because it could be more memory efficient, allows the size to be resized easily, and
+        accessing the neighbours is very straightforward.
+
+
+        <h2 id="L31-complexity">Complexity</h2>
+        Using an adjacency matrix versus an adjacency matrix has certain trade-offs. The two most common operations is
+        checking if there is an edge between \(v_i\) and \(v_j\) as well as finding all the vertices adjacent to a
+        vertex \(v_i\)
+        <ul>
+            <li>Detecting if edge exists</li>
+            <ul>
+                <li>Adjacency Matrix: O(1). This is because we can directly access the element in the matrix.</li>
+
+                <li>Adjacency List: O(d) where \(d\) is the maximum degree in the graph. This is because we have to
+                    traverse the linked list to find the edge.</li>
+            </ul>
+            <li>
+                Finding all neighbours
+            </li>
+            <ul>
+                <li>Adjacency Matrix: \(O(|V|)\) where \(|V|\) is the number of vertices. This is because we have to
+                    traverse the entire row.</li>
+                <li>
+                    Adjacency List: \(O(d)\) where \(d\) is the maximum degree in the graph. This is because we have to
+                    traverse the linked list to find the edge.
+                </li>
+            </ul>
+        </ul>
+        When \(d\) is much smaller than \(|V|\) it's clear that the adjacency list is more efficient. However, when
+        \(d\) is close to \(|V|\) then the adjacency matrix is more efficient.<br><br>
+
+        We also have to think about space requirements. An adjacency matrix needs a space of \(O(|V|^2)\) because this
+        is the number of entries in the matrix.<br><br>
+
+        An adjacency list has a space requirement of \(O(|E| + |V|)\). This is slightly trickier to figure out why. This
+        is because we want to store a total of \(|V|\) vertices. For each of the \(|V|\) vertices, we want to store a
+        linked list such that the total number of elements of the lined lists is equal to \(E\) (or \(2E\) for an
+        undirected graph). Therefore, we have a space requirement of \(O(|E| + |V|)\).
+
+        <footer>
+            By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+            <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and
+                adaptation is allowed for non-commercial purposes as long as
+                attribution to the original author is given, and as long as you notify the original author at
+                guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable
+                way
+                and
+                in a way that does not suggest that the original author endorses any adaptation. This permission to
+                share,
+                re-distribute and adapt is non-transferrable.</div>
+        </footer>
+    </div>
+</body>

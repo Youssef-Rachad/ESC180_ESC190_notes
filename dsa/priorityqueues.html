@@ -69,7 +69,7 @@
                 hospital or files requested from a server). Alternatively, it can be used in searching algorithms (i.e.
                 in
                 games) such as A* (A Star).
-                <h2 id="L25-Naive-Implementation">Slow Method 1</h2>
+                <h1 id="L25-Naive-Implementation">Naive Implementation</h1>
                 The naive implementation is to store everything in an (unsorted) array. Every time that we wish to
                 extract
                 the minimum, we have to search through the entire array to find the minimum. See the below code,
@@ -99,7 +99,7 @@
         <span class="hljs-keyword">return</span> cur_min</code></pre>
                 What is the time complexity? Inserting is effectively O(1) as discussed last time, and extracting the
                 minimum is O(n), since we need to search through the entire array.
-                <h2 id="L25-Naive-Implementation-2">Slow Method 2</h2>
+                <h1 id="L25-Naive-Implementation-2">Sorted Implemetation</h1>
                 One idea is to keep the data sorted, so we don't need to look for the minimum. This is not enough
                 though: we
                 want to ensure we are deleting the last element of the array (which takes constant time), not the first
