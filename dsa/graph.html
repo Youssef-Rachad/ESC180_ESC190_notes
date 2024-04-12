@@ -221,7 +221,7 @@
                         Such is the joy of ADTs!
                     </li>
                 </ul>
-                <h2>Adjacency List Implementation</h2>
+                <h1>Adjacency List Implementation</h1>
                 <h3>Arrays</h3>
                 We can implement an adjacency list in Python as follows:
                 <pre><code class="python">class Node:
@@ -456,7 +456,7 @@ node3.adjacent.append(node1)
                 This can be useful because it could be more memory efficient, allows the size to be resized easily, and
                 accessing the neighbours is very straightforward.
 
-                <h2>Adjacency Matrix Implementation</h2>
+                <h1>Adjacency Matrix Implementation</h1>
                 Recall this simple graph:
                 <script type="text/tikz">
                     \begin{tikzpicture}[scale=3]
@@ -588,7 +588,7 @@ def connect_by_index(self, index1, index2):
                 This can be useful because it could be more memory efficient, allows the size to be resized easily, and
                 accessing the neighbours is very straightforward.
                 
-                <h2 id="L31-complexity">Complexity</h2>
+                <h1 id="L31-complexity">Complexity</h1>
                 Using an adjacency matrix versus an adjacency matrix has certain trade-offs. The two most common
                 operations is
                 checking if there is an edge between \(v_i\) and \(v_j\) as well as finding all the vertices adjacent to
@@ -633,7 +633,56 @@ def connect_by_index(self, index1, index2):
                 linked list such that the total number of elements of the lined lists is equal to \(E\) (or \(2E\) for
                 an
                 undirected graph). Therefore, we have a space requirement of \(O(|E| + |V|)\).
-
+                <h1 id = "L30-pagerank">Pagerank</h1>
+                One very notable application of an adjacency matrix is the <b>PageRank</b> algorithm, which is the first and most well-known algorithm used by Google to rank web pages. It essentially tries to capture the idea of which pages are the most important by asking the following question: If I start at a random page and follow random links, what is the probability that I will end up at page \(i\)?
+                <ol>
+                    <li>Normalize the matrix \(A\) to be
+                        \[
+                A = \begin{pmatrix}
+                0 & 1/2 & 1/2 \\ 
+                1 & 0 & 0 \\ 
+                1 & 0 & 0
+                \end{pmatrix}
+                \]
+                such that each row sums to 1 (i.e. the total probability of ending up at a site when clicking a link is 1).
+                    </li>
+                    <li>Imagine that we start at state \(v_0\)</li>
+                    <li>The probability distribution of reaching some site after a single link click is given by \( M v_0\) where \(M=A^T\). Why is this the case? If the current site is Toronto, then we can write 
+                \[
+                v_0 = \begin{pmatrix}
+                1 \\
+                0 \\
+                0
+                \end{pmatrix}
+                \]
+                and the (transpose) adjacency matrix \(M=A^T\) maps this vector to the first row of the matrix, which contains all the sites that Toronto links to.<br><br>
+                
+                In lecture, Professor Guerzhoy wrote \(Av_0\) instead. This gives a different result as the result will be a column that represents the sites that lead to Toronto. For a symmetric adjacency matrix, there is no difference, but in reality, we wouldn't have it to be symmetrical.
+                    </li>
+                    <li>
+                        Just doing this once is a horrible way of measuring the importance of a site. Someone could cheat the system very easily by creating several sites that all link to the same site. The idea is that if we have a very popular site being linked to by many sites, then many of these sites should also be very popular.<br><br>
+                
+                        This idea is reflected by iterating the process of multiplying by \(M=A^T\) several times. Suppose we run it \(k\) times, where \(k\) is some very large number. Surprisingly, the result should actually converge! We get 
+                        \[
+                            (M)^{k} \vec{v}_0 \to \vec{p}
+                        \]
+                        where \(\vec{p}\) is the probability distribution of reaching any site after \(k\) clicks. This result should not change much depending on what the initial state is (barring some edge cases such as islands), but it is typically done by assuming an initial uniform distribution.<br><br>
+                
+                        The \(i^\text{th}\) element of \(\vec{p}\) will then be the page rank of the \(i^\text{th}\) site. The intuition is that if we start at a random site and click links, then the probability of ending up at site \(i\) is equal to the page rank of site \(i\).
+                    </li>
+                </ol>
+                Why does this work? Why would we even expect the solution to converge at all? The basic idea is that we can decompose \(v_0\) into the eigenvectors \((\vec{w}_1,\vec{w}_2,\dots,\vec{w}_n)\)
+                such that 
+                \[M^{k}\vec{v}_0 = M^k(a_0\vec{w}_1 + \cdots + a_n\vec{w}_n) = a_1\lambda_1^k \vec{w}_1 + \cdots + a_n\lambda_n^k \vec{w}_n\]
+                Suppose \(\vec{w}_1\) has the largest eigenvalue. Then for large \(k\) we have 
+                \[M^k\vec{v}_0 \approx a_1\lambda_1^k \vec{w}_1\]
+                So we can imagine that if we start at a random site, then the most likely site to end up at is the site with the largest eigenvalue.<br><br>
+                
+                In fact, it's possible to show (with more linear algebra) that an adjacency matrix where the rows sum to 1 will always have an eigenvalue of \(1\) with a multiplicity of \(1\). In fact, all other eigenvalues will be smaller than \(1\). This shows more clearly that the other eigenvectors will die off quickly as we keep iterating. <i>Note:</i> The above was only used to illustrate the intuition you should have for this kind of problem.<br><br>
+                
+                There are a couple of flaws with this argument (which we need more math to fix), but if this is something you are interested in, you cover stuff like this (i.e. Markov chains) more in depth in <b>ECE368</b> (and a bit in <b>ROB311</b>) if you decide to do the Machine Intelligence option. <br><br>
+                
+                Outside of pagerank, this is a very fundamental idea that allows us to see which nodes are connected.
                 <footer>
                     By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
                     <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and
