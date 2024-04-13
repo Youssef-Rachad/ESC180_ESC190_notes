@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YCY17GV3DB"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', 'G-YCY17GV3DB');</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <title>ESC190 Lecture Notes</title>
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <!-- TOC CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/bootstrap-toc.css">
+
+    <link rel="stylesheet" href="https://afeld.github.io/bootstrap-toc/assets/screen.css" media="screen"
+        charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://afeld.github.io/bootstrap-toc/bootstrap-toc.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            (i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments); }),
+                (i[r].l = 1 * new Date());
+            (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+            a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+        })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+
+        ga("create", "UA-19048260-11", "auto"); ga("send", "pageview");
+
+        hljs.highlightAll();
+    </script>
+</head>
+
+<body data-bs-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-sm-9">
+
+
+
+                <h1 id="LDynamicStrings">Trees</h1>
+                <!--There's a weird relationship here, a BST is a tree which is a graph. 
+                    So to an array or a ll it's an ADT but do a set it's a datastructure-->
+                <h2>Definition</h2>
+                Trees are a special case of <a href="./graph.html">graphs</a> where a hierarchy is clearly established between the nodes.
+                The first node is called the <code>root node</code> and is the point at which the graph "starts" meaning no other node points to it.
+                The root node points down to one or more <code>child nodes</code> and these nodes then point down to their own child nodes. 
+                When a node points to another, we call it its <code>parent node</code>. 
+                One last term: a leaf node is any node that has no children (remember trees are upside down in computer science).
+                
+                Let's focus on more special cases: 
+                <ol>
+                    <li>A <code>binary tree</code> is a tree in which each node has <b>at most 2 children</b>.</li>
+                    <li>A <code>binary search tree (BST)</code> is a binary tree in which the left child is always smaller and the right child is always bigger for any node in the tree.
+                    </li>
+                </ol>
+                <em>Binary trees don't need to have 2 children for every node, but when they do they're called <code>complete trees</code></em>
+                <h2>Implementation in Python</h2>
+                Let's look at how to implement a binary search tree. We will start by implementing a binary tree.
+
+                <pre><code class="python"># Recall the class definition of a Node 
+class Node:
+  def __init__(self, key):
+    self.left  = None 
+    self.right = None
+    self.val   = key 
+
+def make_tree():
+  root = Node(1)  # Creating the tree starts by defining the root node 
+  root.left = Node(2)
+  root.right = Node(3)
+  root.left.left = Node(4)
+  root.left.right = Node(5)
+  
+  return root
+
+# We get a tree that looks like 
+#      1
+#     / \
+#    2   3 
+#   / \
+#  4   5
+                </code></pre>
+                The above code gets us a binary tree; notice that we defined our <code>Node</code> class to only support 2 children at most.
+                We will rewrite <code>make_tree()</code> to instead give us a BST (to convert any binary tree into a BST we need to study heapify)
+                <pre><code class="python"># Recall the class definition of a Node 
+class Node:
+  def __init__(self, key):
+    self.left  = None 
+    self.right = None
+    self.val   = key 
+
+def make_tree():
+  root = Node(3)  # Creating the tree starts by defining the root node 
+  root.left = Node(1) # Remember left children are smaller
+  root.right = Node(5) # right children are bigger 
+  root.left.left = Node(0)
+  root.left.right = Node(2)
+  
+  return root
+
+# We get a tree that looks like 
+#      3
+#     / \
+#    1   5 
+#   / \
+#  0   2
+                </code></pre>
+                Now if we want to search for a value in our BST we can start at the root node and compare its value against our target value.
+                There are 3 cases:
+                <ol>
+                    <li>The current value is equal to our target, we found the node we are looking for and can stop the search.</li>
+                    <li>The current value is smaller: we continue exploring the left sub-tree.</li>
+                    <li>The current value is larger: we continue exploring the right sub-tree.</li>
+                </ol>
+<pre><code class="python">def search_BST(root, key):
+    # root is the root node of a BST, key is the target value 
+    # return True if the key is present in the BST 
+    if root is None:
+      return False                   # The BST (or sub-tree) is empty, no more nodes left to explore
+    elif root.val == key:
+      return True                    # We found the value!
+    elif key &lt; root.val: 
+      return search(root.left, key)  # Explore the left sub-tree 
+    else:
+      return search(root.right, key) # Explore the right sub-tree
+</code></pre>
+Notice this implementation makes healthy use of recursion because we can break down the problem and address it one node at a time.
+<h2>Complexity</h2>
+            </div>
+        </div>
+        <footer>
+            By Michael Guerzhoy, Youssef Rachad, Ian Wu, Qilin Xue<br>
+            <div style="text-align: justify;text-justify: inter-word;">&copy; 2023 Sharing, re-distribution, and adaptation is allowed for non-commercial purposes as long as
+            attribution to the original author is given, and as long as you notify the original author at
+            guerzhoy@cs.toronto.edu that you intend to use the materials. Atrribution must be given in a reasonable way
+            and
+            in a way that does not suggest that the original author endorses any adaptation. This permission to share,
+            re-distribute and adapt is non-transferrable.</div>
+        </footer>
+    </div>
+</body>

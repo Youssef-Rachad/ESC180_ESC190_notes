@@ -52,13 +52,16 @@
                 <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
             </div>
             <div class="col-sm-9">
-                <h1 id="L35">L35: Hashing</h1>
-                This lecture will cover the basics of how sets and dictionaries work.
+                <h1 id="Hashing"> Hashing</h1>
+                This lecture will cover the basics of how dictionaries work.
                 <div class="alert alert-success" role="alert"><br>
                     A <b>map</b> is a collection of <i>(key, value)</i> pairs, where the keys are unique, but the values may not be. The two operations are:
                     <ul>
                         <li><code>get(key)</code> gets the value at the specific key</li>
                         <li><code>put(key, value)</code> puts the pair (key,value) in the map</li>
+                        <em>The term map also highlights the relationship between the keys and the values. You might have seen in MAT185 that mappings can be injective, surjective, bijective.
+                            In general, the map ADT is surjective (anything not in the values can be ignored) but not necessarily injective (hence why multiple keys can point to the same value).
+                        </em>
                     </ul>
                 </div>
                 For example, a python dictionary is an implementation of a map. How can we implement this?
