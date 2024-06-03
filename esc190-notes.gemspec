@@ -5,6 +5,7 @@ Gem::Specification.new do |s|
   s.version       = "0.0.0"
   s.authors       = ["Youssef Rachad"]
   s.email         = [""]
+  s.license       = ""
   s.homepage      = "https://github.com/Youssef-Rachad/ESC180_ESC190_notes"
   s.summary       = "Course Notes for ESC190: Computer Algorithms and Data Structures."
 
