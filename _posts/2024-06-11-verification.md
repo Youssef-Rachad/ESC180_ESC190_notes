@@ -41,7 +41,8 @@ You could be reading an inconspicuous sentence describing the funs and wonders o
 Block equations however, now those are the wild west of Latex. Anything can happen: $$\underbrace{F = ma.}_{\text{an interesting equation}}$$
 
 Wanna use additional packages, sure! though I'm not sure what's included and not:
-\\[
+
+$$
 \begin{align}
 \mathbf M &= \begin{pmatrix} 
 0&1\\
@@ -49,7 +50,9 @@ Wanna use additional packages, sure! though I'm not sure what's included and not
 \end{pmatrix}\\
 M &= U^\dagger U
 \end{align}
-\\]
+$$
+
+Editor's note: gotta use double dollars for anything worthwhile...
 
 ## TiKz
 We want to make plots, draw shapes and make graphs of all sorts. Here are a few examples which should be met:
