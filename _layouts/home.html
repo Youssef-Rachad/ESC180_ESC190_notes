@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{{ page.title }}</title>
 
 {% seo %}
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
@@ -15,7 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     {% include head-custom.html %}
-    {% include math-jax.html    %}
   </head>
   <body>
 
@@ -27,11 +25,7 @@
       <div id="banner">
         <span id="logo"></span>
 
-	<!--<a href="{{ site.github.repository_url }}" class="button fork"><strong>View On GitHub</strong></a>-->
-        <a href="{{ site.github.repository_url }}" class="button"><strong>Home</strong></a>
-        <a href="{{ site.github.repository_url }}" class="button"><strong>C Programming</strong></a>
-        <a href="{{ site.github.repository_url }}" class="button"><strong>Data Structures</strong></a>
-        <a href="{{ site.github.repository_url }}" class="button"><strong>Algorithms</strong></a>
+	<a href="{{ site.baseurl }}{% link _topics/cprogramming.md %}" class="button fork"><strong>View On GitHub</strong></a>
         {% if site.show_downloads %}
           <div class="downloads">
             <span>Downloads:</span>
@@ -52,10 +46,10 @@
 
       </section>
       <footer>
-        <!--{% if site.github.is_project_page %}
+        {% if site.github.is_project_page %}
           <p>Project maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-	  {% endif %}-->
-        <p>Here afoot lies the footer...</p>
+        {% endif %}
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/mattgraham">mattgraham</a></small></p>
       </footer>
     </div>
   </body>

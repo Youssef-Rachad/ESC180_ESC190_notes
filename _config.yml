@@ -1,0 +1,7 @@
+title: ESC190 Course Notes
+description: Course notes for ESC190 Computer Algorithms and Data Structures
+plugins:
+  - jekyll-seo-tag
+collections:
+  topics:
+    output: true

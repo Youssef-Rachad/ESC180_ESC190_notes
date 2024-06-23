@@ -1,4 +1,5 @@
 
+/*
 @font-face {
     font-family: 'Quattrocento Sans';
     src: url('../fonts/quattrocentosans-bold-webfont.eot');
@@ -52,4 +53,61 @@
          url('../fonts/copse-regular-webfont.svg#CopseRegular') format('svg');
     font-weight: normal;
     font-style: normal;
+}
+*/
+
+@font-face {
+    font-family: 'Playfair Display';
+    src        : url('../fonts/Playfair_Display/static/PlayfairDisplay-Regular.ttf');
+    font-weight: normal;
+    font-style : normal;
+}
+
+@font-face {
+    font-family: 'Playfair Display';
+    src        : url('../fonts/Playfair_Display/static/PlayfairDisplay-Bold.ttf');
+    font-weight: bold;
+    font-style : normal;
+}
+
+@font-face {
+    font-family: 'Playfair Display';
+    src        : url('../fonts/Playfair_Display/static/PlayfairDisplay-Italic.ttf');
+    font-weight: normal;
+    font-style : italic;
+}
+
+@font-face {
+    font-family: 'Playfair Display';
+    src        : url('../fonts/Playfair_Display/static/PlayfairDisplay-BoldItalic.ttf');
+    font-weight: bold;
+    font-style : italic;
+}
+
+@font-face {
+    font-family: 'Urbanist';
+    src        : url('../fonts/Urbanist/static/Urbanist-Regular.ttf');
+    font-weight: normal;
+    font-style : normal;
+}
+
+@font-face {
+    font-family: 'Urbanist';
+    src        : url('../fonts/Urbanist/static/Urbanist-Bold.ttf');
+    font-weight: bold;
+    font-style : normal;
+}
+
+@font-face {
+    font-family: 'Urbanist';
+    src        : url('../fonts/Urbanist/static/Urbanist-Italic.ttf');
+    font-weight: normal;
+    font-style : italic;
+}
+
+@font-face {
+    font-family: 'Urbanist';
+    src        : url('../fonts/Urbanist/static/Urbanist-BoldItalic.ttf');
+    font-weight: bold;
+    font-style : italic;
 }
