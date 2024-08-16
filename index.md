@@ -21,3 +21,8 @@ Cheers!
 
 Youssef
 
+
+# Table of Contents
+- [Introduction to Programming in C](./topics/cprogramming.html)
+- [Data Structure](./topics/datastructures.html)
+- [Algorithms](./topics/algorithms.html)
