@@ -8,7 +8,7 @@ In this section, we will cover the basics of programming in C and an example set
 
 - What is C?
 - Why do we use C?
-- [Hello World]({% link {{site.url}}{{site.baseurl}}/_topics/cprogramming/helloworld.md %})
+- [Hello World]({{ site.baseurl }}{% link _topics/cprogramming/helloworld.md %})
 - Data Types
 - Functions
 - Pointers
