@@ -6,11 +6,12 @@ layout: default
 
 In this section, we will tentatively cover:
 
-- Data Sctructures vs. Abstract Data Types
-- Linked Lists (the subfields here are repeatable for every topic)
+- [Data Sctructures vs. Abstract Data Types]({{ site.baseurl }}{% link _topics/datastructures/ADT.md %})
+- [Python Classes]({{ site.baseurl }}{% link _topics/datastructures/classes.md %})
+- [Linked Lists]({{ site.baseurl }}{% link _topics/datastructures/linkedlist.md %}) (the subfields here are repeatable for every topic)
   - Operations for linked lists
   - Python vs. C implementations
-  - Variants on linked lists
+  - [Variants on linked lists]({{ site.baseurl }}{% link _topics/datastructures/moreLLs.md %})
   - Complexity of Operations Defined
 - Stacks
 - Queues
