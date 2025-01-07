@@ -2,7 +2,6 @@
 title: The C Programming Language
 layout: default
 ---
-
 > "How does the compiler itself get started? Because, of course, the C compiler is written in C!"
 >
 > - Brian Kernighan, EngPhys 6T4, co-author of The C Programming Language

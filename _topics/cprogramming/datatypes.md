@@ -36,9 +36,9 @@ Recall this is exactly how we decompose numbers in decimal $$14=1\cdot10^1+4\cdo
 Let's take a look now at how we might convert between `14_{10}` and `1110_2`.
 
 Going from right to left:
-1. 14 is even, so the last binary digit is a 0. We now have to represent $\frac{14-0}{2}=7$.
-1. 7 is odd, so the 2nd last binary digit is a 1. We now have to represent $\frac{7-1}{2}=3$.
-1. 3 is odd, so the 3rd last binary digit is a 1. We now have to represent $\frac{3-1}{2}=1$.
+1. 14 is even, so the last binary digit is a 0. We now have to represent $$\frac{14-0}{2}=7$$.
+1. 7 is odd, so the 2nd last binary digit is a 1. We now have to represent $$\frac{7-1}{2}=3$$.
+1. 3 is odd, so the 3rd last binary digit is a 1. We now have to represent $$\frac{3-1}{2}=1$$.
 1. 1 in binary is still 1 so the 4th last digit is a 1.
 
 We thus write, from right to left: $$1110_{2}$$
@@ -67,10 +67,10 @@ print(get_binary_digits(25))
 Going from left to right:
 - We want to write 14 as a sum of powers of 2, we do this by removing the largest power of 2 at each iteration until we are done. Thus the problem is to determine the coefficients such that $$14 = b_k2^k+b_{k-1}2^{k-1}+\dots+b_12+b_0$$
 1. We determine that 14 is a 4 bit digit binary number.
-1. The largest power of 2 that fits in 14 is 8 so $b_3=1$. We now need to represent $14-8=6$.
-1. The largest power of 2 that fits in 6 is 4 so $b_2=1$. We now need to represent $6-4=2$.
-1. The largest power of 2 that fits in 2 is exactly 2 so $b_1=1$. We now need to represent $2-2=0$.
-1. $2^0=1$ doesn't fit in 0 so $b_0=0$. We are now done and have: $$14 = 2^3+2^2+2^1 = 1110_2.$$
+1. The largest power of 2 that fits in 14 is 8 so $$b_3=1$$. We now need to represent $$14-8=6$$.
+1. The largest power of 2 that fits in 6 is 4 so $$b_2=1$$. We now need to represent $$6-4=2$$.
+1. The largest power of 2 that fits in 2 is exactly 2 so $$b_1=1$$. We now need to represent $$2-2=0$$.
+1. $2^0=1$ doesn't fit in 0 so $$b_0=0$$. We are now done and have: $$14 = 2^3+2^2+2^1 = 1110_2.$$
 
 **What about negative numbers? and floating point number?**
 The numbers we dealt with above are called _unsigned_ because we assume they are positive when looking at their binary representation. However, dealing with negative numbers necessarily means using 1 bit of information to communicate whether the number is positive or negative (after all, binary is most useful in digital logic which is strictly a 2 state system of HIGH or LOW so its not practical to write a minus sign in hardware). 
@@ -96,6 +96,3 @@ There are many other schemes to represent numbers using binary and these are bes
 - Unicode is the modern standard for text and includes nearly all languistic characters and pictograms for art and emojis. 
 
 Unicode is an interesting case where backwards compatability with ASCII was a must-requirement. To achieve this, Unicode uses the non-extended ASCII standard which only requires 7 bits then sets the first bit to 0 for a total of 8 bits. None of the UTF encodings have a 0 as the first bit so this signals to Unicode readers that the character is an ASCII 1 byte character while ASCII readers are non the wiser since the bit string matches the standard.
-
-
-
