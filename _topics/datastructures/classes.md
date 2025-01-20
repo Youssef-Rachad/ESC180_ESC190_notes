@@ -1,5 +1,7 @@
 ---
 title: Python Classes
+layout: default
+jax: True
 ---
 # Python Classes
 

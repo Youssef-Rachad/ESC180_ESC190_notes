@@ -1,5 +1,7 @@
 ---
 title: Dynamic (Infinite*) Strings
+Layout: default
+jax: True
 ---
 We've seen previously how to declare strings - static, using pointers, as constants - and noticed all approaches share a similar pattern of declaring some fixed size of memory and storing characters. What if we wanted to shorten or lenghthen our string?
 

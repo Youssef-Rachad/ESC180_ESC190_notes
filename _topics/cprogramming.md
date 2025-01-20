@@ -11,6 +11,7 @@ In this section, we will cover the basics of programming in C and an example set
 - [Data Types]({{ site.baseurl }}{% link _topics/cprogramming/datatypes.md %})
 - [Functions]({{ site.baseurl }}{% link _topics/cprogramming/functions.md %})
 - [Pointers]({{ site.baseurl }}{% link _topics/cprogramming/pointers.md %})
-- Arrays and Strings
+- [Arrays]({{ site.baseurl }}{% link _topics/cprogramming/arrays.md %})
+- [Strings]({{ site.baseurl }}{% link _topics/cprogramming/strings.md %})
 - [Structs]({{ site.baseurl }}{% link _topics/cprogramming/structs.md %})
 - [Projects]({{ site.baseurl }}{% link _topics/cprogramming/projects.md %})
