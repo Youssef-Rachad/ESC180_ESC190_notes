@@ -15,11 +15,35 @@ Below are some examples of types:
 | double  | Double-precision floating point number |
 | char | ASCII character (the basic english character set) |
 | int * | Address of an int variable |
-| double * | Addres of a double variable |
+| double * | Address of a double variable |
 | char * | Address of a char variable |
 
 The last 3 types are known as **pointers** and are covered in more depth in a future [topic]({{ site.baseurl }}{% link _topics/cprogramming/pointers.md %}).
 Note that we also haven't addressed strings (or lists for that matter); these a discussed in the [arrays and strings]({{ site.baseurl }}{% link _topics/cprogramming/arrays.md %}) topic.
+
+# Brief note on `sizeof`
+sizeof returns the size occupied in memory by the contents of a variable.
+It returns a value of type size_t. The size_t is defined in a way to guarantee that it can count the elements in an array (among other use cases) so it is forced to be the size of the largest unsigned integer. On my machine, this means that it resembles the unsigned long long which is 64-bit in size. Note that the compiler will give a warning rather than an error when type casting a size_t to fit an integer in the limit that the size obtained does not exceed 32 bits (about 4 billion; nothing to worry about hopefully).
+
+# How big is an integer?
+Most computers nowadays use a 64 bit architecture but this was not always the case! Even before the standardisation of the 32-bit architecture, different computer platforms had different architectures. Note that an architecture size refers to the maximum register size available. 
+In C, primitive type were introduces in part to abstract away the need to manually account for a specific platforms architecture and this concept is still applicable nowadays although you should be able to find the same primitive type sizes as shown in the following section.
+
+| Primitive Type    | Size    |
+| ----------------- | ------- |
+| character (ASCII) | 1 byte  |
+| integer           | 4 bytes |
+| double            | 8 bytes |
+| float             | 4 bytes |
+| pointer           | 8 bytes |
+| short integer     | 2 bytes |
+| long integer      | 4 bytes |
+| long long integer | 8 bytes |
+| long double       | 8 bytes |
+| size_t            | 8 bytes |
+| boolean           | 1 byte  |
+
+`unsigned` variants of datatypes are of the same length but have different possible values. Note that floats and doubles cannot be unsigned and that there are no long long doubles or long floats nor short short integers. The boolean type `bool` is available for the C99 standard onwards and takes on values of either `true` or `false`.
 
 # Literals in C
 A literal is a value that is used in the program, but not explicitly defined as a variable. 
@@ -95,4 +119,4 @@ There are many other schemes to represent numbers using binary and these are bes
 - ASCII is the old American standard for text (but is easiest to teach since it uses 8 bit binary)
 - Unicode is the modern standard for text and includes nearly all languistic characters and pictograms for art and emojis. 
 
-Unicode is an interesting case where backwards compatability with ASCII was a must-requirement. To achieve this, Unicode uses the non-extended ASCII standard which only requires 7 bits then sets the first bit to 0 for a total of 8 bits. None of the UTF encodings have a 0 as the first bit so this signals to Unicode readers that the character is an ASCII 1 byte character while ASCII readers are non the wiser since the bit string matches the standard.
+Unicode is an interesting case where backwards compatability with ASCII was a must-requirement. To achieve this, Unicode uses the non-extended ASCII standard which only requires 7 bits then sets the first bit to 0 for a total of 8 bits (or 1 byte). None of the UTF encodings have a 0 as the first bit so this signals to Unicode readers that the character is an ASCII 1 byte character while ASCII readers are non the wiser since the bit string matches the standard.
