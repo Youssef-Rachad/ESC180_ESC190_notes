@@ -73,6 +73,7 @@ int main()
 When a static array is created, it is stored in a read-only part of the memory meaning that it cannot be resized afterwards. It's very useful to modify arrays in this way and in some cases, static allocation is not possible so let's learn more about dynamic arrays.
 
 We already know that an 'array variable' in reality points to the first element of the array and subsequent elements are adjacent to it. Now, we can use a pointer to hold the address of the element which allows the compiler to store the array in the heap memory (for now, we should only understand that the heap is much larger and modifiable; which we want). Dynamic allocation thus requires calling an allocation method (defined in the standard library):
+
 ```c
 #include <stdlib.h>
 
@@ -84,6 +85,7 @@ int main()
   return 0;
 }
 ```
+
 Let's unpack this code:
 - Remember that the array is now defined by a pointer `*numbers`
 - We allocate memory by calling `malloc`, meaning memory allocation:
@@ -91,6 +93,7 @@ Let's unpack this code:
 - In the `malloc` call, we want enough memory for 10 integers which we obtain using the `sizeof` function
 - Finally, we make sure that the result of malloc is a pointer to an integer array so we use a typecast `(int *)`
 Suppose we wanted to store 20 integers instead of 10, then we can grow the array by calling
+
 ```c
 #include <stdio.h>
 
@@ -104,9 +107,11 @@ int main()
   return 0;
 }
 ```
+
 WARNING: now that we're dynamically allocating memory, we are also responsible for managing it. When we are done with our dynamically allocated array, we need to free the allocated memory used otherwise memory leak might result. A memory leak is the uncontrolled use of a program's memory and this happens when we lose track of the allocated memory or when we keep allocating memory and overconsume the computer's resources. Although we typically won't write code that will test our hardware's limitations, it's still very important to implement best coding practices.
 
 Let's see an example of dynamically allocating a matrix and freeing it: to achieve this, each row of the matrix is a dynamically allocated array and the matrix is constructed using an array of pointers to integers
+
 ```
 matrix -> [
            row -> [1, 2, 3],
@@ -114,6 +119,7 @@ matrix -> [
            row -> [7, 8, 9],
            ]
 ```
+
 ```c
 #include <stdio.h>
 #include <stdlib.h>
@@ -156,6 +162,3 @@ int main ()
   return 0;
 }
 ```
-## Brief notes on `sizeof()`
-sizeof returns the size occupied in memory by the contents of a variable.
-It returns a value of type `size_t`. The `size_t` is defined in a way to guarantee that it can count the elements in an array (among other use cases) so it is forced to be the size of the largest unsigned integer. On my machine, this means that it resembles the unsigned long long which is 64-bit in size. Note that the compiler will give a warning rather than an error in the limit that the size used does not exceed 32 bits (about 4 billion; nothing to worry about hopefully).
