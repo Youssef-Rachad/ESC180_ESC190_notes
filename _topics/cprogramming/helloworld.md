@@ -103,3 +103,15 @@ Common format specifiers include:
 | `%p`             | pointers|
 | `%x`             | hexadecimal|
 | `%u`             | unsigned integer |
+
+There are also special characters that can be confused by the compiler but we can print them using escape characters understood by `printf()`. These include whitespace characters and the double quotes used to define string literals.
+
+| Escape Character | Actual Character |
+| ---------------- | ---------------- |
+| `\"`             | Double Quotation |
+| `\n`             | Newline          |
+| `\t`             | Tab              |                   
+| `\r`             | Carriage Return  |
+| `\\`             | Backslash        |
+| `\0`             | Null Terminator  |
+
