@@ -45,6 +45,7 @@ Two common approaches are followed to manipulate arrays in functions:
 1. We can dynamically allocate memory during the function call. This creates a pointer which points to an allocated block in memory (outside of the function frame) which we can return.
    
 2. We can pre-defined an array (either static or dynamic) and pass it as an argument to the function. This allows the array to be populated in the function.
+
 ```c
 #include <stdio.h>
 
