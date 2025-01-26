@@ -38,10 +38,25 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color:#333;
   margin:0 0 10px;
+  scroll-margin-top: 25vh;
 }
 
 p, ul, ol, table, pre, dl {
   margin:0 0 20px;
+}
+
+/* Lectures in order */
+ol#lecs {
+  counter-reset: number;
+}
+
+ol#lecs > li {
+  list-style: none;
+  counter-increment: number;
+}
+
+ol#lecs > li::before {
+  content: "Lecture " counter(number) ". ";
 }
 
 h1, h2, h3 {
@@ -402,6 +417,28 @@ footer {
   line-height: 16px;
 }
 
+/* Code block styling - why is it so bad */
+pre.highlight {
+  margin: 0;
+
+  * {
+    margin: 0;
+  }
+
+  td {
+    border: none;
+  }
+
+  pre {
+    border: none;
+  }
+
+  pre.lineno {
+    padding: 0;
+  }
+  /* a bit more needs to be done but at least it's legible now */
+}
+
 @media print, screen and (max-width: 1060px) {
 
   div.wrapper {
@@ -525,9 +562,13 @@ footer {
     margin-top: 5px;
   }
 
-  #banner { display: none;}
+  /* Mobile navigation fix, should be further tested */
+  #banner { display: block; margin-top:-5vh; position:absolute;}
   header ul {
-    display:none;
+    display:block;
+  }
+  div.wrapper {
+    margin-top:10vh;
   }
 }
 

@@ -1,0 +1,50 @@
+<!-- note to the debugger: nb to escape double quotes like so \" ;) -->
+<div class="quiz-container">
+    <p class="quiz-question">{{ include.question | markdownify }}</p>
+    <button class="quiz-toggle">Answer:</button>
+    <div class="quiz-answer" style="display: none;">{{ include.answer | markdownify }}</div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".quiz-toggle").forEach(function (button) {
+            button.addEventListener("click", function () {
+                this.nextElementSibling.style.display = "block";
+                this.style.display = "none"; // Hide button after showing the answer
+            });
+        });
+    });
+</script>
+
+<style>
+    .quiz-container {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        max-width: 600px;
+        background-color: #f9f9f9;
+    }
+
+    .quiz-toggle {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+    .quiz-toggle:hover {
+        background-color: #0056b3;
+    }
+
+    .quiz-answer pre {
+        background-color: #282c34;
+        color: #ffffff;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+    }
+</style>
+
