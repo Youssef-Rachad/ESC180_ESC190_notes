@@ -2,6 +2,11 @@ title: ESC190 Course Notes
 description: Course notes for ESC190 Computer Algorithms and Data Structures
 plugins:
   - jekyll-seo-tag
+kramdown:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
 collections:
   topics:
     output: true

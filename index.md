@@ -26,3 +26,16 @@ Youssef
 - [Introduction to Programming in C](./topics/cprogramming.html)
 - [Data Structure](./topics/datastructures.html)
 - [Algorithms](./topics/algorithms.html)
+
+# Lectures
+<ol id="lecs">
+  <li>Jan  6 - Introduction </li>
+  <li>Jan  8 -  </li>
+  <li>Jan  9 -  </li>
+  <li>Jan 13 - </li>
+  <li>Jan 15 -  </li>
+  <li>Jan 16 - </li>
+  <li>Jan 20 - </li>
+  <li>Jan 22 - </li>
+  <li>Jan 23 - </li>
+<ol>

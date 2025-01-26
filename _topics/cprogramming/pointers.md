@@ -48,3 +48,29 @@ we get the following memory table:
 
 The symbol `*` is used both to define variables (i.e. as a type) and also as an operator for dereferencing. While both are used in the context of memory, they are separate. 
 You may notice that the variable `p_a` takes up 64 bits instead of the standard 32 bits. This is because addresses are usually stored as long integers by most systems. 
+
+# Pointers to pointers
+It will be useful in many situations to have pointers which point to more pointers. For instance, we can see how dynamic arrays use pointers to reference an array block in memory and by extension, a matrix like concept can be designed using an "array of arrays" which requires a pointer to pointers. 
+
+For now, let's look at a contrived example to double a number:
+```c
+#include <stdio.h>
+
+void double_without_change(int **p_p_a)
+{
+  int b  = **p_p_a * 2; // take the value pointed to by the pointer pointed to by p_p_a
+                        // we are drilling down to find the value 'a'
+                        // the address p_p_a points to the address p_a, we follow it
+                        // the address p_a points to the integer a, we go to 'a' and retrieve its value
+  *p_p_a = &b;
+}
+
+int main()
+{
+ 
+  int a = 42; 
+
+  return 0;
+}
+ ```
+```

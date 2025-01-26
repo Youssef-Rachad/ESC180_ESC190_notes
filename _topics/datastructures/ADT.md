@@ -3,6 +3,7 @@ title: Abstract Data Types
 layout: default
 jax: True
 ---
+# What is an ADT?
 We've seen so far that C is a strongly typed language and that we should be specific about our `int`s, `char`s and more. These were some of the primitive data types that we've worked with and they came with a few operations which are built-in to most languages like C or Python.
 
 What if we wanted more, like having a list of values that we could manipulate in an intuitive way? You might have a few ideas to achieve this so to stay general, we will introduce the concept of an ADT.
