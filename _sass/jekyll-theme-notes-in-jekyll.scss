@@ -575,7 +575,7 @@ pre.highlight {
 @media print, screen and (max-width: 450px) {
   /* Mobile navigation fix, should be further tested */
   #banner { height:4vh; }
-  #banner.button {
+  #banner .button {
     margin-left:2px;
     padding: 5px 6px;
     margin-top: 3px;
