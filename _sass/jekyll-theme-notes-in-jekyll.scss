@@ -570,8 +570,22 @@ pre.highlight {
   div.wrapper {
     margin-top:10vh;
   }
+  div.wrapper {
+    margin-top:10vh;
+  }
 }
 
+@media print, screen and (max-width: 450px) {
+  /* Mobile navigation fix, should be further tested */
+  #banner { height:4vh; }
+  #banner .button {
+    margin-left:2px;
+    padding: 5px 6px;
+    margin-top: 3px;
+    line-height: 7px;
+    font-size: 10px;
+  }
+}
 @media print {
   body {
     padding:0.4in;

@@ -167,4 +167,3 @@ In this implementation
 - the counter step is just running a command. Here we run the `printf()` command and use the postfix increment operator to advance `str`
 
 Note that this style of programming is highly discouraged as it is very difficult to read (and debug...)
-
