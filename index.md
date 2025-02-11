@@ -94,4 +94,8 @@ Youssef
           <li>storing strings in structs</li>
           <li>arrays of structs</li>
       </ul>
+  <li>Feb 10 - [Better Strings]({{ site.baseurl }}{% link _topics/datastructures/betterstring.md %}) in C
+      <ul>
+          <li> Creating, changing, appending and destroying</li>
+      </ul>
 <!-- markdown auto closes the list maybe </ol> -->

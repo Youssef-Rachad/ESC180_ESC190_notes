@@ -8,6 +8,7 @@ In this section, we will tentatively cover:
 
 - [Data Sctructures vs. Abstract Data Types]({{ site.baseurl }}{% link _topics/datastructures/ADT.md %})
 - [Python Classes]({{ site.baseurl }}{% link _topics/datastructures/classes.md %})
+- [Better Strings]({{ site.baseurl }}{% link _topics/datastructures/betterstring.md %}) in C
 - [Linked Lists]({{ site.baseurl }}{% link _topics/datastructures/linkedlist.md %}) (the subfields here are repeatable for every topic)
   - Operations for linked lists
   - Python vs. C implementations
