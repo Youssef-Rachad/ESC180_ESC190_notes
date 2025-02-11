@@ -1,5 +1,6 @@
 ---
 title: Linked Lists
+layout: default
 ---
 Motivation: We cannot dynamically add an element to an existing array or block of memory easily, as there could be no space there! The only option we have is to re-allocate everything to a new location with enough space. This is inefficient, especially for larger arrays. Instead, we can use a special data structure called a **linked list**.
 
