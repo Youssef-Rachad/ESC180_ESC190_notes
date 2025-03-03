@@ -1,6 +1,6 @@
 ---
 title: Better Strings
-Layout: default
+layout: default
 jax: True
 ---
 # Dynamic Strings
