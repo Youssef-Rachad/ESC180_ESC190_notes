@@ -40,3 +40,14 @@ It is important to distinguish between ADTs and data structures, but it's also a
 - Could this be implemented in a few different ways? Then it's likely an ADT.
 - Does it have very specific mechanisms like defining pointers to nodes in a specific fashion? Then it's likely a data structure.
 - Is this code? Then it's definitely a datastructure.
+
+## ArrayLists
+
+An array is a data structure which implements a list using a contiguous block of memory. A reference is held to the first element of the array and subsequent elements are accessed by offsetting this reference. Note that arrays are strictly non-resizable.
+
+### Complexity of operations
+An array lists implement all of the list's operations
+
+- `Insert(list, i, x)` is done in $\mathcal O(n)$ where $n$ is the number of elements. This is because we need to free the current block of memory and allocate another block which is large enough to insert the new element.
+- `Remove(list, i)`: is similarly done in $\mathcal O(n)$ except the new memory block is one element smaller instead.
+- `Get(list, i)`: is done in $\mathcal O(1)$ because the exact location in memory of the index can be calculated by offsetting the reference to the first element.
