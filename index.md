@@ -98,4 +98,36 @@ Youssef
       <ul>
           <li> Creating, changing, appending and destroying</li>
       </ul>
+  <li>Feb 12 - 
+      <ul>
+          <li><a href="{{ site.baseurl }}{% link _topics/datastructures/betterstring.md %}">Better Strings</a> in C: `get_char`, `get_str`.</li>
+          <li>What are <a href="{{ site.baseurl }}{% link _topics/datastructures/ADT.md %}">Abstract Data Types</a>?</li>
+          <li>Example: <a href="{{ site.baseurl }}{% link _topics/datastructures/ADT.md %}">Lists</a></li>
+          <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/exercice.html">Exercise 1</a>: Is it an ADT or a DS?</li>
+      </ul>
+  <li>Feb 13 - 
+      <ul>
+          <li><a href="{{ site.baseurl }}{% link _topics/datastructures/pyInteger.md %}">Pythonic Integers</a> in C.</li>
+      </ul>
+  <li>Mar 5 - Dynamic Programming Introduction
+      <ul>
+          <li><a href="{{ site.baseurl }}{% link _topics/algorithms/dynamicprogramming.md %}">Dynamic Programming Intro</a>.</li>
+          <li><a href="">Fibonnaci Numbers</a>.</li>
+          <li><a href="">House Painting</a>.</li>
+      </ul>
+  <li>Mar 6 - Dynamic Programming House Painting
+      <ul>
+          <li><a href="">House Painting</a>.</li>
+      </ul>
+  <li>Mar 10 - Dynamic Programming Problems
+      <ul>
+          <li><a href="">Fibonnaci Numbers</a>.</li>
+          <li><a href="">House Painting</a>.</li>
+          <li><a href="">Coin Change</a>.</li>
+          <li><a href="">Word Segmentation</a>.</li>
+      </ul>
+  <li>Mar 12 -
+      <ul>
+          <li><a href="{{ site.baseurl }}{% link _topics/datastructures/graphs.md %}">Graphs</a>.</li>
+      </ul>
 <!-- markdown auto closes the list maybe </ol> -->

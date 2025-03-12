@@ -1,0 +1,31 @@
+<!-- note to the debugger: nb to escape double quotes like so \" ;) -->
+<div class="box-container">
+    <h4 class="box-title">{{ include.title | markdownify }}</h4>
+    <p class="box-content">{{ include.content | markdownify }}</p>
+</div>
+
+<style>
+    .box-title {
+	    color:#001833;
+	    font-size: 1.5rem;
+    }
+
+    .box-container {
+	    padding:15px;
+	    margin-bottom:20px;
+	    border:1px solid transparent;
+	    border-radius:4px;
+	    background-color:#DFF0d8;
+	    color:#3c763d;
+	    border-color:#d6e9c6;
+    }
+
+    .box-content pre {
+        background-color: #282c34;
+        color: #ffffff;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+    }
+</style>
+
