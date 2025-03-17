@@ -109,4 +109,8 @@ Youssef
       <ul>
           <li><a href="{{ site.baseurl }}{% link _topics/datastructures/pyInteger.md %}">Pythonic Integers</a> in C.</li>
       </ul>
+  <li>Mar 12 -
+      <ul>
+          <li><a href="{{ site.baseurl }}{% link _topics/datastructures/graphs.md %}">Graphs</a>.</li>
+      </ul>
 <!-- markdown auto closes the list maybe </ol> -->
