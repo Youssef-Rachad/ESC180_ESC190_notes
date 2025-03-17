@@ -129,5 +129,6 @@ Youssef
   <li>Mar 12 -
       <ul>
           <li><a href="{{ site.baseurl }}{% link _topics/datastructures/graphs.md %}">Graphs</a>.</li>
+          <li><a href="{{ site.baseurl }}{% link _topics/datastructures/stacks.md %}">Stacks</a>.</li>
       </ul>
 <!-- markdown auto closes the list maybe </ol> -->

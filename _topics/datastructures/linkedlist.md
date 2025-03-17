@@ -20,7 +20,7 @@ A linked list consists of a data structure called a `node`, which consists of t
 We can then make an array by creating a chain of these nodes, where we can find the next node by following the `next` pointer. While this uses up more space than a regular array, it has the benefit of preventing re-allocating everything.  
 For example, if we want to add an element to the end of the list, we can simply create a new node and set the `next` pointer of the last node to point to the new node (+ a minor detail we'll touch on in a bit).
 
-See the [lecture slides](https://www.cs.toronto.edu/~guerzhoy/190/lec/W07/LL.pdf) for a visual of linked lists and their operations.
+See the [lecture slides](https://www.cs.toronto.edu/~guerzhoy/190w23/lec/W07/LL.pdf) for a visual of linked lists and their operations.
 
 # Linked List Operations
 
