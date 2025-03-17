@@ -1,5 +1,7 @@
 ---
 title: PyInteger
+layout: default
+jax: True
 ---
 While in C the allowed integer datatypes (mainly `int`and `unsigned int`) have a restricted size, Python ==implements== a seemingly infinite integer. We will call this the `pyinteger` ADT and derive a possible implementation (such a task appeared on a past midterm!). The ADT `pyinteger` allows us to represent arbitrarily large integers and perform the two basic operations,
 

@@ -39,7 +39,18 @@ typedef struct mystr{
 // initialise the string
 void mystr_create(mystr **p_p_s);                           // Input: a pointer to apointer of a mystr
                                                             // Effect: set the pointer to the address of a valid mystr
+// read a character at an index
+char get_char(mystr *p_s, int index);                       // Input: a pointer of a mystr
+                                                            // Effect: get the value at index to character
+                                                            // sidenote - don't forget to check the index is within range
 // change a character at an index
+void set_char(mystr *p_s, const char character, int index); // Input: a pointer of a mystr
+                                                            // Effect: set the value at index to character
+                                                            // sidenote - const char is used here because we don't expect
+                                                            //            to change the value of character inside the 
+                                                            //            function (but this doesn't necessarily mean it 
+                                                            //            can't be changed outside of the function
+// read the whole string back
 void set_char(mystr *p_s, const char character, int index); // Input: a pointer of a mystr
                                                             // Effect: set the value at index to character
                                                             // sidenote - const char is used here because we don't expect
@@ -89,11 +100,23 @@ void mystr_create(mystr **p_p_s)
 
 void set_char(mystr *p_s, const char character, int index)
 {
+  // Change the contents of the block at an index
+
   if((index >= p_s->length) || (index < 0)){
     printf("ERROR: index %d out of bounds in mystr (length: %d)\n", index, p_s->length);
     exit(1);
   }
   (p_s->block)[index] = character;
+}
+
+char get_char(mystr *p_s, int index)
+{
+  // Read the character at an index
+  if (index < 0 || index >= p_s->length){
+    printf("ERROR: Trying to access an index out of bounds\n");
+    exit(1);
+  }
+  return p_s->block[index];
 }
 
 void append_str(mystr *p_s, const char *src)
@@ -109,11 +132,21 @@ void append_str(mystr *p_s, const char *src)
       printf("ERROR: failed to reallocate memory block of size %d", new_capacity);
       exit(1);
     }
-    p_s->capacity = new_capacity;
-    p_s->length = p_s->length + strlen(src);  // Note that we could update the size by setting it to the new capacity before multiplying by 2
+    p_s->capacity = new_capacity;// Note that we could update the size by setting it to the new capacity before multiplying by 2
   }
+  p_s->length = p_s->length + strlen(src);  
 
   strcat(p_s->block, src);
+}
+```
+
+It's also good practise to abstract away how an implementation of `mystr` works. Instead of accessing the `block` field directly, we should implement a function which returns the contents of the `mystr`.
+
+```c
+char* get_str(mystr *p_s)
+{
+  // Returns the whole string, i.e. the contents of 'block'
+  return p_s->block;
 }
 ```
 
@@ -168,10 +201,58 @@ Running this code through Valgrind will reveal that there are memory leaks from 
 // mystr.c
 void mystr_destroy(mystr *p_s)
 {
-  free(p_s->block);
-  free(p_s);
+  // the order of freeing is important
+  // if we free p_s before p_s->block then we lose access
+  // to the block and have a memory leak
+  free(p_s->block);  // free the block first
+  free(p_s);         // free the memory pointed to by p_s
 }
 ```
-Now we can recompile and see that the memory is properly released before the program terminates. One subtlety to notice here is the order in which we free the memory: if we free the pointer to mystr first then we effectively have no reference to the block it contained and this causes a memory leak of its own (losing access to allocated memory locks that memory block so it counts as consuming memory without control; though modern OS's can deal with this by destroying the process entirely).
+Now we can recompile and see that the memory is properly released before the program terminates. One subtlety to notice here is the order in which we free the memory: if we free the pointer to mystr first then we effectively have no reference to the block it contained. This causes a memory leak of its own (losing access to allocated memory locks that memory block so it counts as consuming memory without control; though modern OS's can deal with this by destroying the process entirely).
+As an exercise, try to reverse the free order and observe the effects.
 Generally, it's good practice to think about what parts have no dependent memory blocks and free those first. Note also that the integers are not freed because they are not allocated and their memory is released when we free the pointer to mystr.
 
+
+
+Now that we can make one `mystr`, can we make a whole list of them? Sure we can, and we will use an array to implement this list (as opposed to linked lists)!
+
+```c
+// test_mystr.c
+
+// First note that we have to dynamically allocate pointers for each mystr
+// so the following would not work
+// mystr arr[40]; // since we also need to allocate memory for the bloack
+
+  // Instead we allocate an array of 40 mystr pointers
+  mystr **str_block = (mystr **)malloc(40 * sizeof(mystr *));
+  
+  // Now we allocate their blocks
+  for(int idx = 0; idx < 40; idx++){
+    create_string(&(str_block[idx])); // .. or equivalently
+    // create_string(str_block + idx);
+  }
+```
+
+Here, `**str_block` is a pointer to an array of `mystr *` pointers. We can allocate each `mystr`'s block by accessing the i-th `mystr` and calling the `create_string()` function defined above.
+
+# Using mystr
+```c
+// testing_mystr.c
+#include <stdio.h>
+#include "mystr.h"
+
+int main()
+{
+  mystr *p_s;
+  mystr_create(&p_s);  // notice we are passing the address of our pointer!
+                       // now we have an empty mystr with 100 characters of capacity
+
+  append_str(p_s, "ESC");
+  printf("The string is %s\n", p_s->block); // "ESC"
+
+  append_str(p_s, "190");
+  printf("The string is %s\n", p_s->block); // "ESC190"
+
+  return 0;
+}
+```

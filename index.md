@@ -98,4 +98,15 @@ Youssef
       <ul>
           <li> Creating, changing, appending and destroying</li>
       </ul>
+  <li>Feb 12 - 
+      <ul>
+          <li><a href="{{ site.baseurl }}{% link _topics/datastructures/betterstring.md %}">Better Strings</a> in C: `get_char`, `get_str`.</li>
+          <li>What are <a href="{{ site.baseurl }}{% link _topics/datastructures/ADT.md %}">Abstract Data Types</a>?</li>
+          <li>Example: <a href="{{ site.baseurl }}{% link _topics/datastructures/ADT.md %}">Lists</a></li>
+          <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/exercice.html">Exercise 1</a>: Is it an ADT or a DS?</li>
+      </ul>
+  <li>Feb 13 - 
+      <ul>
+          <li><a href="{{ site.baseurl }}{% link _topics/datastructures/pyInteger.md %}">Pythonic Integers</a> in C.</li>
+      </ul>
 <!-- markdown auto closes the list maybe </ol> -->

@@ -8,12 +8,19 @@ We've seen so far that C is a strongly typed language and that we should be spec
 
 What if we wanted more, like having a list of values that we could manipulate in an intuitive way? You might have a few ideas to achieve this so to stay general, we will introduce the concept of an ADT.
 
-An **abstract data type** (ADT) is any collection of values, together with operations on those values. For example:
+{% include colorbox.html 
+   title="Definition" 
+   content="
+   An **abstract data type** (ADT) is any collection of values, together with operations on those values. For example:
 
 - `ints` with operations `+,-,*,/,%`
 - `lists` with operations `insert, remove, get`
+"
+%}
 
-An **ADT** specifies what values are represented and what operations can be performed, but not how to store them or how to carry them out. They allow for modularity and reuse, as it is independent of implementation. A **data structure** is an implementation of an ADT as it is a way to represent the values, and algorithms for each operation.
+An **ADT** specifies what values are represented and what operations can be performed, but not how to store them or how to carry them out. This makes ADTs important for modularity and reuse, as it is independent of implementation which means that how we use an ADT does not  depend on its implementation. A **data structure** is an implementation of an ADT as it is a way to represent the values, and algorithms for each operation.
+
+The motivation behind distinguishing ADTs from datastructures comes from complexity analysis which describes and calculates (asymptically) the cost of operations. An ADT is a way to describe what behaviour we want to enact but each datastructure that implement said ADT will come with its tradeoffs where some operations are performed quicker while others are performed slower.
 
 ## Lists
 
