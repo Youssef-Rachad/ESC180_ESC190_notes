@@ -38,39 +38,26 @@ This is called **memoisation** (which is not a typo, but you can think of "memor
 
 With memoisation, we can implement a more efficient algorithm:
 ```python
-def fib(n, mem = {}):
+def fib(n, mem = {0: 0, 1: 1}):
     if n in mem:
         return mem[n]
-    if n == 0:
-        return 0
-    if n == 1:
-        return 1
+    
+    # This section is commented out because
+    # mem is initialised with the base case
+    # values. This is called using a 
+    # 'default parameter' and acts like a
+    # global variable since it lives in the
+    # stack..
+    #if n == 0:
+    #    return 0
+    #if n == 1:
+    #    return 1
+    
     mem[n] = fib(n-1, mem) + fib(n-2, mem)
     return mem[n]
 ```
-
 Therefore, if we have already computed something, we don't have to go through an entire series of recursive calls! The time complexity of this implementation is now linear, because we only have to do $$3n$$ recursive calls. Analysing the algorithm, we can see that each entry in `mem` is computed once exactly so `fib(i-1)` and `fib(i-2)` do not produce recursive calls. Since we compute up to $$n$$ entries in `mem`, the time complexity is said to be linear, $$\mathcal O(n)$$ (drop the constant 3). Note that this analysis assumes retrieval is constant and addition is constant in time, which is true for doubles, but may not be true for other data types (since fibonacci integers can increase exponentially)
 
-<center>
-{% include quiz.html question="
-Since recursion and iteration are equally expressive, we can rewrite the above algorithm to use a `for-loop` instead of a recursion. 
-Even though the two are equivalent, in practise there some differences and in this case, the iterative implementation should truly make n computations.
-Implement this iterative version of the algorithm"
-answer="
-```python
-def fib_iter(int n):
-    fib_list = [0] * n
-    fib_list[0:2] = [0, 1]
-    for i in range(2, n + 1):
-        fib_list[i] = fib_list[i-1] + fib_list[i-2]
-    return fib_list[n]
-```
-**Open Ended Follow Up:**
-
-The size of this array is linear in n. Can you do this task in constant space (i.e. the size of the array does not depend on m?)
-"
-%}
-</center>
 
 ## Dynamic Programming Method
 In general, for dynamic programming:
@@ -84,6 +71,33 @@ $$F_i = \begin{cases}0 & i=0\\1&i=1\\F_{i-1} + F_{i-2}&i>1\end{cases}$$
 3. Store solutions to each subproblem, solving each subproblem once (i.e. using `fib_list` to store solutions)
 4. Use stored solutions to solve the original problem.
 
+## Iterative Equivalence
+Memoisation can be thought of as selectively populating an array of values from which we access solutions to subproblems in order to solve the original problem. 
+Since recursion and iteration are equally expressive, we can equivalently rewrite the above algorithm to solve *every subproblem* up until the original problem is solved.
+Because there are at most n subproblems to solve (this is especially easy to see in the case of finding the n-th Fibonacci number), then it turns out that both memoisation and computing all subproblems run in linear time complexity $$\mathcal O(n)$$ in the limit of n.
+We can think of this as a **bottom up** approach or as an **iterative approach** because we compute the solution to the smallest subproblem then store the result in an array of size n and move onto the next subproblem - that subproblem can now use prior results to speed up computation!
+
+{% include quiz.html question="
+Let's implement the solution to Fibonacci's problem once more, using the iterative approach using a `for-loop` instead of a recursion. 
+Even though the two are equivalent, in practise there are some differences and in this case, the iterative implementation should truly make n computations."
+answer="
+```python
+def fib_arr(n):
+  A = [0] * (n + 1)
+  A[0] = 0
+  A[1] = 1
+  for idx in range(2, n + 1):
+    A[i] = A[i - 1] + A[i - 2]
+  
+  return A[n]
+```
+"
+%}
+As an aside not covered in the course: observe that in this particular case, we know that the current subproblem is always computed using the previous 2 so this removes the need for an if-statement which, at a really low level, is faster to execute by the processor since it doesn't have to calculate branches ahead.
+
+**Open Ended Follow Up:**
+
+The size of this array is linear in n. Can you do this task in constant space (i.e. the size of the array does not depend on n)?
 # Painting the Whole Neighbourhood
 > There are a row of $$n$$ houses, each house can be painted with one of the three colors: red, blue or green. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.
 >

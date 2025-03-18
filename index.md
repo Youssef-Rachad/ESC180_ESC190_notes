@@ -131,4 +131,11 @@ Youssef
           <li><a href="{{ site.baseurl }}{% link _topics/datastructures/graphs.md %}">Graphs</a>.</li>
           <li><a href="{{ site.baseurl }}{% link _topics/datastructures/stacks.md %}">Stacks</a>.</li>
       </ul>
+  <li>Mar 13 -
+      <ul>
+      </ul>
+  <li>Mar 17 -
+      <ul>
+          <li><a href="{{ site.baseurl }}{% link _topics/algorithms/dynamicprogramming.md %}#memoising-fibonacci-numbers">Fibonnaci Numbers Iteratively</a>.</li>
+      </ul>
 <!-- markdown auto closes the list maybe </ol> -->
