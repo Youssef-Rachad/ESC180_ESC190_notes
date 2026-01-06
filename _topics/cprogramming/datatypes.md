@@ -47,7 +47,52 @@ In C, primitive type were introduces in part to abstract away the need to manual
 
 # Literals in C
 A literal is a value that is used in the program, but not explicitly defined as a variable. 
-Integers and decimal points are of int and double type, respectively. Symbols in single quotes are of char type, and strings (in double quotes) are of `const char *` type; which are discussed in the arrays and strings topic.
+Integers and decimal points are of int and double type, respectively. Symbols in single quotes are of char type, and strings (in double quotes) are of `const char *` type; which are discussed more in the
+<a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/strings.html">arrays and strings </a>topic.
+
+For example, we can break down a simple command like so
+```C
+int variable = 10;
+```
+- `int` is the data type
+- `variable` is the variable name
+- `10` is the literal (here, we can call it an integer literal)
+
+Another example is when we write
+```C
+printf("Hello World!");
+```
+Here, we directly 'created' and passed `"Hello World"` into the `printf()` function.
+This leads us to the first of many observations about how strings are implemented in C...
+
+# Silly Strings
+In the above example, we directly passed 
+```c
+printf("Hello World!");
+```
+In reality (or as we say: <b>at compile time</b>; which refers to the compiler processing the source code), the program is understood by the compiler more like
+```cpp
+char *str = "Hello World";
+printf("%s", str);
+```
+In fact, `printf(const char *str)` is defined to take a pointer to a string as a first argument (the reason you can then use many arguments to specify the string formatting is because C implements varargs but these won't be covered).
+
+Taking a second look at `char *str = "Hello World";`, we can learn more features of (static) C strings. Firstly, the notations
+- `char *str`
+- `char* str`
+- `char * str`
+
+are all valid, though we will prefer the first one by convention in this course.
+
+Secondly, `str` only holds the address to `'H'`! So how then do we get all of the literal?
+It turns out that strings are actually terminated by a <i>null terminator</i> represented by `\0`. This symbol tells the compiler that the string is done so when we pass the string literal "Hello World" what happens at compile time
+1. A static string is instantiated in the memory `'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '\0'`
+2. The address of 'H' is stored in a `char *` variable
+3. That `char *` variable is passed to `printf()`
+4. `printf()` goes to the address of 'H' and keeps reading the memory until it encounters the null terminator
+5. "Hello World" is printed (there are more details here, starting with allocating a buffer to the standard output and so on but these details are not covered in the course)
+
+Strings present interesting challenges, especially since we much of the nice abstractions we had by trading Python for C, and are further discussed in the <a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/strings.html">strings </a>topic.
 
 # Binary Numbers
 A binary number is a number represented in its base 2 notation. We can interpret it as a sum of powers of 2 where the position of a digit determines its exponent. 

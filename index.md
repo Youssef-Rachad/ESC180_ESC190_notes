@@ -29,22 +29,17 @@ Youssef
 
 # Lectures
 <ol id="lecs">
-  <li>Jan  6 - Introduction 
+  <li>Week 1: Jan 5 & 7 - Introduction to C
 	  <ul>
-		  <li>The C Programming Language</li>
-		  <li>Hello World</li>
-		  <li>Data Types</li>
-	</ul>
-  </li>
-  <li>Jan  8 - Working with variables 
-	  <ul>
-		  <li>Data Types</li>
-		  <li>Pointers</li>
-		  <li>Strings</li>
-		  <li>Arrays</li>
+		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/thecprogramminglanguage.html">The C Programming Language</a></li>
+		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/helloworld.html">Hello World</a></li>
+		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/datatypes.html">Data Types</a></li>
+		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/arrays.html">Arrays</a></li>
+		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/pointers.html">Pointers</a></li>
+		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/strings.html">Strings</a></li>
 	  </ul>
   </li>
-  <li>Jan  9 - Arrays, Strings, Functions: passing by reference and passing by reference
+  <!--<li>Jan  9 - Arrays, Strings, Functions: passing by reference and passing by reference
 	  <ul>
 		  <li>Arrays</li>
 		  <li>Strings</li>
@@ -77,7 +72,7 @@ Youssef
   <li>Jan 27 - String Methods:
       <ul>
           <li>strcpy</li>
-          <!--<li>??</li>-->
+          <li>??</li>
       </ul>
   <li>Jan 29 - Memory Management, String Methods
       <ul>
@@ -90,7 +85,7 @@ Youssef
           <li> ++, -- and precedence</li>
           <li>Iterating through strings in increasingly silly ways</li>
           <li>strcpy</li>
-          <!--<li>length of string??</li>-->
+          <li>length of string??</li>
           <li>storing strings in structs</li>
           <li>arrays of structs</li>
       </ul>
@@ -137,5 +132,5 @@ Youssef
   <li>Mar 17 -
       <ul>
           <li><a href="{{ site.baseurl }}{% link _topics/algorithms/dynamicprogramming.md %}#memoising-fibonacci-numbers">Fibonnaci Numbers Iteratively</a>.</li>
-      </ul>
+      </ul>-->
 <!-- markdown auto closes the list maybe </ol> -->
