@@ -29,7 +29,7 @@ Youssef
 
 # Lectures
 <ol id="lecs">
-  <li>Week 1: Jan 5 & 7 - Introduction to C
+  <li>Week 1: Jan 5, 7 & 8 - Introduction to C
 	  <ul>
 		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/thecprogramminglanguage.html">The C Programming Language</a></li>
 		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/helloworld.html">Hello World</a></li>
@@ -39,6 +39,17 @@ Youssef
 		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/strings.html">Strings</a></li>
 	  </ul>
   </li>
+  <li> Week 2: Jan 12, 14 & 15 - Pointers, Strings, Struct and Memory
+     <ul>
+          <li><a href="(( site.url}}{{ site.baseurl }}/topics/cprogramming/pointers.html">Pointers</a></li>
+          <li><a href="(( site.url}}{{ site.baseurl }}/topics/cprogramming/pointers.html">Pointer Drills (ext.)</a>, <a href="https://dl.acm.org/doi/pdf/10.1145/3724389.3731268">link to paper</a></li>
+          <li><a href="(( site.url}}{{ site.baseurl }}/topics/cprogramming/strings.html">Modifying Strings</a></li>
+          <li><a href="(( site.url}}{{ site.baseurl }}/topics/cprogramming/strings.html">const char *</a></li>
+          <li><a href="(( site.url}}{{ site.baseurl }}/topics/cprogramming/helloworld.html">Using the Standard Output and printf()</a></li>
+          <li><a href="(( site.url}}{{ site.baseurl }}/topics/cprogramming/structs.html">Custom Data Types</a></li>
+          <li><a href="(( site.url}}{{ site.baseurl }}/topics/cprogramming/structs.html">Structs and Compound Data Types</a></li>
+      </ul>
+
   <!--<li>Jan  9 - Arrays, Strings, Functions: passing by reference and passing by reference
 	  <ul>
 		  <li>Arrays</li>
