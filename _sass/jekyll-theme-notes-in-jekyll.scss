@@ -56,7 +56,7 @@ ol#lecs > li {
 }
 
 ol#lecs > li::before {
-  content: "Lecture " counter(number) ". ";
+  content: "Week " counter(number) ". ";
 }
 
 h1, h2, h3 {

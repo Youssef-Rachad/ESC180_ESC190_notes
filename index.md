@@ -29,7 +29,7 @@ Youssef
 
 # Lecture Calendar
 <ol id="lecs">
-  <li>Week 1: Jan 5, 7 & 8 - Introduction to C <br><i>Note: the early concepts are reviewed often, the timestamps show when they are introduced while the notes are a synthesis of the material presented in lecture.</i>
+  <li>Jan 5, 7 & 8 - Introduction to C <br><i>Note: the early concepts are reviewed often, the timestamps show when they are introduced while the notes are a synthesis of the material presented in lecture.</i>
 	  <ul>
 		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/thecprogramminglanguage.html">The C Programming Language</a> (
           <a href="https://www.youtube.com/live/C_s5KK_S2Zo?t=1011">Jan 5</a>
@@ -68,7 +68,7 @@ Youssef
 		  <li> &#x2514;&gt; <a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/exercice.html">Exercises</a> (Jan 8)</li>
 	  </ul>
   </li>
-  <li> Week 2: Jan 12, 14 & 15 - Pointers, Functions, Strings, Struct and Memory
+  <li>Jan 12, 14 & 15 - Pointers, Functions, Strings, Struct and Memory
      <ul>
 		  <li><a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/pointers.html">Pointer</a> (
           <a href="https://www.youtube.com/live/QgstsM8puKA?t=133">Jan 12</a>
@@ -109,7 +109,7 @@ Youssef
           )</li>
       </ul>
 
-  <li>Week 3: Jan  19, 21 & 22 - Arrays, Structs, Memory, Strings, Pointers, Working with Projects
+  <li>Jan  19, 21 & 22 - Arrays, Structs, Memory, Strings, Pointers, Working with Projects
 	  <ul>
           <li><a href="{{ site.url}}{{ site.baseurl }}/topics/cprogramming/structs.html">Calculating the Size of Compound Data Types</a> (
           <a href="https://www.youtube.com/live/FJ_5YqDLEhk?t=525">Jan 19</a>
