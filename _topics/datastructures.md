@@ -16,7 +16,7 @@ In this section, we will tentatively cover:
   - [Variants on linked lists]({{ site.baseurl }}{% link _topics/datastructures/moreLLs.md %})
   - Complexity of Operations Defined
 - [Stacks]({{ site.baseurl }}{% link _topics/datastructures/stacks.md %})
-- Queues
+- [Queues]({{ site.baseurl }}{% link _topics/datastructures/queues.md %})
   - Implementing a Queue using an Array or using a Linked List
 - Priority Queues
   - Implementation using Arrays (naive approach) 
