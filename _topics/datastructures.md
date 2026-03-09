@@ -21,10 +21,10 @@ In this section, we will tentatively cover:
 - Priority Queues
   - Implementation using Arrays (naive approach) 
   - Implementation using Heaps
-- Graphs
+- [Graphs]({{ site.baseurl }}{% link _topics/datastructures/graphs.md %})
   - Classification of Graphs
   - Adjacency List Implementation
   - Adjacency Matrix Implementation
-- Hash Tables
+- [Hash Tables]({{ site.baseurl }}{% link _topics/datastructures/hashing.md %})
   - Hash Mappings
   - Collision Handling 
