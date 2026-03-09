@@ -23,8 +23,8 @@ In this section, we will tentatively cover:
   - Implementation using Heaps
 - [Graphs]({{ site.baseurl }}{% link _topics/datastructures/graphs.md %})
   - Classification of Graphs
-  - Adjacency List Implementation
-  - Adjacency Matrix Implementation
+  - [Adjacency List]({{ site.baseurl }}(% link _topics/datastructures/adjlst.md %}) Implementation
+  - [Adjacency Matrix]({{ site.baseurl }}(% link _topics/datastructures/adjmat.md %}) Implementation
 - [Hash Tables]({{ site.baseurl }}{% link _topics/datastructures/hashing.md %})
   - Hash Mappings
   - Collision Handling 
