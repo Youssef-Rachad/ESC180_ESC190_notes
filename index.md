@@ -141,13 +141,13 @@ Youssef
 <li> Jan 26, 28, 29 - Memory Allocation: Structs and Blocks
 <ul>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/cprogramming/projects.html">Arrays of structs</a> (
-        <a href="https://www.youtube.com/live/icdw-jKSOVU?si=Jn5wj6tBBAp39hTj&t=632">Jan 26</a>
+        <a href="https://www.youtube.com/live/icdw-jKSOVU?t=632">Jan 26</a>
         )</li>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/cprogramming/projects.html">Dynamic Arrays of structs</a> (
-        <a href="https://www.youtube.com/live/icdw-jKSOVU?si=Jn5wj6tBBAp39hTj&t=972">Jan 26</a>
+        <a href="https://www.youtube.com/live/icdw-jKSOVU?t=972">Jan 26</a>
         )</li>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/cprogramming/projects.html">Pointer Drills</a> (
-        <a href="https://www.youtube.com/live/SUFRZjIkcf8?si=iher-2U7GSCWkcPp&t=929">Jan 29</a>
+        <a href="https://www.youtube.com/live/SUFRZjIkcf8?t=929">Jan 29</a>
         )</li>
 </ul>
 </li>
@@ -170,19 +170,28 @@ Youssef
 <li> Mar 2, 4, 5 - Graphs ADT, Graph Traversal Algorithms
 <ul>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/datastructures/graphs.html">Graph ADT</a>
-    (<a href="https://www.youtube.com/live/FdCbMJSJTBI?si=ME_vgQdFtInfvZNT&t=396"> Mar 2</a>)</li>
+    (<a href="https://www.youtube.com/live/FdCbMJSJTBI?t=396"> Mar 2</a>)</li>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/datastructures/graphs.html">Adjacenecy Matrix</a>
-    (<a href="https://www.youtube.com/live/FdCbMJSJTBI?si=_6IuOa1r8arKjy5X&t=647"> Mar 2</a>)</li>
+    (<a href="https://www.youtube.com/live/FdCbMJSJTBI?t=647"> Mar 2</a>)</li>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/datastructures/graphs.html">Adjacenecy List</a>
-    (<a href="https://www.youtube.com/live/FdCbMJSJTBI?si=9vIQpPGOmqj0WsY9&t=2581"> Mar 2</a>)</li>
+    (<a href="https://www.youtube.com/live/FdCbMJSJTBI?t=2581"> Mar 2</a>)</li>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/algorithms/traversal.html">Graph Traversal</a>
-    (<a href="https://www.youtube.com/live/FdCbMJSJTBI?si=DRo8rJvvbvfTQziO&t=1812">Mar 2</a>, <a href="https://www.youtube.com/live/qHCSi7ZAFus?si=aLcJjJrgIYwmTBWE&t=358"> Mar 4</a>)</li>
+    (<a href="https://www.youtube.com/live/FdCbMJSJTBI?t=358"> Mar 4</a>)</li>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/algorithms/traversal.html">Breadth First Search</a>
-    (<a href="https://www.youtube.com/live/qHCSi7ZAFus?si=aLcJjJrgIYwmTBWE&t=604"> Mar 4</a>, <a href="https://www.youtube.com/live/qHCSi7ZAFus?si=aLcJjJrgIYwmTBWE&t=1254"> Mar 4.1</a>)</li>
+    (<a href="https://www.youtube.com/live/qHCSi7ZAFus?t=1254"> Mar 4.1</a>)</li>
 <li><a href="{{ site.url}}{{ site.baseurl }}/topics/algorithms/traversal.html">Depth First Search</a>
-    (<a href="https://www.youtube.com/live/qHCSi7ZAFus?si=aLcJjJrgIYwmTBWE&t=862"> Mar 4</a>, <a href="https://www.youtube.com/live/qHCSi7ZAFus?si=aLcJjJrgIYwmTBWE&t=2094"> Mar 4.1</a>)</li>
+    (<a href="https://www.youtube.com/live/qHCSi7ZAFus?t=2094"> Mar 4.1</a>)</li>
 </ul>
 
+<li> Mar 9 - Graphs ADT, PageRank, DFS
+<ul>
+<li>The <a href="{{ site.url}}{{ site.baseurl }}/topics/algorithms/pagerank.html">Page Rank</a> Algorithm
+    (<a href="https://www.youtube.com/live/rzJgiT_mYaU?t=171"> Mar 9</a>)</li>
+<li><a href="{{ site.url}}{{ site.baseurl }}/topics/datastructures/graphs.html">Graph implementation in C</a>
+    (<a href="https://www.youtube.com/live/rzJgiT_mYaU?t=1333"> Mar 9</a>)</li>
+<li><a href="{{ site.url}}{{ site.baseurl }}/topics/datastructures/graphs.html">DFS implementation in C</a>
+    (<a href="https://www.youtube.com/live/rzJgiT_mYaU?t=2299"> Mar 9</a>)</li>
+</ul>
 <!-- <li>Jan 13 - <a href="{{ site.url }}{{ site.baseurl }}/topics/cprogramming/exercice.html">Exercise 1</a>: Passing by reference and by value</li>
 <li>Jan 15 - Strings and pointers. Exercise 2: <a href="https://www.cs.toronto.edu/~guerzhoy/190/pointers" target="blank_">Pointers</a>  
 <ul>
