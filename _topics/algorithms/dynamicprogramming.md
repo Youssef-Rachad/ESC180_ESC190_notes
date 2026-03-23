@@ -387,10 +387,9 @@ canSegment(s, wordDict) = ( (True) ) OR (False)
 Let's apply DP more formally:
  
 1. Divide the problem into computing whether each prefix of $$s$$ can be segmented.
-2. Define the Bellman equation. Let $$\text{OPT}(i)$$ be `True` if the substring $$s[0:i]$$ can be segmented using `wordDict`. Then:
-$$\text{OPT}(i) = \bigvee_{w \in \text{wordDict}} \left[ \text{OPT}(i - |w|) \text{ AND } s[i-|w|:i] = w \right]$$
-   In words: $$s[0:i]$$ is segmentable if there is some word $$w$$ in the dictionary such that $$s$$ ends with $$w$$ at position $$i$$, and the prefix before that ending is *also* segmentable.
-3. Store solutions in a boolean array `dp` of size $$n+1$$ where $$n = |s|$$.
+2. Define the Bellman equation. Let $$\text{OPT}(i)$$ be `True` if the substring $$s[0:i]$$ can be segmented using `wordDict`. Then
+ $$s[0:i]$$ is segmentable if there is some word $$w$$ in the dictionary such that $$s$$ ends with $$w$$ at position $$i$$, and the prefix before that ending is *also* segmentable.
+3. Store solutions in a boolean array `dp` of size $$n+1$$ where $$n$$ is the length of the string $$s$$.
 4. Return `dp[n]`.
  
 ## Iterative (Bottom-Up) Solution
@@ -417,14 +416,12 @@ Running through our example with `s = "applepenapple"` and `wordDict = ["apple",
  
 ```
 dp[0]  = True   # ""
-dp[5]  = True   # "apple" ✓
-dp[8]  = True   # "apple" + "pen" ✓
-dp[13] = True   # "apple" + "pen" + "apple" ✓
+dp[5]  = True   # "apple" 
+dp[8]  = True   # "apple" + "pen" 
+dp[13] = True   # "apple" + "pen" + "apple" 
 ```
  
 So `dp[13] = True` and we return `True`.
- 
-The time complexity of this solution is $$\mathcal{O}(n \cdot |\text{wordDict}| \cdot L)$$ where $$L$$ is the length of the longest word, since string comparison at each step takes $$\mathcal{O}(L)$$. The space complexity is $$\mathcal{O}(n)$$ for the `dp` array.
  
 ## Retrieving the Segmentation
  
@@ -471,6 +468,5 @@ def canSegment(s, wordDict, memo={}):
     return False
 ```
  
-Without memoisation, this is exponential because the same suffix of $$s$$ may be evaluated many times (analogous to computing `fib(n)` naively). With memoisation, each unique suffix is solved at most once — there are at most $$n$$ unique suffixes, giving $$\mathcal{O}(n \cdot |\text{wordDict}| \cdot L)$$ time complexity, identical to the iterative version.
  
 

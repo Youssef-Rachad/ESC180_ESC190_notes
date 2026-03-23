@@ -13,8 +13,8 @@ In this section, we will cover:
   - [Segmenting Words]({{ site.baseurl }}{% link _topics/algorithms/dynamicprogramming.md %}#i-have-a-pen-i-have-an-apple-)
 
 - [Graph Exploration and Path Finding]({{ site.baseurl }}{% link _topics/algorithms/traversal.md %})
-  - [Breadth First Search]()
-  - [Depth First Search]()
+  - [Breadth First Search]({{ site.baseurl }}{% link _topics/algorithms/bfs.md %})
+  - [Depth First Search]({{ site.baseurl }}{% link _topics/algorithms/dfs.md %})
   - [PageRank]({{ site.baseurl }}{% link _topics/algorithms/pagerank.md %}) Algorithm
   - [Dijkstra's]()
   - [A\*]()
