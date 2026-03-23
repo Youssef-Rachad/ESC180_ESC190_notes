@@ -206,9 +206,147 @@ Let's define $$\text{OPT}(v) := \text{minimum of coins to make } v$$ as the solu
 4. Use the stored solutions to solve the original problem
 
 ## Iterative Solution
+ 
+To implement the iterative (bottom-up) solution in Python, we set up an array where each index corresponds to a target amount:
+ 
+```python
+import numpy as np
+ 
+def make_change(denom, target):
+    OPT = np.inf * np.ones(target + 1)
+    OPT[0] = 0
+ 
+    for amount in range(1, target +  1):
+        # check all denominations
+        for d in denom:
+            # can we use this denomination?
+            if amount - d >= 0:
+                # is this the best way to make this amount?
+                if OPT[amount - d] + 1 < OPT[amount]:
+                    # update the optimal solution
+                    OPT[amount] = OPT[amount - d] + 1
+ 
+    return OPT[target]
+```
+ 
+We initialize all entries to `np.inf` (meaning it's impossible to make that amount), except `OPT[0] = 0`. We then use a bottom-up approach: to compute `OPT(target)` we need `OPT(target - 1)`, which needs `OPT(target - 2)`, and so on all the way to `OPT(1)`. By iterating upward from 1, every subproblem we depend on is already solved when we need it.
+ 
+For each `amount`, we loop over all denominations `d`. If `amount - d >= 0`, then we *could* use coin `d`, leaving `amount - d` left to make — which costs `OPT[amount - d]` coins optimally. So the total cost of choosing denomination `d` is `OPT[amount - d] + 1`. We keep the minimum across all such choices.
+ 
+For our example (`denom = [1, 4, 5]`, `target = 8`), the array evolves as follows:
+ 
+```
+OPT = [0, ∞, ∞, ∞, ∞, ∞, ∞, ∞, ∞]   # initial
+OPT = [0, 1, ∞, ∞, ∞, ∞, ∞, ∞, ∞]   # amount=1: use coin 1
+OPT = [0, 1, 2, ∞, ∞, ∞, ∞, ∞, ∞]   # amount=2: use coin 1 twice
+OPT = [0, 1, 2, 3, ∞, ∞, ∞, ∞, ∞]   # amount=3: use coin 1 thrice
+OPT = [0, 1, 2, 3, 1, ∞, ∞, ∞, ∞]   # amount=4: use coin 4
+OPT = [0, 1, 2, 3, 1, 1, ∞, ∞, ∞]   # amount=5: use coin 5
+OPT = [0, 1, 2, 3, 1, 1, 2, 2, 2]   # ... continuing to target=8
+```
+ 
+So `OPT[8] = 2`, corresponding to using two coins of value 4.
+ 
+The time complexity of this solution is $$\mathcal{O}(d \cdot t)$$ where $$d$$ is the number of denominations and $$t$$ is the target amount, since for each of the $$t$$ amounts we loop over all $$d$$ denominations. The space complexity is $$\mathcal{O}(t)$$ for the `OPT` array.
+ 
 ## Retrieving the Coins
+ 
+Knowing the optimal *number* of coins isn't always enough — we also want to know *which* coins to use. To do this, we maintain a second structure `OPT_soln` that tracks the actual coins used for the optimal solution at each amount. Every time we update `OPT[amount]`, we also update `OPT_soln[amount]`:
+ 
+```python
+import numpy as np
+ 
+def make_change(denom, target):
+    OPT = np.inf * np.ones(target + 1)
+    OPT[0] = 0
+    OPT_soln = {}
+    OPT_soln[0] = []
+ 
+    for amount in range(1, target + 1):
+        for d in denom:
+            if amount - d >= 0:
+                if OPT[amount - d] + 1 < OPT[amount]:
+                    OPT[amount] = OPT[amount - d] + 1
+                    OPT_soln[amount] = OPT_soln[amount - d] + [d]
+ 
+    return OPT_soln.get(target, None)
+```
+ 
+`OPT_soln[amount]` gets overwritten every time we find a better (fewer-coins) solution, so it always reflects the optimal combination. The `get(target, None)` handles the case where it's impossible to make the target amount (e.g. if the denomination `1` is absent and the target is not reachable).
+ 
+Running this on our example gives:
+```python
+{0: [],
+ 1: [1],
+ 2: [1, 1],
+ 3: [1, 1, 1],
+ 4: [4],
+ 5: [5],
+ 6: [5, 1],
+ 7: [5, 1, 1],
+ 8: [4, 4]}
+```
+ 
 ## Recursive Solution
+ 
+We can also write a recursive solution. Structurally it's very similar to the iterative one — we've just swapped square brackets for round brackets (array indexing for function calls):
+ 
+```python
+import numpy as np
+ 
+def make_change_recursive(denom, target):
+    if target == 0:
+        return 0
+    if target < 0:
+        return np.inf
+ 
+    min_coins = np.inf
+    for d in denom:
+        cur_min = make_change_recursive(denom, target - d) + 1
+        if cur_min < min_coins:
+            min_coins = cur_min
+    return min_coins
+```
+ 
+However, this is extremely inefficient. With 3 denominations, to compute `OPT(t)` we make 3 recursive calls, each of which makes 3 more, and so on. The total number of calls is bounded by $$3^0 + 3^1 + \cdots + 3^t = \mathcal{O}(3^t)$$. In general, the time complexity without memoisation is $$\mathcal{O}(d^t)$$ where $$d$$ is the number of denominations.
+ 
 ## Memoisation
+ 
+As with Fibonacci, we can fix the exponential blowup by caching previously computed results:
+ 
+```python
+import numpy as np
+ 
+def make_change_recursive(denom, target, memo={}, solns={}):
+    if target in memo:
+        return memo[target], solns[target]
+    if target == 0:
+        memo[0] = 0
+        solns[0] = []
+        return 0, []
+    if target < 0:
+        memo[target] = np.inf
+        solns[target] = None
+        return np.inf, None
+ 
+    min_coins = np.inf
+    optimal_soln = None
+    for d in denom:
+        cur_min, cur_soln = make_change_recursive(denom, target - d, memo, solns)
+        if cur_min < min_coins:
+            min_coins = cur_min + 1
+            optimal_soln = cur_soln + [d]
+ 
+    memo[target] = min_coins
+    solns[target] = optimal_soln
+    return min_coins, optimal_soln
+```
+ 
+With memoisation, each distinct target value is computed exactly once. Since there are at most $$t + 1$$ distinct targets and for each we loop over $$d$$ denominations, the time complexity drops to $$\mathcal{O}(d \cdot t)$$ — the same as the iterative solution.
+ 
+**Memoisation vs. Iterative:** In many cases, both approaches yield the same time complexity. However, memoisation (top-down) can be slightly more efficient in practice if many subproblems are never needed — we only recurse into values we actually encounter. The iterative (bottom-up) approach always computes *every* subproblem from 0 to $$t$$, even if most are unnecessary. For sparse denominations with a large target, this difference can matter.
+
+
 # I Have a Pen, I Have an Apple ...
 This problem is taken from lab 8 (also from the 2024 Exam)
 > Given a non-empty string $$s$$ and a dictionary $$\text{wordDict}$$ containing a list of non-empty words, determin if $$s$$ can be segmented into a space-separated sequence of one or more dictionary words.
@@ -243,4 +381,96 @@ canSegment("apple", wordDict) = True # "apple" is a dictionary word!
 canSegment(s, wordDict) = ( (True) ) OR (False)
                         = True
 ```
+
+## Applying the Dynamic Programming Method
+ 
+Let's apply DP more formally:
+ 
+1. Divide the problem into computing whether each prefix of $$s$$ can be segmented.
+2. Define the Bellman equation. Let $$\text{OPT}(i)$$ be `True` if the substring $$s[0:i]$$ can be segmented using `wordDict`. Then:
+$$\text{OPT}(i) = \bigvee_{w \in \text{wordDict}} \left[ \text{OPT}(i - |w|) \text{ AND } s[i-|w|:i] = w \right]$$
+   In words: $$s[0:i]$$ is segmentable if there is some word $$w$$ in the dictionary such that $$s$$ ends with $$w$$ at position $$i$$, and the prefix before that ending is *also* segmentable.
+3. Store solutions in a boolean array `dp` of size $$n+1$$ where $$n = |s|$$.
+4. Return `dp[n]`.
+ 
+## Iterative (Bottom-Up) Solution
+ 
+```python
+def canSegment(s, wordDict):
+    n = len(s)
+    dp = [False] * (n + 1)
+    dp[0] = True  # empty string is trivially segmentable
+ 
+    for i in range(1, n + 1):
+        for w in wordDict:
+            # does word w end exactly at position i?
+            if i >= len(w) and dp[i - len(w)] and s[i - len(w):i] == w:
+                dp[i] = True
+                break  # no need to check further words
+ 
+    return dp[n]
+```
+ 
+`dp[0] = True` is our base case: the empty prefix can always be "segmented" (with zero words). For each position $$i$$ from 1 to $$n$$, we check every word $$w$$ in the dictionary. If the substring ending at $$i$$ matches $$w$$ *and* the prefix before it (`dp[i - len(w)]`) is already segmentable, then `dp[i] = True`.
+ 
+Running through our example with `s = "applepenapple"` and `wordDict = ["apple", "pen", "app"]`:
+ 
+```
+dp[0]  = True   # ""
+dp[5]  = True   # "apple" ✓
+dp[8]  = True   # "apple" + "pen" ✓
+dp[13] = True   # "apple" + "pen" + "apple" ✓
+```
+ 
+So `dp[13] = True` and we return `True`.
+ 
+The time complexity of this solution is $$\mathcal{O}(n \cdot |\text{wordDict}| \cdot L)$$ where $$L$$ is the length of the longest word, since string comparison at each step takes $$\mathcal{O}(L)$$. The space complexity is $$\mathcal{O}(n)$$ for the `dp` array.
+ 
+## Retrieving the Segmentation
+ 
+Just as in the coin change problem, we may want to retrieve the actual segmentation, not just whether one exists. We maintain a second array `dp_soln` where `dp_soln[i]` stores a segmentation of `s[0:i]`:
+ 
+```python
+def canSegmentAndRetrieve(s, wordDict):
+    n = len(s)
+    dp = [False] * (n + 1)
+    dp_soln = [None] * (n + 1)
+    dp[0] = True
+    dp_soln[0] = []
+ 
+    for i in range(1, n + 1):
+        for w in wordDict:
+            if i >= len(w) and dp[i - len(w)] and s[i - len(w):i] == w:
+                dp[i] = True
+                dp_soln[i] = dp_soln[i - len(w)] + [w]
+                break
+ 
+    return dp_soln[n] if dp[n] else None
+```
+ 
+For our example, this returns `["apple", "pen", "apple"]`.
+ 
+## Memoised Recursive Solution
+ 
+For completeness, we can also write the recursive solution with memoisation. We work top-down from the full string, trying every word as a potential first word:
+ 
+```python
+def canSegment(s, wordDict, memo={}):
+    if s in memo:
+        return memo[s]
+    if s == "":
+        return True
+ 
+    for w in wordDict:
+        if s.startswith(w):
+            if canSegment(s[len(w):], wordDict, memo):
+                memo[s] = True
+                return True
+ 
+    memo[s] = False
+    return False
+```
+ 
+Without memoisation, this is exponential because the same suffix of $$s$$ may be evaluated many times (analogous to computing `fib(n)` naively). With memoisation, each unique suffix is solved at most once — there are at most $$n$$ unique suffixes, giving $$\mathcal{O}(n \cdot |\text{wordDict}| \cdot L)$$ time complexity, identical to the iterative version.
+ 
 
