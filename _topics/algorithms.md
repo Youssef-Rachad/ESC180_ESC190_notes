@@ -15,5 +15,6 @@ In this section, we will cover:
 - [Graph Exploration and Path Finding]({{ site.baseurl }}{% link _topics/algorithms/traversal.md %})
   - [Breadth First Search]()
   - [Depth First Search]()
+  - [PageRank]({{ site.baseurl }}{% link _topics/algorithms/pagerank.md %}) Algorithm
   - [Dijkstra's]()
   - [A\*]()

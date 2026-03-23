@@ -16,15 +16,15 @@ In this section, we will tentatively cover:
   - [Variants on linked lists]({{ site.baseurl }}{% link _topics/datastructures/moreLLs.md %})
   - Complexity of Operations Defined
 - [Stacks]({{ site.baseurl }}{% link _topics/datastructures/stacks.md %})
-- Queues
+- [Queues]({{ site.baseurl }}{% link _topics/datastructures/queues.md %})
   - Implementing a Queue using an Array or using a Linked List
 - Priority Queues
   - Implementation using Arrays (naive approach) 
   - Implementation using Heaps
-- Graphs
+- [Graphs]({{ site.baseurl }}{% link _topics/datastructures/graphs.md %})
   - Classification of Graphs
-  - Adjacency List Implementation
-  - Adjacency Matrix Implementation
-- Hash Tables
+  - [Adjacency List]({{ site.baseurl }}{% link _topics/datastructures/adjlst.md %}) Implementation
+  - [Adjacency Matrix]({{ site.baseurl }}{% link _topics/datastructures/adjmat.md %}) Implementation
+- [Hash Tables]({{ site.baseurl }}{% link _topics/datastructures/hashing.md %})
   - Hash Mappings
   - Collision Handling 
